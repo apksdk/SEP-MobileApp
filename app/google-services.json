@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "916407310369",
+    "firebase_url": "https://sep-project-4a4f3.firebaseio.com",
+    "project_id": "sep-project-4a4f3",
+    "storage_bucket": "sep-project-4a4f3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:916407310369:android:7e95f6e7b91fdafe",
+        "android_client_info": {
+          "package_name": "com.riversidecorps.rebuy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "916407310369-4318i9q793rbi3bavpg03nmqfdejv537.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBzlIq1RKRGXn36Lz6jzJ5HZzu8QRj8FIA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
