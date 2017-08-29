@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="16dp"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.riversidecorps.rebuy.MyAccountActivity"
+    tools:showIn="@layout/app_bar_my_account">
+
+    <ImageView
+        android:id="@+id/userAvatarIV"
+        android:layout_width="128dp"
+        android:layout_height="128dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="16dp"
+        android:layout_marginTop="16dp"
+        app:srcCompat="@mipmap/ic_launcher_round" />
+
+    <TextView
+        android:id="@+id/userIDTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/userAvatarIV"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="16dp"
+        android:text="UserID" />
+
+    <TextView
+        android:id="@+id/userEmailTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/userIDTV"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="16dp"
+        android:text="email@example.com" />
+
+    <TextView
+        android:id="@+id/currentListingsTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/userEmailTV"
+        android:text="Current Listings:" />
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/currentListingsTV" />
+
+</RelativeLayout>
