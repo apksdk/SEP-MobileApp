@@ -25,7 +25,6 @@
     <string name="username_prompt">Username</string>
     <string name="password_prompt">Password</string>
     <string name="email_prompt">Email</string>
-    <string name="login_prompt">Email/Username</string>
     <string name="action_sign_in">Sign in or register</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="error_no_email">Please enter an email</string>
@@ -41,7 +40,6 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
-    <string name="confirm_password">Confirm Password</string>
 
     <!-- Strings related to the chat -->
     <string name="send_btn">Send</string>
@@ -51,6 +49,7 @@
     <string name="create_chat_btn">Create Chat</string>
     <string name="chat_title_hint">Enter a chat name</string>
     <string name="action_select_chat">Select Chat</string>
+<<<<<<< HEAD
 
     <string name="app_logo">App Logo</string>
     <string name="title_activity_create_listing">Create A Listing</string>
@@ -62,4 +61,6 @@
     <string name="title_activity_offers">Offers</string>
     <string name="title_activity_message_inbox">Message Inbox</string>
 
+=======
+>>>>>>> parent of 9ab5af6... Did the interface
 </resources>

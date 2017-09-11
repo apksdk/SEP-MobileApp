@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.riversidecorps.rebuy">
 
-    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
         android:allowBackup="true"
@@ -11,38 +11,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".LoginActivity">
+        <activity android:name=".MainActivity"/>
+        <activity android:name="com.riversidecorps.rebuy.LoginActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+            <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
         </activity>
-        <activity android:name=".RegisterActivity" />
-        <activity
-            android:name=".MyAccountActivity"
-            android:label="My Account"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".CreateListingActivity"
-            android:label="@string/title_activity_create_listing"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".SearchListingsActivity"
-            android:label="@string/title_activity_search_listings"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".SingleListingActivity"
-            android:label="@string/title_activity_single_listing"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".OffersActivity"
-            android:label="@string/title_activity_offers"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".MessageInboxActivity"
-            android:label="@string/title_activity_message_inbox"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name="com.riversidecorps.rebuy.RegisterActivity"/>
     </application>
 
 </manifest>

@@ -254,8 +254,8 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     myRef.child(DB_USERS).child(userID).setValue(userInformation);
                     //Creates a toast to inform the user everything is set up
                     Toast.makeText(RegisterActivity.this, LOGIN_SUCCESS, Toast.LENGTH_SHORT).show();
-                    //Closes the registration activity
-                    finish();
+                    //Moves the new user to the main activity
+                    RegisterActivity.this.startActivity(new Intent(RegisterActivity.this, MainActivity.class));
                     //If unsuccessful create a toast informing the user
                 } else {
                     Toast.makeText(RegisterActivity.this, LOGIN_FAILED, Toast.LENGTH_SHORT).show();
