@@ -9,14 +9,32 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.riversidecorps.rebuy.com.cabbage.sdpjournal.LoginActivity">
+    tools:context="com.riversidecorps.rebuy.LoginActivity"
+    android:gravity="center"
+    android:weightSum="1">
+
+    <ImageView
+        android:id="@+id/logoIV"
+        android:layout_width="121dp"
+        android:layout_height="102dp"
+        android:layout_gravity="center"
+        app:srcCompat="@drawable/logo"
+        android:contentDescription="@string/app_logo" />
+
+    <TextView
+        android:id="@+id/logoTV"
+        android:layout_width="wrap_content"
+        android:textSize="18sp"
+        android:gravity="center"
+        android:layout_height="wrap_content"
+        android:text="@string/app_name" />
 
     <EditText
         android:id="@+id/emailEt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
-        android:hint="@string/email_prompt"
+        android:hint="@string/login_prompt"
         android:inputType="textEmailAddress"
         android:paddingBottom="@dimen/activity_vertical_margin" />
 

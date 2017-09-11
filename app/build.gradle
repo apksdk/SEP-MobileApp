@@ -29,7 +29,6 @@ dependencies {
     })
     compile 'com.android.support:appcompat-v7:26.0.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-<<<<<<< HEAD
     compile 'com.google.firebase:firebase-core:11.2.0'
     compile 'com.google.firebase:firebase-auth:11.2.0'
     compile 'com.google.firebase:firebase-database:11.2.0'
@@ -43,11 +42,6 @@ dependencies {
     compile 'com.firebaseui:firebase-ui:2.3.0'
     compile 'com.android.support:design:26.0.1'
     testCompile 'junit:junit:4.12'
-=======
-    testCompile 'junit:junit:4.12'
-    compile 'com.google.firebase:firebase-auth:9.2.0'
-    compile 'com.google.firebase:firebase-database:9.2.0'
->>>>>>> parent of 9ab5af6... Did the interface
 }
 
 apply plugin: 'com.google.gms.google-services'
