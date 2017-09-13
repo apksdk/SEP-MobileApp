@@ -24,8 +24,8 @@
     <string name="back_btn">Back</string>
     <string name="username_prompt">Username</string>
     <string name="password_prompt">Password</string>
+    <string name="login_prompt">Login</string>
     <string name="email_prompt">Email</string>
-    <string name="login_prompt">Email/Username</string>
     <string name="action_sign_in">Sign in or register</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="error_no_email">Please enter an email</string>
@@ -42,6 +42,7 @@
         completions."
     </string>
     <string name="confirm_password">Confirm Password</string>
+    <string name="action_reset_password">Reset Password</string>
 
     <!-- Strings related to the chat -->
     <string name="send_btn">Send</string>
@@ -61,5 +62,7 @@
     <string name="title_activity_single_listing">SingleListingActivity</string>
     <string name="title_activity_offers">OffersActivity</string>
     <string name="title_activity_message_inbox">MessageInboxActivity</string>
+    <string name="title_activity_reset_password">ResetPasswordActivity</string>
 
+>>>>>>> Stashed changes
 </resources>
