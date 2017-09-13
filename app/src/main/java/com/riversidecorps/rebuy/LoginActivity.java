@@ -209,7 +209,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         int output = 0;
         if(password.length()< 6){
             output = 0;
-        } else if(password.length() > 16){
+        } else if(password.length() > 64){
             output = 1;
         } else {
             output = 2;

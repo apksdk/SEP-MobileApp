@@ -40,6 +40,12 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+<<<<<<< Updated upstream
+=======
+    <string name="confirm_password">Confirm Password</string>
+    <string name="action_reset_password">Reset Password</string>
+
+>>>>>>> Stashed changes
 
     <!-- Strings related to the chat -->
     <string name="send_btn">Send</string>
@@ -49,4 +55,19 @@
     <string name="create_chat_btn">Create Chat</string>
     <string name="chat_title_hint">Enter a chat name</string>
     <string name="action_select_chat">Select Chat</string>
+<<<<<<< Updated upstream
+=======
+
+    <string name="app_logo">App Logo</string>
+    <string name="title_activity_create_listing">Create A Listing</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="title_activity_search_listings">SearchListingsActivity</string>
+    <string name="title_activity_single_listing">SingleListingActivity</string>
+    <string name="title_activity_offers">OffersActivity</string>
+    <string name="title_activity_message_inbox">MessageInboxActivity</string>
+    <string name="title_activity_reset_password">ResetPasswordActivity</string>
+
+>>>>>>> Stashed changes
 </resources>

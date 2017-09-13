@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/ReBuy.iml" filepath="$PROJECT_DIR$/ReBuy.iml" />
+      <module fileurl="file://$PROJECT_DIR$/SEP-MobileApp.iml" filepath="$PROJECT_DIR$/SEP-MobileApp.iml" />
       <module fileurl="file://$PROJECT_DIR$/SEP-Project.iml" filepath="$PROJECT_DIR$/SEP-Project.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
