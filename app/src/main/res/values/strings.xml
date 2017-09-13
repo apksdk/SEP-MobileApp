@@ -58,11 +58,10 @@
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="title_activity_search_listings">SearchListingsActivity</string>
-    <string name="title_activity_single_listing">SingleListingActivity</string>
-    <string name="title_activity_offers">OffersActivity</string>
-    <string name="title_activity_message_inbox">MessageInboxActivity</string>
-    <string name="title_activity_reset_password">ResetPasswordActivity</string>
-
->>>>>>> Stashed changes
+  
+    <string name="title_activity_search_listings">Browse Listings</string>
+    <string name="title_activity_single_listing">Viewing Item</string>
+    <string name="title_activity_offers">Offers</string>
+    <string name="title_activity_message_inbox">Message Inbox</string>
+    <string name="title_activity_reset_password">Reset Password</string>
 </resources>
