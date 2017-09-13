@@ -8,9 +8,11 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
@@ -25,6 +27,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.riversidecorps.rebuy.models.Listing;
 
@@ -84,13 +87,16 @@ public class MyAccountActivity extends AppCompatActivity
         //Set up recyclerview
         currentListingsRV.setLayoutManager(new LinearLayoutManager(this));
 
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Listings");
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
+        currentListingsRV.addItemDecoration(dividerItemDecoration);
 
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Listings");
+        Query query = ref.orderByChild("itemDeleted").equalTo(false);
         FirebaseRecyclerAdapter<Listing, ListingHolder> mAdapter = new FirebaseRecyclerAdapter<Listing, ListingHolder>(
                 Listing.class,
                 R.layout.item_listing_overview,
                 ListingHolder.class,
-                ref) {
+                query) {
             /**
              * Each time the data at the given Firebase location changes, this method will be called for
              * each item that needs to be displayed. The first two arguments correspond to the mLayout and
@@ -107,6 +113,9 @@ public class MyAccountActivity extends AppCompatActivity
             protected void populateViewHolder(ListingHolder viewHolder, Listing model, int position) {
                 viewHolder.setItemNameTV(model.getItemName());
                 viewHolder.setItemPriceTV(model.getItemPrice());
+                //Get the primary key of the item
+                viewHolder.setItemID(getRef(position).getKey());
+                Log.i("GetItemID", getRef(position).getKey());
             }
         };
         currentListingsRV.setAdapter(mAdapter);

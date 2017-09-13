@@ -1,12 +1,10 @@
 package com.riversidecorps.rebuy.models;
 
-import android.text.style.TtsSpan;
-
-import java.util.Currency;
+import java.util.ArrayList;
 
 /**
  * This is the listing model that contains all relevant data regarding to the listing.
- *
+ * <p>
  * Created by Joshua on 9/12/2017.
  */
 public class Listing {
@@ -16,10 +14,13 @@ public class Listing {
     private Integer mItemQuantity;
     private String mItemPrice;
     private String mItemDescription;
+    private ArrayList<String> mItemImages;
+    private Boolean mItemDeleted;
+    private Boolean mItemCompleted;
 
     /**
      * Instantiates a new Listing.
-     *
+     * <p>
      * Firebase requires a blank model so do not remove this.
      */
     public Listing() {
@@ -41,6 +42,8 @@ public class Listing {
         mItemQuantity = itemQuantity;
         mItemPrice = itemPrice;
         mItemDescription = itemDescription;
+        mItemDeleted = false;
+        mItemCompleted = false;
     }
 
     /**
@@ -149,5 +152,21 @@ public class Listing {
      */
     public void setItemDescription(String itemDescription) {
         mItemDescription = itemDescription;
+    }
+
+    public Boolean getItemDeleted() {
+        return mItemDeleted;
+    }
+
+    public void setItemDeleted(Boolean itemDeleted) {
+        mItemDeleted = itemDeleted;
+    }
+
+    public Boolean getItemCompleted() {
+        return mItemCompleted;
+    }
+
+    public void setItemCompleted(Boolean itemCompleted) {
+        mItemCompleted = itemCompleted;
     }
 }
