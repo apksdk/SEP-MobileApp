@@ -3,6 +3,7 @@ package com.riversidecorps.rebuy;
 import android.content.Intent;
 import android.icu.text.NumberFormat;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -37,14 +38,19 @@ import java.util.Locale;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static android.content.ContentValues.TAG;
+
 /**
  * The type My account activity.
  */
-public class MyAccountActivity extends AppCompatActivity
+public class 
+  AccountActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private FirebaseUser mUser = mAuth.getCurrentUser();
+    private static final String AUTH_IN = "onAuthStateChanged:signed_in:";
+    private static final String AUTH_OUT = "onAuthStateChanged:signed_out";
 
     @BindView(R.id.userAvatarIV)
     ImageView userAvatarIV;
@@ -61,7 +67,7 @@ public class MyAccountActivity extends AppCompatActivity
     // TO DO - CHECK OFFLINE & DISPLAY ERROR IF SO, LOAD IMAGES
     // ALSO MAYBE CREATE NEW SECTION FOR LISTING PREVIEWS IN FIREBASE TO AVOID LOADING OTHER INFOS
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+        protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_account);
 
@@ -69,6 +75,16 @@ public class MyAccountActivity extends AppCompatActivity
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        //Prevents being required to login every time
+        myFirebaseAuth = FirebaseAuth.getInstance();
+        myFirebaseUser = myFirebaseAuth.getCurrentUser();
+        if (myFirebaseUser == null) {
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+        } else {
+            //User is logged in;
+        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -78,6 +94,23 @@ public class MyAccountActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+
+        //Set listener that triggers when a user signs out
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+                    // User is signed in
+                    Log.d(TAG, AUTH_IN + user.getUid());
+                } else {
+                    // User is signed out
+                    Log.d(TAG, AUTH_OUT);
+                }
+                // ...
+            }
+        };
 
         //Display user details
         userAvatarIV.setImageURI(mUser.getPhotoUrl());
@@ -137,6 +170,60 @@ public class MyAccountActivity extends AppCompatActivity
 //                failedToast.show();
 //            }
 //        });
+
+    }
+
+    //On start method
+    @Override
+    public void onStart() {
+        super.onStart();
+        //Sets a listener to catch when the user is signing in.
+        mFirebaseAuth.addAuthStateListener(mAuthListener);
+    }
+
+    //On stop method
+    @Override
+    public void onStop() {
+        super.onStop();
+        //Sets listener to catch when the user is signing out.
+        if (mAuthListener != null) {
+            mFirebaseAuth.removeAuthStateListener(mAuthListener);
+        }
+    }
+    /**
+     * Creates the options menu on the action bar.
+     * @param menu Menu at the top right of the screen
+     * @return true
+     */
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        //Inflates the menu menu_other which includes logout and quit functions.
+        getMenuInflater().inflate(R.menu.my_account, menu);
+        return true;
+    }
+
+    /**
+     * Sets a listener that triggers when an option from the taskbar menu is selected.
+     * @param item Which item on the menu was selected.
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        //Finds which item was selected
+        switch(item.getItemId()){
+            //If item is logout
+            case R.id.action_logout:
+                //Sign out of the authenticator and return to login activity.
+                mFirebaseAuth.signOut();
+                this.startActivity(new Intent(this, LoginActivity.class));
+                return true;
+
+            //If item is reset password
+            case R.id.action_reset_password:
+                this.startActivity(new Intent(this, ResetPasswordActivity.class));
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -147,28 +234,6 @@ public class MyAccountActivity extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.my_account, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
