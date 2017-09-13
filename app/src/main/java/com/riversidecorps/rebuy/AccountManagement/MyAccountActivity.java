@@ -1,7 +1,6 @@
 package com.riversidecorps.rebuy;
 
 import android.content.Intent;
-import android.icu.text.NumberFormat;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -15,21 +14,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.riversidecorps.rebuy.models.Listing;
-
-import java.util.Currency;
-import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -178,6 +169,8 @@ public class MyAccountActivity extends AppCompatActivity
             startActivity(new Intent(this, SearchListingsActivity.class));
         } else if (id == R.id.nav_create_listing) {
             startActivity(new Intent(this, CreateListingActivity.class));
+        } else if (id == R.id.nav_view_listing) {
+            startActivity(new Intent(this, ViewListingsActivity.class));
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
