@@ -43,14 +43,12 @@ import static android.content.ContentValues.TAG;
 /**
  * The type My account activity.
  */
-public class 
-  MyAccountActivity extends AppCompatActivity
+public class
+AccountActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private FirebaseUser mUser = mAuth.getCurrentUser();
-    private FirebaseAuth.AuthStateListener mAuthListener;
-
     private static final String AUTH_IN = "onAuthStateChanged:signed_in:";
     private static final String AUTH_OUT = "onAuthStateChanged:signed_out";
 
@@ -69,7 +67,7 @@ public class
     // TO DO - CHECK OFFLINE & DISPLAY ERROR IF SO, LOAD IMAGES
     // ALSO MAYBE CREATE NEW SECTION FOR LISTING PREVIEWS IN FIREBASE TO AVOID LOADING OTHER INFOS
     @Override
-        protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_account);
 
@@ -79,9 +77,9 @@ public class
         setSupportActionBar(toolbar);
 
         //Prevents being required to login every time
-        mAuth = FirebaseAuth.getInstance();
-        mUser = mAuth.getCurrentUser();
-        if (mUser == null) {
+        myFirebaseAuth = FirebaseAuth.getInstance();
+        myFirebaseUser = myFirebaseAuth.getCurrentUser();
+        if (myFirebaseUser == null) {
             startActivity(new Intent(this, LoginActivity.class));
             finish();
         } else {
@@ -115,9 +113,9 @@ public class
         };
 
         //Display user details
-        //userAvatarIV.setImageURI(mUser.getPhotoUrl());
-        //userIDTV.setText(mUser.getDisplayName());
-        //userEmailTV.setText(mUser.getEmail());
+        userAvatarIV.setImageURI(mUser.getPhotoUrl());
+        userIDTV.setText(mUser.getDisplayName());
+        userEmailTV.setText(mUser.getEmail());
 
         //Set up recyclerview
         currentListingsRV.setLayoutManager(new LinearLayoutManager(this));
@@ -180,7 +178,7 @@ public class
     public void onStart() {
         super.onStart();
         //Sets a listener to catch when the user is signing in.
-        mAuth.addAuthStateListener(mAuthListener);
+        mFirebaseAuth.addAuthStateListener(mAuthListener);
     }
 
     //On stop method
@@ -189,7 +187,7 @@ public class
         super.onStop();
         //Sets listener to catch when the user is signing out.
         if (mAuthListener != null) {
-            mAuth.removeAuthStateListener(mAuthListener);
+            mFirebaseAuth.removeAuthStateListener(mAuthListener);
         }
     }
     /**
@@ -215,7 +213,7 @@ public class
             //If item is logout
             case R.id.action_logout:
                 //Sign out of the authenticator and return to login activity.
-                mAuth.signOut();
+                mFirebaseAuth.signOut();
                 this.startActivity(new Intent(this, LoginActivity.class));
                 return true;
 
