@@ -1,7 +1,6 @@
-package com.riversidecorps.rebuy;
+package com.riversidecorps.rebuy.AccountManagement;
 
 import android.content.Intent;
-import android.icu.text.NumberFormat;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -18,22 +17,20 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
+import com.riversidecorps.rebuy.ListingManagement.CreateListingActivity;
+import com.riversidecorps.rebuy.ListingManagement.ListingHolder;
+import com.riversidecorps.rebuy.ListingManagement.SearchListingsActivity;
+import com.riversidecorps.rebuy.ListingManagement.ViewListingsActivity;
+import com.riversidecorps.rebuy.OfferManagement.OffersActivity;
+import com.riversidecorps.rebuy.R;
 import com.riversidecorps.rebuy.models.Listing;
-
-import java.util.Currency;
-import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -44,11 +41,13 @@ import static android.content.ContentValues.TAG;
  * The type My account activity.
  */
 public class
-AccountActivity extends AppCompatActivity
+  MyAccountActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private FirebaseUser mUser = mAuth.getCurrentUser();
+    private FirebaseAuth.AuthStateListener mAuthListener;
+
     private static final String AUTH_IN = "onAuthStateChanged:signed_in:";
     private static final String AUTH_OUT = "onAuthStateChanged:signed_out";
 
@@ -67,7 +66,7 @@ AccountActivity extends AppCompatActivity
     // TO DO - CHECK OFFLINE & DISPLAY ERROR IF SO, LOAD IMAGES
     // ALSO MAYBE CREATE NEW SECTION FOR LISTING PREVIEWS IN FIREBASE TO AVOID LOADING OTHER INFOS
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+        protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_account);
 
@@ -77,9 +76,9 @@ AccountActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         //Prevents being required to login every time
-        myFirebaseAuth = FirebaseAuth.getInstance();
-        myFirebaseUser = myFirebaseAuth.getCurrentUser();
-        if (myFirebaseUser == null) {
+        mAuth = FirebaseAuth.getInstance();
+        mUser = mAuth.getCurrentUser();
+        if (mUser == null) {
             startActivity(new Intent(this, LoginActivity.class));
             finish();
         } else {
@@ -113,9 +112,9 @@ AccountActivity extends AppCompatActivity
         };
 
         //Display user details
-        userAvatarIV.setImageURI(mUser.getPhotoUrl());
-        userIDTV.setText(mUser.getDisplayName());
-        userEmailTV.setText(mUser.getEmail());
+        //userAvatarIV.setImageURI(mUser.getPhotoUrl());
+        //userIDTV.setText(mUser.getDisplayName());
+        //userEmailTV.setText(mUser.getEmail());
 
         //Set up recyclerview
         currentListingsRV.setLayoutManager(new LinearLayoutManager(this));
@@ -178,7 +177,7 @@ AccountActivity extends AppCompatActivity
     public void onStart() {
         super.onStart();
         //Sets a listener to catch when the user is signing in.
-        mFirebaseAuth.addAuthStateListener(mAuthListener);
+        mAuth.addAuthStateListener(mAuthListener);
     }
 
     //On stop method
@@ -187,7 +186,7 @@ AccountActivity extends AppCompatActivity
         super.onStop();
         //Sets listener to catch when the user is signing out.
         if (mAuthListener != null) {
-            mFirebaseAuth.removeAuthStateListener(mAuthListener);
+            mAuth.removeAuthStateListener(mAuthListener);
         }
     }
     /**
@@ -213,7 +212,7 @@ AccountActivity extends AppCompatActivity
             //If item is logout
             case R.id.action_logout:
                 //Sign out of the authenticator and return to login activity.
-                mFirebaseAuth.signOut();
+                mAuth.signOut();
                 this.startActivity(new Intent(this, LoginActivity.class));
                 return true;
 
@@ -252,6 +251,8 @@ AccountActivity extends AppCompatActivity
             startActivity(new Intent(this, SearchListingsActivity.class));
         } else if (id == R.id.nav_create_listing) {
             startActivity(new Intent(this, CreateListingActivity.class));
+        } else if (id == R.id.nav_view_listings) {
+            startActivity(new Intent(this, ViewListingsActivity.class));
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

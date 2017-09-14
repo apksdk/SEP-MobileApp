@@ -1,4 +1,4 @@
-package com.riversidecorps.rebuy;
+package com.riversidecorps.rebuy.AccountManagement;
 
 /**
  * Created by Sean on 13/09/2017.
@@ -23,7 +23,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.riversidecorps.rebuy.AccountManagement.LoginActivity;
+import com.riversidecorps.rebuy.R;
 
 import static android.content.ContentValues.TAG;
 

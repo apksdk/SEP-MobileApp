@@ -1,7 +1,9 @@
-package com.riversidecorps.rebuy;
+package com.riversidecorps.rebuy.ListingManagement;
 
-import android.os.Bundle;
 import android.app.Activity;
+import android.os.Bundle;
+
+import com.riversidecorps.rebuy.R;
 
 public class ViewListingsActivity extends Activity {
 

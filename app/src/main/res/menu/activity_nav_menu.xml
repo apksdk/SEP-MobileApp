@@ -22,5 +22,9 @@
             android:id="@+id/nav_create_listing"
             android:icon="@drawable/ic_menu_create_listing"
             android:title="Create A Listing" />
+        <item
+            android:id="@+id/nav_view_listings"
+            android:icon="@drawable/ic_menu_create_listing"
+            android:title="View Listings" />
     </group>
 </menu>
