@@ -44,11 +44,13 @@ import static android.content.ContentValues.TAG;
  * The type My account activity.
  */
 public class 
-  AccountActivity extends AppCompatActivity
+  MyAccountActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private FirebaseUser mUser = mAuth.getCurrentUser();
+    private FirebaseAuth.AuthStateListener mAuthListener;
+
     private static final String AUTH_IN = "onAuthStateChanged:signed_in:";
     private static final String AUTH_OUT = "onAuthStateChanged:signed_out";
 
@@ -77,9 +79,9 @@ public class
         setSupportActionBar(toolbar);
 
         //Prevents being required to login every time
-        myFirebaseAuth = FirebaseAuth.getInstance();
-        myFirebaseUser = myFirebaseAuth.getCurrentUser();
-        if (myFirebaseUser == null) {
+        mAuth = FirebaseAuth.getInstance();
+        mUser = mAuth.getCurrentUser();
+        if (mUser == null) {
             startActivity(new Intent(this, LoginActivity.class));
             finish();
         } else {
@@ -113,9 +115,9 @@ public class
         };
 
         //Display user details
-        userAvatarIV.setImageURI(mUser.getPhotoUrl());
-        userIDTV.setText(mUser.getDisplayName());
-        userEmailTV.setText(mUser.getEmail());
+        //userAvatarIV.setImageURI(mUser.getPhotoUrl());
+        //userIDTV.setText(mUser.getDisplayName());
+        //userEmailTV.setText(mUser.getEmail());
 
         //Set up recyclerview
         currentListingsRV.setLayoutManager(new LinearLayoutManager(this));
@@ -178,7 +180,7 @@ public class
     public void onStart() {
         super.onStart();
         //Sets a listener to catch when the user is signing in.
-        mFirebaseAuth.addAuthStateListener(mAuthListener);
+        mAuth.addAuthStateListener(mAuthListener);
     }
 
     //On stop method
@@ -187,7 +189,7 @@ public class
         super.onStop();
         //Sets listener to catch when the user is signing out.
         if (mAuthListener != null) {
-            mFirebaseAuth.removeAuthStateListener(mAuthListener);
+            mAuth.removeAuthStateListener(mAuthListener);
         }
     }
     /**
@@ -213,7 +215,7 @@ public class
             //If item is logout
             case R.id.action_logout:
                 //Sign out of the authenticator and return to login activity.
-                mFirebaseAuth.signOut();
+                mAuth.signOut();
                 this.startActivity(new Intent(this, LoginActivity.class));
                 return true;
 
