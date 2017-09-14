@@ -1,4 +1,4 @@
-package com.riversidecorps.rebuy.ListingManagement;
+package com.riversidecorps.rebuy;
 
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;

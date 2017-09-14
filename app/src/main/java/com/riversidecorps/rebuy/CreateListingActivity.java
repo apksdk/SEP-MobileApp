@@ -1,4 +1,4 @@
-package com.riversidecorps.rebuy.ListingManagement;
+package com.riversidecorps.rebuy;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,13 +16,10 @@ import android.view.View;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.riversidecorps.rebuy.AccountManagement.LoginActivity;
-import com.riversidecorps.rebuy.R;
-import com.riversidecorps.rebuy.AccountManagement.ResetPasswordActivity;
 
 import static android.content.ContentValues.TAG;
 
-public class SearchListingsActivity extends AppCompatActivity
+public class CreateListingActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private FirebaseAuth myFirebaseAuth;
@@ -35,7 +32,7 @@ public class SearchListingsActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_search_listings);
+        setContentView(R.layout.activity_create_listing);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -93,7 +90,7 @@ public class SearchListingsActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         //Inflates the menu menu_other which includes logout and quit functions.
-        getMenuInflater().inflate(R.menu.search_listings, menu);
+        getMenuInflater().inflate(R.menu.create_listing, menu);
         return true;
     }
 
@@ -146,13 +143,14 @@ public class SearchListingsActivity extends AppCompatActivity
         } else if (id == R.id.nav_search_listings) {
 
         }
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
-    // REMOVE THIS METHOD WHEN IMPLEMENTING
-    public void singleItemClickHandler(View view) {
-        startActivity(new Intent(this, SingleListingActivity.class));
+    public void cancelListingBtnHandler(View view) {
+        //Needs to check if there's changes, then ask if they want to confirm
+        finish();
     }
 }

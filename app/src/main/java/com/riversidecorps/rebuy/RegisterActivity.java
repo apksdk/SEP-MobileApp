@@ -1,4 +1,4 @@
-package com.riversidecorps.rebuy.AccountManagement;
+package com.riversidecorps.rebuy;
 
 import android.app.ProgressDialog;
 import android.content.Intent;

@@ -1,4 +1,4 @@
-package com.riversidecorps.rebuy.OfferManagement;
+package com.riversidecorps.rebuy;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,9 +15,6 @@ import android.view.MenuItem;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.riversidecorps.rebuy.AccountManagement.LoginActivity;
-import com.riversidecorps.rebuy.R;
-import com.riversidecorps.rebuy.AccountManagement.ResetPasswordActivity;
 
 import static android.content.ContentValues.TAG;
 

@@ -1,4 +1,4 @@
-package com.riversidecorps.rebuy.AccountManagement;
+package com.riversidecorps.rebuy;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -24,12 +24,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-import com.riversidecorps.rebuy.ListingManagement.CreateListingActivity;
-import com.riversidecorps.rebuy.ListingManagement.ListingHolder;
-import com.riversidecorps.rebuy.ListingManagement.SearchListingsActivity;
-import com.riversidecorps.rebuy.ListingManagement.ViewListingsActivity;
-import com.riversidecorps.rebuy.OfferManagement.OffersActivity;
-import com.riversidecorps.rebuy.R;
 import com.riversidecorps.rebuy.models.Listing;
 
 import butterknife.BindView;

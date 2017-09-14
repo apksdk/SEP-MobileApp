@@ -1,4 +1,4 @@
-package com.riversidecorps.rebuy.ListingManagement;
+package com.riversidecorps.rebuy;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,17 +12,12 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.riversidecorps.rebuy.AccountManagement.LoginActivity;
-import com.riversidecorps.rebuy.R;
-import com.riversidecorps.rebuy.AccountManagement.ResetPasswordActivity;
-
 import static android.content.ContentValues.TAG;
 
-public class CreateListingActivity extends AppCompatActivity
+public class SingleListingActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private FirebaseAuth myFirebaseAuth;
@@ -35,7 +30,7 @@ public class CreateListingActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_listing);
+        setContentView(R.layout.activity_single_listing);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -93,7 +88,7 @@ public class CreateListingActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         //Inflates the menu menu_other which includes logout and quit functions.
-        getMenuInflater().inflate(R.menu.create_listing, menu);
+        getMenuInflater().inflate(R.menu.single_listing, menu);
         return true;
     }
 
@@ -150,10 +145,5 @@ public class CreateListingActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-    public void cancelListingBtnHandler(View view) {
-        //Needs to check if there's changes, then ask if they want to confirm
-        finish();
     }
 }

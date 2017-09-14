@@ -1,4 +1,4 @@
-package com.riversidecorps.rebuy.AccountManagement;
+package com.riversidecorps.rebuy;
 
 /**
  * Created by Sean on 13/09/2017.

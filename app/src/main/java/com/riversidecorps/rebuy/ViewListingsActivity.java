@@ -1,4 +1,4 @@
-package com.riversidecorps.rebuy.ListingManagement;
+package com.riversidecorps.rebuy;
 
 import android.app.Activity;
 import android.os.Bundle;

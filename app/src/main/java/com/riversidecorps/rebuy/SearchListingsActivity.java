@@ -1,4 +1,4 @@
-package com.riversidecorps.rebuy.ListingManagement;
+package com.riversidecorps.rebuy;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,16 +12,14 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.riversidecorps.rebuy.AccountManagement.LoginActivity;
-import com.riversidecorps.rebuy.R;
-import com.riversidecorps.rebuy.AccountManagement.ResetPasswordActivity;
 
 import static android.content.ContentValues.TAG;
 
-public class SingleListingActivity extends AppCompatActivity
+public class SearchListingsActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private FirebaseAuth myFirebaseAuth;
@@ -34,7 +32,7 @@ public class SingleListingActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_single_listing);
+        setContentView(R.layout.activity_search_listings);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -92,7 +90,7 @@ public class SingleListingActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         //Inflates the menu menu_other which includes logout and quit functions.
-        getMenuInflater().inflate(R.menu.single_listing, menu);
+        getMenuInflater().inflate(R.menu.search_listings, menu);
         return true;
     }
 
@@ -145,9 +143,13 @@ public class SingleListingActivity extends AppCompatActivity
         } else if (id == R.id.nav_search_listings) {
 
         }
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    // REMOVE THIS METHOD WHEN IMPLEMENTING
+    public void singleItemClickHandler(View view) {
+        startActivity(new Intent(this, SingleListingActivity.class));
     }
 }
