@@ -15,7 +15,6 @@ import android.view.MenuItem;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
 import static android.content.ContentValues.TAG;
 
 public class SingleListingActivity extends AppCompatActivity
