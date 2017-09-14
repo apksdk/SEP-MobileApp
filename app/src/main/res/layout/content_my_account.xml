@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:layout_margin="16dp"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.riversidecorps.rebuy.AccountManagement.MyAccountActivity"
+    tools:context="com.riversidecorps.rebuy.MyAccountActivity"
     tools:showIn="@layout/app_bar_my_account">
 
     <ScrollView

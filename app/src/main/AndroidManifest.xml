@@ -49,6 +49,10 @@
             android:name=".ResetPasswordActivity"
             android:label="@string/title_activity_reset_password"
             android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".ViewListingsActivity"
+            android:label="@string/title_activity_view_listing"
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>
