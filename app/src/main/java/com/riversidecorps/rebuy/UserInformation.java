@@ -1,4 +1,5 @@
 package com.riversidecorps.rebuy;
+
 /**
  * Class to store account details while they are moved to the database
  * @author Sean Carmichael

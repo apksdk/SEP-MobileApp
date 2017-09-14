@@ -19,6 +19,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.riversidecorps.rebuy.R;
 
+
 import static android.content.ContentValues.TAG;
 
 /**
