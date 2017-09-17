@@ -1,6 +1,7 @@
 package com.riversidecorps.rebuy.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -94,9 +95,9 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
             viewHolder.view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-           /*     Intent intent = new Intent(context, ViewItem.class);
-                intent.putExtra(context.getString(R.string.notification_id), itemLists.get(viewHolder.getAdapterPosition()).getId());
-                context.startActivity(intent);*/
+                Intent intent = new Intent(context,com.riversidecorps.rebuy.SingleListingActivity.class );
+                intent.putExtra(context.getString(R.string.item_id), itemLists.get(viewHolder.getAdapterPosition()).getItemID());
+                context.startActivity(intent);
 
             }
         });

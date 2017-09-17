@@ -73,4 +73,6 @@
     <string name="seller_pre">Seller:</string>
     <string name="description_pre">Description:</string>
     <string name="date_pre">Date:</string>
+
+    <string name="item_id" >ITEM_ID</string>
 </resources>
