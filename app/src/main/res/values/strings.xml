@@ -65,4 +65,14 @@
     <string name="title_activity_message_inbox">Message Inbox</string>
     <string name="title_activity_reset_password">Reset Password</string>
     <string name="title_activity_view_listing">View Listings</string>
+
+    <!-- Strings related to the item -->
+    <string name="title_pre">Title: </string>
+    <string name="price_pre">Price: </string>
+    <string name="quantity_pre">Quantity:</string>
+    <string name="seller_pre">Seller:</string>
+    <string name="description_pre">Description:</string>
+    <string name="date_pre">Date:</string>
+
+    <string name="item_id" >ITEM_ID</string>
 </resources>

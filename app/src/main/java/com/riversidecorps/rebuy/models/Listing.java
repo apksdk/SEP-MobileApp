@@ -1,6 +1,7 @@
 package com.riversidecorps.rebuy.models;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * This is the listing model that contains all relevant data regarding to the listing.
@@ -17,6 +18,8 @@ public class Listing {
     private ArrayList<String> mItemImages;
     private Boolean mItemDeleted;
     private Boolean mItemCompleted;
+    private Date mCreatedDate;
+
 
     /**
      * Instantiates a new Listing.
@@ -36,7 +39,7 @@ public class Listing {
      * @param itemPrice       the item price
      * @param itemDescription the item description
      */
-    public Listing(String itemSeller, String itemName, Integer itemQuantity, String itemPrice, String itemDescription) {
+    public Listing(String itemSeller, String itemName, Integer itemQuantity, String itemPrice, String itemDescription, Date itemDate) {
         mItemSeller = itemSeller;
         mItemName = itemName;
         mItemQuantity = itemQuantity;
@@ -44,6 +47,7 @@ public class Listing {
         mItemDescription = itemDescription;
         mItemDeleted = false;
         mItemCompleted = false;
+        mCreatedDate=itemDate;
     }
 
     /**
@@ -169,4 +173,8 @@ public class Listing {
     public void setItemCompleted(Boolean itemCompleted) {
         mItemCompleted = itemCompleted;
     }
+
+    public Date getmCreatedDate() { return mCreatedDate; }
+
+    public void setmCreatedDate(Date mCreatedDate) { this.mCreatedDate = mCreatedDate; }
 }
