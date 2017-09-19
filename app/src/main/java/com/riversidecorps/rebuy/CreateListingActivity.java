@@ -13,6 +13,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -28,6 +30,11 @@ public class CreateListingActivity extends AppCompatActivity
 
     private static final String AUTH_IN = "onAuthStateChanged:signed_in:";
     private static final String AUTH_OUT = "onAuthStateChanged:signed_out";
+    private EditText itemNameET;
+    private EditText itemQantityET;
+    private EditText itemPriceET;
+    private EditText itemDescriptionET;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
