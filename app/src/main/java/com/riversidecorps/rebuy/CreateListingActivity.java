@@ -1,5 +1,6 @@
 package com.riversidecorps.rebuy;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,22 +14,36 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import static android.content.ContentValues.TAG;
 
 public class CreateListingActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener{
 
     private FirebaseAuth myFirebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseUser myFirebaseUser;
+    private DatabaseReference databaseReference;
+    private static final String DB_LISTING = "Listings";
 
     private static final String AUTH_IN = "onAuthStateChanged:signed_in:";
     private static final String AUTH_OUT = "onAuthStateChanged:signed_out";
+    private EditText itemNameET;
+    private EditText itemQantityET;
+    private EditText itemPriceET;
+    private EditText itemDescriptionET;
+    private Button confirmListingBTN,cancelListingBTN;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,8 +52,18 @@ public class CreateListingActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        databaseReference = FirebaseDatabase.getInstance().getReference();
+
+        itemNameET = (EditText)findViewById(R.id.itemNameET);
+        itemQantityET = (EditText)findViewById(R.id.itemQuantityET);
+        itemPriceET = (EditText)findViewById(R.id.itemPriceET);
+        itemDescriptionET = (EditText)findViewById(R.id.itemDescriptionET);
+        confirmListingBTN =(Button)findViewById(R.id.confirmListingBTN);
+        cancelListingBTN =(Button)findViewById(R.id.cancelListingBTN);
+
         myFirebaseAuth = FirebaseAuth.getInstance();
         myFirebaseUser = myFirebaseAuth.getCurrentUser();
+        confirmListingBTN.setOnClickListener(this);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -48,6 +73,10 @@ public class CreateListingActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+
+
+
 
         //Set listener that triggers when a user signs out
         mAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -153,5 +182,27 @@ public class CreateListingActivity extends AppCompatActivity
     public void cancelListingBtnHandler(View view) {
         //Needs to check if there's changes, then ask if they want to confirm
         finish();
+    }
+
+    private void saveItemInformation(){
+        String name = itemNameET.getText().toString().trim();
+        int quantity = Integer.parseInt(itemQantityET.getText().toString().trim());
+        double price = Double.parseDouble(itemPriceET.getText().toString().trim());
+        String description = itemDescriptionET.getText().toString().trim();
+
+        ItemInformation itemInformation = new ItemInformation(name,quantity,price,description);
+        FirebaseUser myFirebaseUser = myFirebaseAuth.getCurrentUser();
+        databaseReference.child(DB_LISTING).child(myFirebaseUser.getUid()).setValue(itemInformation);
+        Toast.makeText(this,"Creating please wait...",Toast.LENGTH_LONG).show();
+
+    }
+    @Override
+    public void onClick(View view) {
+        if(view == confirmListingBTN){
+            saveItemInformation();
+            CreateListingActivity.this.startActivity(new Intent(CreateListingActivity.this, MyAccountActivity.class));
+        }else if(view == cancelListingBTN ){
+            CreateListingActivity.this.startActivity(new Intent(CreateListingActivity.this, MyAccountActivity.class));
+        }
     }
 }

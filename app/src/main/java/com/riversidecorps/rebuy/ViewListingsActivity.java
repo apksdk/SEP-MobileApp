@@ -82,8 +82,10 @@ public class ViewListingsActivity extends AppCompatActivity
         // Mock
         Listing item_one=new Listing("Jimmy", "Valyrian steel", 1, "$1000", "Made in Valyria", new Date());
         Listing item_two=new Listing("Daenerys", "Dragonglass", 10, "$500", "Made in Dragonstone", new Date());
+        Listing item_three=new Listing("adam", "ballot", 5, "$250", "Made in Dragonstone", new Date());
         mItemList.add(item_one);
         mItemList.add(item_two);
+        mItemList.add(item_three);
 
         mRecyclerView = findViewById(R.id.recycler_view);
         mAdapter = new ItemAdapter(this, mItemList);
