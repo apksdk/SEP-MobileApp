@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -30,6 +31,11 @@ public class SingleListingActivity extends AppCompatActivity
     private static final String AUTH_OUT = "onAuthStateChanged:signed_out";
     private Button offerBTN,buyBTN;
 
+    private String itemID;
+    private String itemName;
+    private String itemPrice;
+    private String itemDes;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +45,20 @@ public class SingleListingActivity extends AppCompatActivity
 
         myFirebaseAuth = FirebaseAuth.getInstance();
         myFirebaseUser = myFirebaseAuth.getCurrentUser();
+
+        itemID = getIntent().getStringExtra("itemID");
+        itemName = getIntent().getStringExtra("itemName");
+        itemPrice = getIntent().getStringExtra("itemPrice");
+        itemDes = getIntent().getStringExtra("itemDes");
+
+        TextView iNameTv = (TextView) findViewById(R.id.itemNameTV);
+        iNameTv.setText(itemName);
+
+        TextView iPriceTv = (TextView) findViewById(R.id.itemPriceTV);
+        iPriceTv.setText(itemPrice);
+
+        TextView iDesTv = (TextView) findViewById(R.id.descriptionTV);
+        iDesTv.setText(itemDes);
 
         offerBTN = (Button)findViewById(R.id.offerBTN);
         buyBTN = (Button)findViewById(R.id.buyBTN);
@@ -60,6 +80,8 @@ public class SingleListingActivity extends AppCompatActivity
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     // User is signed in
+                    TextView loginInfor = (TextView) findViewById(R.id.logininfor);
+                    loginInfor.setText("Welcome, " + user.getDisplayName() + "!");
                     Log.d(TAG, AUTH_IN + user.getUid());
                 } else {
                     // User is signed out
@@ -142,13 +164,16 @@ public class SingleListingActivity extends AppCompatActivity
         if (id == R.id.nav_my_account) {
             // Handle the camera action
         } else if (id == R.id.nav_message_inbox) {
-
+            startActivity(new Intent(this, MessageInboxActivity.class));
         } else if (id == R.id.nav_offers) {
-
+            startActivity(new Intent(this, OffersActivity.class));
         } else if (id == R.id.nav_search_listings) {
-
+            startActivity(new Intent(this, SearchListingsActivity.class));
+        } else if (id == R.id.nav_create_listing) {
+            startActivity(new Intent(this, CreateListingActivity.class));
+        } else if (id == R.id.nav_view_listings) {
+            startActivity(new Intent(this, ViewListingsActivity.class));
         }
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;

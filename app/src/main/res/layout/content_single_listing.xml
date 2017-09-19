@@ -9,6 +9,15 @@
     tools:context="com.riversidecorps.rebuy.SingleListingActivity"
     tools:showIn="@layout/app_bar_single_listing">
 
+    <TextView
+        android:id="@+id/logininfor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="You are not logged in!"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
     <ImageView
         android:id="@+id/itemImageIV"
         android:layout_width="160dp"
@@ -53,7 +62,8 @@
         android:layout_marginBottom="4dp"
         android:layout_marginTop="8dp"
         android:text="Example Item #1"
-        android:textSize="18sp" />
+        android:textSize="22sp"
+        android:textStyle="bold"/>
 
     <TextView
         android:id="@+id/itemPriceTV"
@@ -63,7 +73,8 @@
         android:layout_below="@+id/itemNameTV"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="8dp"
-        android:text="Price: $4.99" />
+        android:text="Price: $4.99"
+        android:textStyle="italic"/>
 
     <TextView
         android:id="@+id/itemDescriptionTV"
@@ -71,7 +82,8 @@
         android:layout_height="wrap_content"
         android:textSize="16sp"
         android:layout_below="@+id/itemPriceTV"
-        android:text="Description:" />
+        android:text="Description:"
+        android:textStyle="bold"/>
 
     <TextView
         android:id="@+id/descriptionTV"
@@ -104,5 +116,7 @@
             android:layout_weight="1"
             android:text="Buy It Now" />
     </LinearLayout>
+
+
 
 </RelativeLayout>

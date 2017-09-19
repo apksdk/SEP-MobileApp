@@ -39,7 +39,8 @@ public class Listing {
      * @param itemPrice       the item price
      * @param itemDescription the item description
      */
-    public Listing(String itemSeller, String itemName, Integer itemQuantity, String itemPrice, String itemDescription, Date itemDate) {
+    public Listing(String itemID, String itemSeller, String itemName, Integer itemQuantity, String itemPrice, String itemDescription, Date itemDate) {
+        mItemID = itemID;
         mItemSeller = itemSeller;
         mItemName = itemName;
         mItemQuantity = itemQuantity;
