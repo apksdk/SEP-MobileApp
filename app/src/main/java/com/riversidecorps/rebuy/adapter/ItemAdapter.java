@@ -96,7 +96,10 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context,com.riversidecorps.rebuy.SingleListingActivity.class );
-                intent.putExtra(context.getString(R.string.item_id), itemLists.get(viewHolder.getAdapterPosition()).getItemID());
+                intent.putExtra("itemID", itemLists.get(viewHolder.getAdapterPosition()).getItemID());
+                intent.putExtra("itemName", itemLists.get(viewHolder.getAdapterPosition()).getItemName());
+                intent.putExtra("itemPrice", itemLists.get(viewHolder.getAdapterPosition()).getItemPrice());
+                intent.putExtra("itemDes", itemLists.get(viewHolder.getAdapterPosition()).getItemDescription());
                 context.startActivity(intent);
 
             }
