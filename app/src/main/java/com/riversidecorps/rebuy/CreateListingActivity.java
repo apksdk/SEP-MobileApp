@@ -73,6 +73,8 @@ public class CreateListingActivity extends AppCompatActivity
 
 
 
+
+
         //Set listener that triggers when a user signs out
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -184,10 +186,10 @@ public class CreateListingActivity extends AppCompatActivity
         int quantity = Integer.parseInt(itemQantityET.getText().toString().trim());
         double price = Double.parseDouble(itemPriceET.getText().toString().trim());
         String description = itemDescriptionET.getText().toString().trim();
-
-        ItemInformation itemInformation = new ItemInformation(name,quantity,price,description);
+        String sellerid = myFirebaseUser.getUid();
+        ItemInformation itemInformation = new ItemInformation(name,quantity,price,description,sellerid);
         FirebaseUser myFirebaseUser = myFirebaseAuth.getCurrentUser();
-        databaseReference.child(DB_LISTING).child(myFirebaseUser.getUid()).setValue(itemInformation);
+        databaseReference.child(DB_LISTING).child(myFirebaseUser.getUid()).push().setValue(itemInformation);
         Toast.makeText(this,"Creating please wait...",Toast.LENGTH_LONG).show();
 
     }
