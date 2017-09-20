@@ -197,7 +197,7 @@ public class ViewListingsActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_my_account) {
-            //Do nothing
+            startActivity(new Intent(this, MyAccountActivity.class));
         } else if (id == R.id.nav_message_inbox) {
             startActivity(new Intent(this, MessageInboxActivity.class));
         } else if (id == R.id.nav_offers) {
@@ -207,7 +207,7 @@ public class ViewListingsActivity extends AppCompatActivity
         } else if (id == R.id.nav_create_listing) {
             startActivity(new Intent(this, CreateListingActivity.class));
         } else if (id == R.id.nav_view_listings) {
-            startActivity(new Intent(this, ViewListingsActivity.class));
+            //Do nothing since current activity is view listings.
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
