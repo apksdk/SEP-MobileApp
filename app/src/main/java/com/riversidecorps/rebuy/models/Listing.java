@@ -9,16 +9,15 @@ import java.util.Date;
  * Created by Joshua on 9/12/2017.
  */
 public class Listing {
-    private String mItemID;
     private String mItemSeller;
     private String mItemName;
-    private Long mItemQuantity;
+    private Integer mItemQuantity;
     private String mItemPrice;
     private String mItemDescription;
     private ArrayList<String> mItemImages;
     private Boolean mItemDeleted;
     private Boolean mItemCompleted;
-    private Date mCreatedDate;
+    private String mCreatedDate;
 
 
     /**
@@ -39,8 +38,7 @@ public class Listing {
      * @param itemPrice       the item price
      * @param itemDescription the item description
      */
-    public Listing(String itemID, String itemSeller, String itemName, Long itemQuantity, String itemPrice, String itemDescription, Date itemDate) {
-        mItemID = itemID;
+    public Listing(String itemSeller, String itemName, Integer itemQuantity, String itemPrice, String itemDescription, String itemDate) {
         mItemSeller = itemSeller;
         mItemName = itemName;
         mItemQuantity = itemQuantity;
@@ -48,25 +46,7 @@ public class Listing {
         mItemDescription = itemDescription;
         mItemDeleted = false;
         mItemCompleted = false;
-        mCreatedDate=itemDate;
-    }
-
-    /**
-     * Gets item id.
-     *
-     * @return the item id
-     */
-    public String getItemID() {
-        return mItemID;
-    }
-
-    /**
-     * Sets item id.
-     *
-     * @param itemID the m item id
-     */
-    public void setItemID(String itemID) {
-        mItemID = itemID;
+        mCreatedDate = itemDate;
     }
 
     /**
@@ -110,7 +90,7 @@ public class Listing {
      *
      * @return the item quantity
      */
-    public Long getItemQuantity() {
+    public Integer getItemQuantity() {
         return mItemQuantity;
     }
 
@@ -119,7 +99,7 @@ public class Listing {
      *
      * @param itemQuantity the m item quantity
      */
-    public void setItemQuantity(Long itemQuantity) {
+    public void setItemQuantity(Integer itemQuantity) {
         mItemQuantity = itemQuantity;
     }
 
@@ -175,7 +155,7 @@ public class Listing {
         mItemCompleted = itemCompleted;
     }
 
-    public Date getmCreatedDate() { return mCreatedDate; }
+    public String getCreatedDate() { return mCreatedDate; }
 
-    public void setmCreatedDate(Date mCreatedDate) { this.mCreatedDate = mCreatedDate; }
+    public void setCreatedDate(String mCreatedDate) { this.mCreatedDate = mCreatedDate; }
 }

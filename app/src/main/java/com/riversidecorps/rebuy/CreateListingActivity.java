@@ -24,6 +24,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.riversidecorps.rebuy.models.Listing;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -38,15 +39,17 @@ public class CreateListingActivity extends AppCompatActivity
     private FirebaseUser myFirebaseUser;
     private DatabaseReference databaseReference;
     private FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
-    private static final String DB_LISTING = "Listings";
 
+    private static final String DB_LISTING = "Listings";
     private static final String AUTH_IN = "onAuthStateChanged:signed_in:";
     private static final String AUTH_OUT = "onAuthStateChanged:signed_out";
+
     private EditText itemNameET;
     private EditText itemQantityET;
     private EditText itemPriceET;
     private EditText itemDescriptionET;
     private Button confirmListingBTN,cancelListingBTN;
+
     private String userName;
 
     @Override
@@ -77,7 +80,6 @@ public class CreateListingActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
 
         String userID = myFirebaseUser.getUid();
         DatabaseReference userRef = mDatabase.getReference().child("users").child(userID).child("username");
@@ -201,10 +203,10 @@ public class CreateListingActivity extends AppCompatActivity
         finish();
     }
 
-    private void saveItemInformation(){
+    private void saveListing(){
         String name = itemNameET.getText().toString().trim();
-        int quantity = Integer.parseInt(itemQantityET.getText().toString().trim());
-        double price = Double.parseDouble(itemPriceET.getText().toString().trim());
+        Integer quantity = Integer.parseInt(itemQantityET.getText().toString().trim());
+        String price = itemPriceET.getText().toString().trim();
         String description = itemDescriptionET.getText().toString().trim();
         String sellerid = myFirebaseUser.getUid();
         FirebaseUser myFirebaseUser = myFirebaseAuth.getCurrentUser();
@@ -212,17 +214,17 @@ public class CreateListingActivity extends AppCompatActivity
         Date date = new Date();
         Date newDate = new Date(date.getTime() + (604800000L * 2) + (24 * 60 * 60));
         SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd");
-        String stringdate = dt.format(newDate);
+        String stringDate = dt.format(newDate);
 
-        ItemInformation itemInformation = new ItemInformation(name,quantity,price,description,sellerid,userName,stringdate);
-        databaseReference.child(DB_LISTING).push().setValue(itemInformation);
+        Listing newListing = new Listing(userName,name,quantity,price,description,stringDate);
+        databaseReference.child(DB_LISTING).push().setValue(newListing);
         Toast.makeText(this,"Wait for it, wait for it... ",Toast.LENGTH_LONG).show();
-
     }
+
     @Override
     public void onClick(View view) {
         if(view == confirmListingBTN){
-            saveItemInformation();
+            saveListing();
             CreateListingActivity.this.startActivity(new Intent(CreateListingActivity.this, MyAccountActivity.class));
         }else if(view == cancelListingBTN ){
             CreateListingActivity.this.startActivity(new Intent(CreateListingActivity.this, MyAccountActivity.class));

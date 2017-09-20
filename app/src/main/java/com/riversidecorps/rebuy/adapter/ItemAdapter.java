@@ -91,7 +91,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
         viewHolder.item_quantity.setText(itemLists.get(position).getItemQuantity().toString());
         viewHolder.item_seller.setText(itemLists.get(position).getItemSeller());
         viewHolder.item_description.setText(itemLists.get(position).getItemDescription());
-        Date date = itemLists.get(position).getmCreatedDate();
+        String date = itemLists.get(position).getCreatedDate();
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         String formatedDate = formatter.format(date);
         viewHolder.item_date.setText(formatedDate);

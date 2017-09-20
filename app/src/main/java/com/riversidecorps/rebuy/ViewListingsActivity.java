@@ -64,26 +64,27 @@ public class ViewListingsActivity extends AppCompatActivity
             //User is logged in;
         }
 
-        String userId=mUser.getUid();
+        String userId = mUser.getUid();
 
-// Attach a listener to read the data at our posts reference
+        // Attach a listener to read the data at our posts reference
         mdatabaseReference.child(LISTINGS).addValueEventListener (new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 mItemList.removeAll(mItemList);
                 for (DataSnapshot messageSnapshot : snapshot.getChildren()) {
 
-                    String name = (String) messageSnapshot.child("name").getValue();
-                    String description = (String) messageSnapshot.child("description").getValue();
-                    String price = (String) messageSnapshot.child("price").getValue().toString();
-                    Long quantity = (Long) messageSnapshot.child("quantity").getValue();
+                    String name = (String) messageSnapshot.child("itemName").getValue();
+                    String description = (String) messageSnapshot.child("itemDescription").getValue();
+                    String price = (String) messageSnapshot.child("itemPrice").getValue().toString();
+                    Integer quantity = (Integer) messageSnapshot.child("itemQuantity").getValue();
                     String sellerName = (String) messageSnapshot.child("sellerName").getValue();
                     String itemId =  messageSnapshot.getKey().toString();
-                    String itemDate=(String) messageSnapshot.child("date").getValue();
+                    String itemDate = (String) messageSnapshot.child("date").getValue();
                     DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+
                     try {
                         Date date = format.parse(itemDate);
-                        Listing newListing=new Listing(itemId,sellerName,name,quantity,price,description,date);
+                        Listing newListing = new Listing(sellerName,name,quantity,price,description,itemDate);
                         mItemList.add(newListing);
                     } catch (ParseException e) {
                         e.printStackTrace();

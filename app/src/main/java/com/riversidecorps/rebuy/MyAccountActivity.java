@@ -127,7 +127,7 @@ public class
             }
         });
         //Display user details
-        userAvatarIV.setImageURI(mUser.getPhotoUrl());
+        //userAvatarIV.setImageURI(mUser.getPhotoUrl());
         userEmailTV.setText(mUser.getEmail());
 
         //Set up recyclerview
@@ -137,6 +137,8 @@ public class
         currentListingsRV.addItemDecoration(dividerItemDecoration);
 
         DatabaseReference ref = mDatabase.getReference().child("Listings");
+//        Listing listing = new Listing("testuser", "Test Item", 1, "$4.99", "Default Description", "22/09/2017");
+//        ref.push().setValue(listing);
         Query query = ref.orderByChild("itemDeleted").equalTo(false);
         FirebaseRecyclerAdapter<Listing, ListingHolder> mAdapter = new FirebaseRecyclerAdapter<Listing, ListingHolder>(
                 Listing.class,
