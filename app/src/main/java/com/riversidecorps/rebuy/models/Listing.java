@@ -12,7 +12,7 @@ public class Listing {
     private String mItemID;
     private String mItemSeller;
     private String mItemName;
-    private Integer mItemQuantity;
+    private Long mItemQuantity;
     private String mItemPrice;
     private String mItemDescription;
     private ArrayList<String> mItemImages;
@@ -39,7 +39,7 @@ public class Listing {
      * @param itemPrice       the item price
      * @param itemDescription the item description
      */
-    public Listing(String itemID, String itemSeller, String itemName, Integer itemQuantity, String itemPrice, String itemDescription, Date itemDate) {
+    public Listing(String itemID, String itemSeller, String itemName, Long itemQuantity, String itemPrice, String itemDescription, Date itemDate) {
         mItemID = itemID;
         mItemSeller = itemSeller;
         mItemName = itemName;
@@ -110,7 +110,7 @@ public class Listing {
      *
      * @return the item quantity
      */
-    public Integer getItemQuantity() {
+    public Long getItemQuantity() {
         return mItemQuantity;
     }
 
@@ -119,7 +119,7 @@ public class Listing {
      *
      * @param itemQuantity the m item quantity
      */
-    public void setItemQuantity(Integer itemQuantity) {
+    public void setItemQuantity(Long itemQuantity) {
         mItemQuantity = itemQuantity;
     }
 

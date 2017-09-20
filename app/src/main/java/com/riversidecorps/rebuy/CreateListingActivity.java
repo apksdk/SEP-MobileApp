@@ -22,6 +22,9 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import static android.content.ContentValues.TAG;
 
 public class CreateListingActivity extends AppCompatActivity
@@ -187,10 +190,16 @@ public class CreateListingActivity extends AppCompatActivity
         double price = Double.parseDouble(itemPriceET.getText().toString().trim());
         String description = itemDescriptionET.getText().toString().trim();
         String sellerid = myFirebaseUser.getUid();
-        ItemInformation itemInformation = new ItemInformation(name,quantity,price,description,sellerid);
         FirebaseUser myFirebaseUser = myFirebaseAuth.getCurrentUser();
-        databaseReference.child(DB_LISTING).child(myFirebaseUser.getUid()).push().setValue(itemInformation);
-        Toast.makeText(this,"Creating please wait...",Toast.LENGTH_LONG).show();
+
+        Date date = new Date();
+        Date newDate = new Date(date.getTime() + (604800000L * 2) + (24 * 60 * 60));
+        SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd");
+        String stringdate = dt.format(newDate);
+
+        ItemInformation itemInformation = new ItemInformation(name,quantity,price,description,sellerid,myFirebaseUser.getDisplayName(),stringdate);
+        databaseReference.child(DB_LISTING).push().setValue(itemInformation);
+        Toast.makeText(this,"Login username: "+myFirebaseUser.getDisplayName(),Toast.LENGTH_LONG).show();
 
     }
     @Override

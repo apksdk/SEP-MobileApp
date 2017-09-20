@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -18,11 +19,20 @@ import android.view.MenuItem;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.riversidecorps.rebuy.adapter.ItemAdapter;
 import com.riversidecorps.rebuy.models.Listing;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 
 import static android.content.ContentValues.TAG;
 
@@ -31,11 +41,11 @@ public class ViewListingsActivity extends AppCompatActivity
     private RecyclerView mRecyclerView;
     private ItemAdapter mAdapter;
     private ArrayList<Listing> mItemList= new ArrayList<>();
-
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private FirebaseUser mUser = mAuth.getCurrentUser();
     private FirebaseAuth.AuthStateListener mAuthListener;
-
+    private DatabaseReference databaseReference;
+    private SwipeRefreshLayout swipeContainer;
     private static final String AUTH_IN = "onAuthStateChanged:signed_in:";
     private static final String AUTH_OUT = "onAuthStateChanged:signed_out";
     @Override
@@ -44,12 +54,56 @@ public class ViewListingsActivity extends AppCompatActivity
         setContentView(R.layout.activity_view_listings);
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
+        databaseReference = FirebaseDatabase.getInstance().getReference();
         if (mUser == null) {
             startActivity(new Intent(this, LoginActivity.class));
             finish();
         } else {
             //User is logged in;
         }
+
+        String userId=mUser.getUid();
+
+// Attach a listener to read the data at our posts reference
+        databaseReference.child("Listings").addValueEventListener (new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                mItemList.removeAll(mItemList);
+                for (DataSnapshot messageSnapshot : snapshot.getChildren()) {
+
+                    String name = (String) messageSnapshot.child("name").getValue();
+                    String description = (String) messageSnapshot.child("description").getValue();
+                    String price = (String) messageSnapshot.child("price").getValue().toString();
+                    Long quantity = (Long) messageSnapshot.child("quantity").getValue();
+                    String sellerName = (String) messageSnapshot.child("sellerName").getValue();
+                    String itemId =  messageSnapshot.getKey().toString();
+                    String itemDate=(String) messageSnapshot.child("date").getValue();
+                    DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+                    try {
+                        Date date = format.parse(itemDate);
+                        Listing newListing=new Listing(itemId,sellerName,name,quantity,price,description,date);
+                        mItemList.add(newListing);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                }
+                mAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("The read failed: " + databaseError.getCode());
+            }
+        });
+        mRecyclerView = findViewById(R.id.recycler_view);
+        mAdapter = new ItemAdapter(this, mItemList);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        mRecyclerView.setAdapter(mAdapter);
+        mAdapter.notifyDataSetChanged();
+
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -77,10 +131,31 @@ public class ViewListingsActivity extends AppCompatActivity
         };
 
 
-        // Fetch item listings from Firebase
+        swipeContainer = findViewById(R.id.swipeContainer);
+        // Setup refresh listener which triggers new data loading
+        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                swipeContainer.setRefreshing(true);
+                // Your code to refresh the list here.
+                // Make sure you call swipeContainer.setRefreshing(false)
+                // once the network request has completed successfully.
+                getResultsFromApi();
+            }
+        });
+        // Configure the refreshing colors
+        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+    }
+
+
+
+    // Fetch item listings from Firebase
 
         // Mock
-        Listing item_one=new Listing("1001", "Jimmy", "Valyrian steel", 1, "$1000", "Made in Valyria", new Date());
+/*        Listing item_one=new Listing("1001", "Jimmy", "Valyrian steel", 1, "$1000", "Made in Valyria", new Date());
         Listing item_two=new Listing("1002", "Daenerys", "Dragonglass", 10, "$500", "Made in Dragonstone", new Date());
         Listing item_three=new Listing("1003", "adam", "ballot", 5, "$250", "Made in Dragonstone", new Date());
         mItemList.add(item_one);
@@ -96,6 +171,7 @@ public class ViewListingsActivity extends AppCompatActivity
         mAdapter.notifyDataSetChanged();
 
     }
+    */
     @Override
     protected void onRestart() {
         super.onRestart();
@@ -152,6 +228,8 @@ public class ViewListingsActivity extends AppCompatActivity
             mAuth.removeAuthStateListener(mAuthListener);
         }
     }
+
+
     /**
      * Creates the options menu on the action bar.
      * @param menu Menu at the top right of the screen
@@ -187,4 +265,7 @@ public class ViewListingsActivity extends AppCompatActivity
 
         return super.onOptionsItemSelected(item);
     }
+    private void getResultsFromApi() {
+    }
+
 }
