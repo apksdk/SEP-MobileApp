@@ -50,6 +50,7 @@ public class
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private FirebaseUser mUser = mAuth.getCurrentUser();
     private FirebaseAuth.AuthStateListener mAuthListener;
+    private FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
 
     private static final String AUTH_IN = "onAuthStateChanged:signed_in:";
     private static final String AUTH_OUT = "onAuthStateChanged:signed_out";
@@ -79,8 +80,6 @@ public class
         setSupportActionBar(toolbar);
 
         //Prevents being required to login every time
-        mAuth = FirebaseAuth.getInstance();
-        mUser = mAuth.getCurrentUser();
         if (mUser == null) {
             startActivity(new Intent(this, LoginActivity.class));
             finish();
@@ -114,10 +113,22 @@ public class
             }
         };
 
+        String userID = mUser.getUid();
+        DatabaseReference userRef = mDatabase.getReference().child("users").child(userID).child("username");
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                userIDTV.setText(dataSnapshot.getValue(String.class));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
         //Display user details
-        //userAvatarIV.setImageURI(mUser.getPhotoUrl());
-        //userIDTV.setText(mUser.getDisplayName());
-        //userEmailTV.setText(mUser.getEmail());
+        userAvatarIV.setImageURI(mUser.getPhotoUrl());
+        userEmailTV.setText(mUser.getEmail());
 
         //Set up recyclerview
         currentListingsRV.setLayoutManager(new LinearLayoutManager(this));
@@ -125,7 +136,7 @@ public class
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
         currentListingsRV.addItemDecoration(dividerItemDecoration);
 
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("Listings");
+        DatabaseReference ref = mDatabase.getReference().child("Listings");
         Query query = ref.orderByChild("itemDeleted").equalTo(false);
         FirebaseRecyclerAdapter<Listing, ListingHolder> mAdapter = new FirebaseRecyclerAdapter<Listing, ListingHolder>(
                 Listing.class,
@@ -154,25 +165,6 @@ public class
             }
         };
         currentListingsRV.setAdapter(mAdapter);
-
-
-        //Listing listing = new Listing("testuser", "Test Item", 1, "$4.99", "Default Description");
-        //ref.child("Listings").push().setValue(listing);
-//        ref.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                for (DataSnapshot listingSnapshot : dataSnapshot.getChildren()) {
-//                    Listing listing = listingSnapshot.getValue(Listing.class);
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//                Toast failedToast = Toast.makeText(getBaseContext(), "Failed to retrieve listings...", Toast.LENGTH_LONG);
-//                failedToast.show();
-//            }
-//        });
-
     }
 
     //On start method
