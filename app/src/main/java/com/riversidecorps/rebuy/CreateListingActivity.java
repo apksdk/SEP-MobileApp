@@ -216,7 +216,7 @@ public class CreateListingActivity extends AppCompatActivity
 
         ItemInformation itemInformation = new ItemInformation(name,quantity,price,description,sellerid,userName,stringdate);
         databaseReference.child(DB_LISTING).push().setValue(itemInformation);
-        Toast.makeText(this,"Wait for it, wait for it... "+userName,Toast.LENGTH_LONG).show();
+        Toast.makeText(this,"Wait for it, wait for it... ",Toast.LENGTH_LONG).show();
 
     }
     @Override
