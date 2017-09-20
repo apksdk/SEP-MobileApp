@@ -44,17 +44,19 @@ public class ViewListingsActivity extends AppCompatActivity
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private FirebaseUser mUser = mAuth.getCurrentUser();
     private FirebaseAuth.AuthStateListener mAuthListener;
-    private DatabaseReference databaseReference;
+    private DatabaseReference mdatabaseReference;
+    private FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
     private SwipeRefreshLayout swipeContainer;
     private static final String AUTH_IN = "onAuthStateChanged:signed_in:";
     private static final String AUTH_OUT = "onAuthStateChanged:signed_out";
+    private static final String LISTINGS = "Listings";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_listings);
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
-        databaseReference = FirebaseDatabase.getInstance().getReference();
+        mdatabaseReference = FirebaseDatabase.getInstance().getReference();
         if (mUser == null) {
             startActivity(new Intent(this, LoginActivity.class));
             finish();
@@ -65,7 +67,7 @@ public class ViewListingsActivity extends AppCompatActivity
         String userId=mUser.getUid();
 
 // Attach a listener to read the data at our posts reference
-        databaseReference.child("Listings").addValueEventListener (new ValueEventListener() {
+        mdatabaseReference.child(LISTINGS).addValueEventListener (new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 mItemList.removeAll(mItemList);

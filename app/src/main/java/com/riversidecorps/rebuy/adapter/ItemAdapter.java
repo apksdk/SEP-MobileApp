@@ -11,6 +11,8 @@ import android.widget.TextView;
 import com.riversidecorps.rebuy.R;
 import com.riversidecorps.rebuy.models.Listing;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 
@@ -89,8 +91,10 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
         viewHolder.item_quantity.setText(itemLists.get(position).getItemQuantity().toString());
         viewHolder.item_seller.setText(itemLists.get(position).getItemSeller());
         viewHolder.item_description.setText(itemLists.get(position).getItemDescription());
-        viewHolder.item_date.setText(itemLists.get(position).getmCreatedDate().toString());
-
+        Date date = itemLists.get(position).getmCreatedDate();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        String formatedDate = formatter.format(date);
+        viewHolder.item_date.setText(formatedDate);
 
             viewHolder.view.setOnClickListener(new View.OnClickListener() {
             @Override

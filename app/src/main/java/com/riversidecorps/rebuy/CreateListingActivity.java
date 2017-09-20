@@ -19,8 +19,11 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -34,6 +37,7 @@ public class CreateListingActivity extends AppCompatActivity
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseUser myFirebaseUser;
     private DatabaseReference databaseReference;
+    private FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
     private static final String DB_LISTING = "Listings";
 
     private static final String AUTH_IN = "onAuthStateChanged:signed_in:";
@@ -43,7 +47,7 @@ public class CreateListingActivity extends AppCompatActivity
     private EditText itemPriceET;
     private EditText itemDescriptionET;
     private Button confirmListingBTN,cancelListingBTN;
-
+    private String userName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +79,19 @@ public class CreateListingActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
 
+        String userID = myFirebaseUser.getUid();
+        DatabaseReference userRef = mDatabase.getReference().child("users").child(userID).child("username");
+        userRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                userName=(dataSnapshot.getValue(String.class));
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
 
 
@@ -197,9 +214,9 @@ public class CreateListingActivity extends AppCompatActivity
         SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd");
         String stringdate = dt.format(newDate);
 
-        ItemInformation itemInformation = new ItemInformation(name,quantity,price,description,sellerid,myFirebaseUser.getDisplayName(),stringdate);
+        ItemInformation itemInformation = new ItemInformation(name,quantity,price,description,sellerid,userName,stringdate);
         databaseReference.child(DB_LISTING).push().setValue(itemInformation);
-        Toast.makeText(this,"Login username: "+myFirebaseUser.getDisplayName(),Toast.LENGTH_LONG).show();
+        Toast.makeText(this,"Wait for it, wait for it... "+userName,Toast.LENGTH_LONG).show();
 
     }
     @Override
