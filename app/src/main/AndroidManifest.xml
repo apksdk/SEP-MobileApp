@@ -19,7 +19,7 @@
         <activity android:name=".RegisterActivity" />
         <activity
             android:name=".MyAccountActivity"
-            android:label="Rebuy"
+            android:label="My Account"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
