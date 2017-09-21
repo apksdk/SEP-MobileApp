@@ -141,7 +141,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             registerUser();
         } else {
             //If back button go back to login activity
-            RegisterActivity.this.startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+            startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
         }
     }
 
@@ -284,13 +284,13 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     //Creates a toast to inform the user everything is set up
                     Toast.makeText(RegisterActivity.this, LOGIN_SUCCESS, Toast.LENGTH_SHORT).show();
                     //Moves the new user to the main activity
-                    RegisterActivity.this.startActivity(new Intent(RegisterActivity.this, MyAccountActivity.class));
+                    startActivity(new Intent(RegisterActivity.this, MyAccountActivity.class));
                     finish();
                     //If unsuccessful create a toast informing the user
                 } else {
                     Toast.makeText(RegisterActivity.this, LOGIN_FAILED, Toast.LENGTH_SHORT).show();
                     //Send the user to the login screen to attempt to login again
-                    RegisterActivity.this.startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+                    startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
                 }
             }
         });

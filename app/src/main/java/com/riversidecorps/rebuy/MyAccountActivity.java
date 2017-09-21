@@ -107,8 +107,9 @@ public class
 
         //Prevents being required to login every time
         if (mUser == null) {
-            startActivity(new Intent(this, LoginActivity.class));
+            startActivity(new Intent(MyAccountActivity.this, LoginActivity.class));
             finish();
+            return;
         } else {
             //User is logged in;
         }
@@ -120,7 +121,7 @@ public class
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     // User is signed in
-                    //Log.d(TAG, AUTH_IN + user.getUid());
+                    Log.d(TAG, AUTH_IN + user.getUid());
                 } else {
                     // User is signed out
                     Log.d(TAG, AUTH_OUT);
@@ -132,6 +133,7 @@ public class
         userAvatarIV.setClickable(true);
 
         String userID = mUser.getUid();
+
         DatabaseReference userRef = mDatabase.getReference().child("users").child(userID).child("username");
         userRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -328,5 +330,9 @@ public class
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void secondFinish() {
+        finish();
     }
 }

@@ -88,7 +88,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     // User is signed in
-                    //Log.d(TAG, AUTH_IN + user.getUid());
+                    Log.d(TAG, AUTH_IN + user.getUid());
                 } else {
                     // User is signed out
                     Log.d(TAG, AUTH_OUT);
@@ -128,7 +128,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             loginUser();
         } else {
             //If register moves to register activity
-            LoginActivity.this.startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
+            startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
         }
     }
 
@@ -190,7 +190,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     //If they match the database move to main activity
                     if (task.isSuccessful()) {
-                        LoginActivity.this.startActivity(new Intent(LoginActivity.this, MyAccountActivity.class));
+                        startActivity(new Intent(LoginActivity.this, MyAccountActivity.class));
                     } else {
                         //Else inform user that login was unsuccessful
                         Toast.makeText(LoginActivity.this, FAILED_LOGIN, Toast.LENGTH_SHORT).show();
