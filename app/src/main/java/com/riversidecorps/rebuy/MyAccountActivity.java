@@ -92,14 +92,6 @@ public class
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        //Prevents being required to login every time
-        if (mUser == null) {
-            startActivity(new Intent(this, LoginActivity.class));
-            finish();
-        } else {
-            //User is logged in;
-        }
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -109,6 +101,17 @@ public class
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        final View navView = navigationView.getHeaderView(0);
+        final TextView usernameNavTV = (TextView) navView.findViewById(R.id.userNavIDTV);
+        TextView emailNavTV = (TextView) navView.findViewById(R.id.userNavEmailTV);
+
+        //Prevents being required to login every time
+        if (mUser == null) {
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+        } else {
+            //User is logged in;
+        }
 
         //Set listener that triggers when a user signs out
         mAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -134,6 +137,7 @@ public class
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 userIDTV.setText(dataSnapshot.getValue(String.class));
+                usernameNavTV.setText(userIDTV.getText().toString());
             }
 
             @Override
@@ -144,6 +148,9 @@ public class
         //Display user details
         //userAvatarIV.setImageURI(mUser.getPhotoUrl());
         userEmailTV.setText(mUser.getEmail());
+
+        //Set up nav menu
+        emailNavTV.setText(mUser.getEmail());
 
         //Set up recyclerview
         currentListingsRV.setLayoutManager(new LinearLayoutManager(this));
