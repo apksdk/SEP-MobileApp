@@ -1,7 +1,9 @@
 package com.riversidecorps.rebuy;
 
+import android.annotation.TargetApi;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -20,6 +22,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.riversidecorps.rebuy.R;
+
+import java.util.Objects;
 
 import static android.content.ContentValues.TAG;
 
@@ -53,6 +57,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     EditText emailEt;
     EditText passwordEt;
     EditText usernameEt;
+    EditText confirmPassEt;
 
     //Firebase variables
     private FirebaseDatabase mFirebaseDatabase;
@@ -84,6 +89,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         emailEt = (EditText) findViewById(R.id.emailEt);
         passwordEt = (EditText) findViewById(R.id.passwordEt);
         usernameEt = (EditText) findViewById(R.id.usernameEt);
+        confirmPassEt = (EditText) findViewById(R.id.confirmPassEt);
 
         //Set a listener for the register button and one for the back button
         registerBtn.setOnClickListener(this);
@@ -142,11 +148,13 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     /**
      * Function that check if fields are valid and if so creates a user with them
      */
+    @TargetApi(Build.VERSION_CODES.KITKAT)
     private void registerUser() {
         //Gathers the string from the fields
         final String email = emailEt.getText().toString();
         final String password = passwordEt.getText().toString();
         final String username = usernameEt.getText().toString();
+        final String confirmPassword = confirmPassEt.getText().toString();
 
         //Initialises variables of validation process
         boolean cancel = false;
@@ -205,9 +213,29 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             }
         }
 
+        /**
+         * Checks to see if their confirmation password is the same as
+         * the password they originally supplied
+         * @param confPassword The confirmation password
+         * @param password The original password that was entered
+         * @return whether the passwords are the same or not
+         */
+        if (TextUtils.isEmpty(confirmPassword)) {
+            confirmPassEt.setError("Please confirm your password");
+            focusView = confirmPassEt;
+            cancel = true;
+        } else {
+            if (!Objects.equals(password, confirmPassword)) {
+                confirmPassEt.setError("These passwords do not match");
+                focusView = confirmPassEt;
+                cancel = true;
+            }
+        }
+
         // If there is an error, don't attempt login and focus the first
         if (cancel) {
             // form field with an error.
+            cancel = false;
             focusView.requestFocus();
         } else {
             //Show a progress dialog telling the user they are being registered
@@ -257,6 +285,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     Toast.makeText(RegisterActivity.this, LOGIN_SUCCESS, Toast.LENGTH_SHORT).show();
                     //Moves the new user to the main activity
                     RegisterActivity.this.startActivity(new Intent(RegisterActivity.this, MyAccountActivity.class));
+                    finish();
                     //If unsuccessful create a toast informing the user
                 } else {
                     Toast.makeText(RegisterActivity.this, LOGIN_FAILED, Toast.LENGTH_SHORT).show();

@@ -88,7 +88,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     // User is signed in
-                    Log.d(TAG, AUTH_IN + user.getUid());
+                    //Log.d(TAG, AUTH_IN + user.getUid());
                 } else {
                     // User is signed out
                     Log.d(TAG, AUTH_OUT);
