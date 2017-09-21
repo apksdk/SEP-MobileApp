@@ -83,7 +83,7 @@ public class CreateListingActivity extends AppCompatActivity
 
         String userID = myFirebaseUser.getUid();
         DatabaseReference userRef = mDatabase.getReference().child("users").child(userID).child("username");
-        userRef.addValueEventListener(new ValueEventListener() {
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 userName=(dataSnapshot.getValue(String.class));
