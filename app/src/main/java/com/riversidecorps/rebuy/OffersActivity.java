@@ -46,7 +46,6 @@ public class OffersActivity extends AppCompatActivity
     private String itemName,itemPrice,mitemQuantity, uid;
     private TextView itemNameTV;
     private TextView itemOriginalPriceTV;
-    private TextView itemQuantityTV;
     private TextView offerAuthorTV;
     private Button makeOfferBtn;
     private Button cancelBtn;
@@ -82,9 +81,6 @@ public class OffersActivity extends AppCompatActivity
 
         itemOriginalPriceTV = (TextView) findViewById(R.id.itemOriginalPriceTV);
         itemOriginalPriceTV.setText(itemPrice);
-
-        itemQuantityTV = (TextView) findViewById(R.id.itemQuantityTV);
-        itemQuantityTV.setText(mitemQuantity);
 
         offerAuthorTV = (TextView) findViewById(R.id.offerAuthorTV);
         offerAuthorTV.setText(uid);
@@ -212,36 +208,21 @@ public class OffersActivity extends AppCompatActivity
 
     private void makeOffer() {
         String itemName =  itemNameTV.getText().toString().trim();
-        /*Integer itemQuantity = Integer.parseInt(itemQuantityTV.getText().toString().trim());*/
+        /*I could catch any value of the itemQuantity in Single view listing page*/
+        //Integer itemQuantity = Integer.parseInt(getIntent().getStringExtra("itemQuantity").trim());
         double orginalPrice = Double.parseDouble(itemOriginalPriceTV.getText().toString().trim());
         double offerPrice = Double.parseDouble(itemOfferPriceET.getText().toString().trim());
-        /*String itemDes = getIntent().getStringExtra("itemDes").toString().trim();
+        String itemDes = getIntent().getStringExtra("itemDes").toString().trim();
         String buyerid = myFirebaseUser.getEmail();
-        FirebaseUser myFirebaseUser = myFirebaseAuth.getCurrentUser();
-
-        /*Date date = new Date();
-        Date newDate = new Date(date.getTime() + (604800000L * 2) + (24 * 60 * 60));
-        SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd");
-        String stringDate = dt.format(newDate);*/
-
-       /* Offer newOffer = new Offer(buyerid,itemName,itemQuantity,orginalPrice,offerPrice,itemDes);*/
-        Offer newOffer = new Offer(itemName,orginalPrice);
-        databaseReference.child(DB_OFFER).push().setValue(newOffer);
-        Toast.makeText(this,"Please wait for making offer ...",Toast.LENGTH_LONG).show();
-        /*String name = itemNameET.getText().toString().trim();
-        Integer quantity = Integer.parseInt(itemQantityET.getText().toString().trim());
-        String price = itemPriceET.getText().toString().trim();
-        String description = itemDescriptionET.getText().toString().trim();
-        String sellerid = myFirebaseUser.getUid();
         FirebaseUser myFirebaseUser = myFirebaseAuth.getCurrentUser();
 
         Date date = new Date();
         Date newDate = new Date(date.getTime() + (604800000L * 2) + (24 * 60 * 60));
         SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd");
         String stringDate = dt.format(newDate);
+        Offer newOffer = new Offer(buyerid,itemName,orginalPrice,offerPrice,stringDate,itemDes);
+        databaseReference.child(DB_OFFER).push().setValue(newOffer);
+        Toast.makeText(this,"Please wait for making offer ...",Toast.LENGTH_LONG).show();
 
-        Listing newListing = new Listing(userName,name,quantity,price,description,stringDate);
-        databaseReference.child(DB_LISTING).push().setValue(newListing);
-        Toast.makeText(this,"Wait for it, wait for it... ",Toast.LENGTH_LONG).show();*/
     }
 }
