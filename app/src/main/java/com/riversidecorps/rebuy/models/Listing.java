@@ -15,6 +15,7 @@ public class Listing {
     private String mItemPrice;
     private String mItemDescription;
     private ArrayList<String> mItemImages;
+    private String mItemImage;
     private Boolean mItemDeleted;
     private Boolean mItemCompleted;
     private String mCreatedDate;
@@ -37,6 +38,7 @@ public class Listing {
      * @param itemQuantity    the item quantity
      * @param itemPrice       the item price
      * @param itemDescription the item description
+     * @param itemDate        the item date
      */
     public Listing(String itemSeller, String itemName, Integer itemQuantity, String itemPrice, String itemDescription, String itemDate) {
         mItemSeller = itemSeller;
@@ -44,6 +46,21 @@ public class Listing {
         mItemQuantity = itemQuantity;
         mItemPrice = itemPrice;
         mItemDescription = itemDescription;
+        mItemDeleted = false;
+        mItemCompleted = false;
+        mCreatedDate = itemDate;
+    }
+
+    /**
+     * Instantiates a new Listing. Used for MyAccountActivity's RV Listings
+     *
+     * @param itemName  the item name
+     * @param itemPrice the item price
+     * @param itemDate  the item date
+     */
+    public Listing(String itemName, String itemPrice, String itemDate) {
+        mItemName = itemName;
+        mItemPrice = itemPrice;
         mItemDeleted = false;
         mItemCompleted = false;
         mCreatedDate = itemDate;
@@ -139,23 +156,71 @@ public class Listing {
         mItemDescription = itemDescription;
     }
 
+    /**
+     * Gets item deleted.
+     *
+     * @return the item deleted
+     */
     public Boolean getItemDeleted() {
         return mItemDeleted;
     }
 
+    /**
+     * Sets item deleted.
+     *
+     * @param itemDeleted the item deleted
+     */
     public void setItemDeleted(Boolean itemDeleted) {
         mItemDeleted = itemDeleted;
     }
 
+    /**
+     * Gets item completed.
+     *
+     * @return the item completed
+     */
     public Boolean getItemCompleted() {
         return mItemCompleted;
     }
 
+    /**
+     * Sets item completed.
+     *
+     * @param itemCompleted the item completed
+     */
     public void setItemCompleted(Boolean itemCompleted) {
         mItemCompleted = itemCompleted;
     }
 
+    /**
+     * Gets created date.
+     *
+     * @return the created date
+     */
     public String getCreatedDate() { return mCreatedDate; }
 
+    /**
+     * Sets created date.
+     *
+     * @param mCreatedDate the m created date
+     */
     public void setCreatedDate(String mCreatedDate) { this.mCreatedDate = mCreatedDate; }
+
+    /**
+     * Gets item image.
+     *
+     * @return the item image
+     */
+    public String getItemImage() {
+        return mItemImage;
+    }
+
+    /**
+     * Sets item image.
+     *
+     * @param mItemImage the m item image
+     */
+    public void setItemImage(String mItemImage) {
+        this.mItemImage = mItemImage;
+    }
 }
