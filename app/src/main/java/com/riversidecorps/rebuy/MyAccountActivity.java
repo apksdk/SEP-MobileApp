@@ -132,7 +132,7 @@ public class
 
         userAvatarIV.setClickable(true);
 
-        String userID = mUser.getUid();
+        final String userID = mUser.getUid();
 
         DatabaseReference userRef = mDatabase.getReference().child("users").child(userID).child("username");
         userRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -160,7 +160,7 @@ public class
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
         currentListingsRV.addItemDecoration(dividerItemDecoration);
 
-        DatabaseReference ref = mDatabase.getReference().child("Listings");
+        DatabaseReference ref = mDatabase.getReference().child("users").child(userID).child("Listings");
 //        Listing listing = new Listing("testuser", "Test Item", 1, "$4.99", "Default Description", "22/09/2017");
 //        ref.push().setValue(listing);
         Query query = ref.orderByChild("itemDeleted").equalTo(false);
@@ -188,6 +188,7 @@ public class
                 //Get the primary key of the item
                 viewHolder.setItemID(getRef(position).getKey());
                 Log.i("GetItemID", getRef(position).getKey());
+                viewHolder.setUserID(userID);
             }
         };
         currentListingsRV.setAdapter(mAdapter);

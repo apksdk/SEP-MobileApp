@@ -33,6 +33,7 @@ public class ListingHolder extends RecyclerView.ViewHolder {
     TextView mItemPriceTV;
 
     private String mItemID;
+    private String mUserID;
 
     public ListingHolder(View itemView) {
         super(itemView);
@@ -74,6 +75,7 @@ public class ListingHolder extends RecyclerView.ViewHolder {
                     public void onClick(DialogInterface dialogInterface, int i) {
                         DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
                         ref.child("Listings").child(mItemID).child("itemDeleted").setValue(true);
+                        ref.child("users").child(mUserID).child("Listings").child(mItemID).child("itemDeleted").setValue(true);
                         Toast listingRemoved = Toast.makeText(mItemNameTV.getContext(), "Your have removed your listing.", Toast.LENGTH_LONG);
                         listingRemoved.show();
                     }
@@ -88,5 +90,13 @@ public class ListingHolder extends RecyclerView.ViewHolder {
 
     public void setItemID(String itemID) {
         mItemID = itemID;
+    }
+
+    public String getUserID() {
+        return mUserID;
+    }
+
+    public void setUserID(String mUserID) {
+        this.mUserID = mUserID;
     }
 }
