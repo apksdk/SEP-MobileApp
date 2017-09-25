@@ -12,22 +12,45 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.riversidecorps.rebuy.models.Offer;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+
+import org.w3c.dom.Text;
 
 import static android.content.ContentValues.TAG;
 
 public class OffersActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener {
 
     private FirebaseAuth myFirebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseUser myFirebaseUser;
+    private DatabaseReference databaseReference;
 
+    private static final String DB_OFFER = "Offers";
     private static final String AUTH_IN = "onAuthStateChanged:signed_in:";
     private static final String AUTH_OUT = "onAuthStateChanged:signed_out";
-
+    private String itemName,itemPrice,mitemQuantity, uid;
+    private TextView itemNameTV;
+    private TextView itemOriginalPriceTV;
+    private TextView offerAuthorTV;
+    private Button makeOfferBtn;
+    private Button cancelBtn;
+    private EditText itemOfferPriceET;
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,8 +58,33 @@ public class OffersActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+
+        databaseReference = FirebaseDatabase.getInstance().getReference();
         myFirebaseAuth = FirebaseAuth.getInstance();
         myFirebaseUser = myFirebaseAuth.getCurrentUser();
+
+
+        uid = myFirebaseUser.getEmail();
+        itemName = getIntent().getStringExtra("itemName");
+        itemPrice = getIntent().getStringExtra("itemPrice");
+        mitemQuantity = getIntent().getStringExtra("itemQuantity");
+
+
+        makeOfferBtn = (Button) findViewById(R.id.makeOfferBtn);
+        cancelBtn = (Button) findViewById(R.id.cancelBtn);
+        itemOfferPriceET = (EditText) findViewById(R.id.itemOfferPriceET);
+        makeOfferBtn.setOnClickListener(this);
+        cancelBtn.setOnClickListener(this);
+
+        itemNameTV = (TextView) findViewById(R.id.itemNameTV);
+        itemNameTV.setText(itemName);
+
+        itemOriginalPriceTV = (TextView) findViewById(R.id.itemOriginalPriceTV);
+        itemOriginalPriceTV.setText(itemPrice);
+
+        offerAuthorTV = (TextView) findViewById(R.id.offerAuthorTV);
+        offerAuthorTV.setText(uid);
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -146,5 +194,35 @@ public class OffersActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onClick(View view) {
+        if(view == makeOfferBtn){
+            makeOffer();
+            OffersActivity.this.startActivity(new Intent(OffersActivity.this, MyAccountActivity.class));
+        } else if(view == cancelBtn){
+            OffersActivity.this.startActivity(new Intent(OffersActivity.this, MyAccountActivity.class));
+        }
+    }
+
+    private void makeOffer() {
+        String itemName =  itemNameTV.getText().toString().trim();
+        /*I could catch any value of the itemQuantity in Single view listing page*/
+        //Integer itemQuantity = Integer.parseInt(getIntent().getStringExtra("itemQuantity").trim());
+        double orginalPrice = Double.parseDouble(itemOriginalPriceTV.getText().toString().trim());
+        double offerPrice = Double.parseDouble(itemOfferPriceET.getText().toString().trim());
+        String itemDes = getIntent().getStringExtra("itemDes").toString().trim();
+        String buyerid = myFirebaseUser.getEmail();
+        FirebaseUser myFirebaseUser = myFirebaseAuth.getCurrentUser();
+
+        Date date = new Date();
+        Date newDate = new Date(date.getTime() + (604800000L * 2) + (24 * 60 * 60));
+        SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd");
+        String stringDate = dt.format(newDate);
+        Offer newOffer = new Offer(buyerid,itemName,orginalPrice,offerPrice,stringDate,itemDes);
+        databaseReference.child(DB_OFFER).push().setValue(newOffer);
+        Toast.makeText(this,"Please wait for making offer ...",Toast.LENGTH_LONG).show();
+
     }
 }

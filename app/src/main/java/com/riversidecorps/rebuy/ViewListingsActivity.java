@@ -77,7 +77,7 @@ public class ViewListingsActivity extends AppCompatActivity
                     String description = (String) messageSnapshot.child("itemDescription").getValue();
                     String price = (String) messageSnapshot.child("itemPrice").getValue().toString();
                     Long quantity = (Long) messageSnapshot.child("itemQuantity").getValue();
-                    String sellerName = (String) messageSnapshot.child("sellerName").getValue();
+                    String sellerName = (String) messageSnapshot.child("itemSeller").getValue();
                     String itemId =  messageSnapshot.getKey().toString();
                     String itemDate = (String) messageSnapshot.child("createdDate").getValue();
                     DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);

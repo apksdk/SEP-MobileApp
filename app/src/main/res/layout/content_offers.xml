@@ -36,8 +36,9 @@
             android:layout_below="@+id/itemNameTV"
             android:layout_toRightOf="@+id/itemImagePreviewIV"
             android:text="Listed Price: $4.99" />
+
         <EditText
-            android:id="@+id/itemOfferPriceTV"
+            android:id="@+id/itemOfferPriceET"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/itemOriginalPriceTV"
@@ -47,7 +48,7 @@
             android:id="@+id/itemOfferMessagePreviewTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/itemOfferPriceTV"
+            android:layout_below="@+id/itemOfferPriceET"
             android:layout_toRightOf="@+id/itemImagePreviewIV"
             android:text="Buyer's Message Preview" />
         <TextView

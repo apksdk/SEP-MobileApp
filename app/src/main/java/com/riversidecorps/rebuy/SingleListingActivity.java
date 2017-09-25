@@ -35,6 +35,7 @@ public class SingleListingActivity extends AppCompatActivity
     private String itemName;
     private String itemPrice;
     private String itemDes;
+    private String itemQuantity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +51,7 @@ public class SingleListingActivity extends AppCompatActivity
         itemName = getIntent().getStringExtra("itemName");
         itemPrice = getIntent().getStringExtra("itemPrice");
         itemDes = getIntent().getStringExtra("itemDes");
+        itemQuantity = getIntent().getStringExtra("itemQuantity");
 
         TextView iNameTv = (TextView) findViewById(R.id.itemNameTV);
         iNameTv.setText(itemName);
@@ -59,6 +61,7 @@ public class SingleListingActivity extends AppCompatActivity
 
         TextView iDesTv = (TextView) findViewById(R.id.descriptionTV);
         iDesTv.setText(itemDes);
+
 
         offerBTN = (Button)findViewById(R.id.offerBTN);
         buyBTN = (Button)findViewById(R.id.buyBTN);
@@ -182,7 +185,15 @@ public class SingleListingActivity extends AppCompatActivity
     @Override
     public void onClick(View view) {
         if(view == offerBTN ){
+            TextView iNameTv = (TextView) findViewById(R.id.itemNameTV);
+            iNameTv.setText(itemName);
+            TextView itemPriceTV =(TextView) findViewById(R.id.itemPriceTV);
+            itemPriceTV.setText(itemPrice);
             Intent OfferActivity = new Intent (this, OffersActivity.class);
+            OfferActivity.putExtra("itemName",iNameTv.getText().toString());
+            OfferActivity.putExtra("itemPrice",itemPriceTV.getText().toString());
+            OfferActivity.putExtra("itemQuantity",itemQuantity);
+            OfferActivity.putExtra("itemDes",getIntent().getStringExtra("itemDes"));
             startActivity(OfferActivity);
         }
     }
