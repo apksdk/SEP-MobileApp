@@ -15,22 +15,26 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.riversidecorps.rebuy.models.Offer;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-
-import org.w3c.dom.Text;
-
 import static android.content.ContentValues.TAG;
+import static com.riversidecorps.rebuy.R.id.itemImageIV;
+import static com.riversidecorps.rebuy.R.id.itemImagePreviewIV;
 
 public class OffersActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener {
@@ -39,6 +43,7 @@ public class OffersActivity extends AppCompatActivity
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseUser myFirebaseUser;
     private DatabaseReference databaseReference;
+    private FirebaseStorage mStorage = FirebaseStorage.getInstance();
 
     private static final String DB_OFFER = "Offers";
     private static final String AUTH_IN = "onAuthStateChanged:signed_in:";
@@ -50,7 +55,8 @@ public class OffersActivity extends AppCompatActivity
     private Button makeOfferBtn;
     private Button cancelBtn;
     private EditText itemOfferPriceET;
-    
+    private String itemId;
+    private ImageView mimageView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,7 +74,7 @@ public class OffersActivity extends AppCompatActivity
         itemName = getIntent().getStringExtra("itemName");
         itemPrice = getIntent().getStringExtra("itemPrice");
         mitemQuantity = getIntent().getStringExtra("itemQuantity");
-
+        itemId = getIntent().getStringExtra("itemId");
 
         makeOfferBtn = (Button) findViewById(R.id.makeOfferBtn);
         cancelBtn = (Button) findViewById(R.id.cancelBtn);
@@ -84,6 +90,17 @@ public class OffersActivity extends AppCompatActivity
 
         offerAuthorTV = (TextView) findViewById(R.id.offerAuthorTV);
         offerAuthorTV.setText(uid);
+
+        mimageView=findViewById(itemImagePreviewIV);
+        String imagePath = "itemImageListings/" + itemId + ".png";
+        //Upload image(s)
+        Log.i("imagePath",imagePath);
+
+        StorageReference itemImageRef = mStorage.getReference(imagePath);
+        Glide.with(this)
+                .using(new FirebaseImageLoader())
+                .load(itemImageRef)
+                .into(mimageView);
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

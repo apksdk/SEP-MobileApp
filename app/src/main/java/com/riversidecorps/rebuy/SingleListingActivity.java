@@ -25,6 +25,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import static android.content.ContentValues.TAG;
+import static com.riversidecorps.rebuy.R.id.itemImageIV;
 
 public class SingleListingActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener{
@@ -44,7 +45,7 @@ public class SingleListingActivity extends AppCompatActivity
     private String itemPrice;
     private String itemDes;
     private Integer itemQuantity;
-    private ImageView itemImageIV;
+    private ImageView mitemImageIV;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +64,7 @@ public class SingleListingActivity extends AppCompatActivity
         itemQuantity = getIntent().getIntExtra("itemQuantity", 0);
 
 
-        itemImageIV=findViewById(R.id.itemImageIV);
+        mitemImageIV=findViewById(itemImageIV);
         String imagePath = "itemImageListings/" + itemID + ".png";
         //Upload image(s)
         Log.i("imagePath",imagePath);
@@ -72,7 +73,7 @@ public class SingleListingActivity extends AppCompatActivity
         Glide.with(this)
                 .using(new FirebaseImageLoader())
                 .load(itemImageRef)
-                .into(itemImageIV);
+                .into(mitemImageIV);
 
 
         TextView iNameTv = (TextView) findViewById(R.id.itemNameTV);
@@ -216,6 +217,7 @@ public class SingleListingActivity extends AppCompatActivity
             OfferActivity.putExtra("itemPrice",itemPriceTV.getText().toString());
             OfferActivity.putExtra("itemQuantity",itemQuantity);
             OfferActivity.putExtra("itemDes",getIntent().getStringExtra("itemDes"));
+            OfferActivity.putExtra("itemId", getIntent().getStringExtra("itemId"));
             startActivity(OfferActivity);
         }
     }
