@@ -3,16 +3,20 @@ package com.riversidecorps.rebuy.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.riversidecorps.rebuy.R;
 import com.riversidecorps.rebuy.models.Listing;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 
@@ -24,6 +28,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
 
     private Context context;
     private List<Listing> itemLists;
+    private FirebaseStorage mStorage = FirebaseStorage.getInstance();
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -40,6 +45,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
         TextView date_pre;
         TextView item_date;
         private View view;
+        ImageView itemImage;
 
         public ViewHolder(final View view) {
             super(view);
@@ -49,13 +55,12 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
 
             price_pre = (TextView) view.findViewById(R.id.price_pre);
             item_price = (TextView) view.findViewById(R.id.item_price);
-
-            quantity_pre = (TextView) view.findViewById(R.id.quantity_pre);
+            itemImage = (ImageView) view.findViewById(R.id.item_image);
+        /*    quantity_pre = (TextView) view.findViewById(R.id.quantity_pre);
             item_quantity = (TextView) view.findViewById(R.id.item_quantity);
 
             seller_pre = (TextView) view.findViewById(R.id.seller_pre);
-            item_seller = (TextView) view.findViewById(R.id.item_seller);
-
+            item_seller = (TextView) view.findViewById(R.id.item_seller);*/
             description_pre = (TextView) view.findViewById(R.id.description_pre);
             item_description = (TextView) view.findViewById(R.id.item_description);
 
@@ -81,20 +86,34 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
     public void onBindViewHolder(final ViewHolder viewHolder, int position) {
         viewHolder.title_pre.setText(R.string.title_pre);
         viewHolder.price_pre.setText(R.string.price_pre);
-        viewHolder.quantity_pre.setText(R.string.quantity_pre);
-        viewHolder.seller_pre.setText(R.string.seller_pre);
+       /* viewHolder.quantity_pre.setText(R.string.quantity_pre);
+        viewHolder.seller_pre.setText(R.string.seller_pre);*/
         viewHolder.description_pre.setText(R.string.description_pre);
         viewHolder.date_pre.setText(R.string.date_pre);
 
         viewHolder.item_name.setText(itemLists.get(position).getItemName());
         viewHolder.item_price.setText(itemLists.get(position).getItemPrice());
-        viewHolder.item_quantity.setText(itemLists.get(position).getItemQuantity().toString());
-        viewHolder.item_seller.setText(itemLists.get(position).getItemSeller());
+      /*  viewHolder.item_quantity.setText(itemLists.get(position).getItemQuantity().toString());
+        viewHolder.item_seller.setText(itemLists.get(position).getItemSeller());*/
         viewHolder.item_description.setText(itemLists.get(position).getItemDescription());
         String date = itemLists.get(position).getCreatedDate();
 //        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 //        String formatedDate = formatter.format(date);
         viewHolder.item_date.setText(date);
+
+        String itemId=itemLists.get(position).getmItemId();
+        Log.i("itemId",itemId);
+        String imagePath = "itemImageListings/" + itemId + ".png";
+        //Upload image(s)
+        Log.i("imagePath",imagePath);
+
+        StorageReference itemImageRef = mStorage.getReference(imagePath);
+        Glide.with(context)
+                .using(new FirebaseImageLoader())
+                .load(itemImageRef)
+                .into(viewHolder.itemImage);
+
+
 
             viewHolder.view.setOnClickListener(new View.OnClickListener() {
             @Override

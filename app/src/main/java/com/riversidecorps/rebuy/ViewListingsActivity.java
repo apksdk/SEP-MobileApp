@@ -78,13 +78,14 @@ public class ViewListingsActivity extends AppCompatActivity
                     String price = (String) messageSnapshot.child("itemPrice").getValue().toString();
                     Long quantity = (Long) messageSnapshot.child("itemQuantity").getValue();
                     String sellerName = (String) messageSnapshot.child("itemSeller").getValue();
-                    String itemId =  messageSnapshot.getKey().toString();
+                    //String itemId =  messageSnapshot.getKey().toString();
                     String itemDate = (String) messageSnapshot.child("createdDate").getValue();
                     DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-
+                    String itemId =  (String) messageSnapshot.child("mItemId").getValue();
                     try {
                         Date date = format.parse(itemDate);
                         Listing newListing = new Listing(sellerName,name,Integer.parseInt(quantity.toString()),price,description,itemDate);
+                        newListing.setmItemId(itemId);
                         mItemList.add(newListing);
                     } catch (ParseException e) {
                         e.printStackTrace();

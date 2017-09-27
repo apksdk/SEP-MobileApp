@@ -1,7 +1,6 @@
 package com.riversidecorps.rebuy.models;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 /**
  * This is the listing model that contains all relevant data regarding to the listing.
@@ -19,7 +18,15 @@ public class Listing {
     private Boolean mItemDeleted;
     private Boolean mItemCompleted;
     private String mCreatedDate;
+    private String mItemId;
 
+    public String getmItemId() {
+        return mItemId;
+    }
+
+    public void setmItemId(String mItemId) {
+        this.mItemId = mItemId;
+    }
 
     /**
      * Instantiates a new Listing.
