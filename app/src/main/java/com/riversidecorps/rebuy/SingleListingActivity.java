@@ -23,9 +23,9 @@ import static android.content.ContentValues.TAG;
 public class SingleListingActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener{
 
-    private FirebaseAuth myFirebaseAuth;
+    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    private FirebaseUser mUser = mAuth.getCurrentUser();
     private FirebaseAuth.AuthStateListener mAuthListener;
-    private FirebaseUser myFirebaseUser;
 
     private static final String AUTH_IN = "onAuthStateChanged:signed_in:";
     private static final String AUTH_OUT = "onAuthStateChanged:signed_out";
@@ -35,7 +35,7 @@ public class SingleListingActivity extends AppCompatActivity
     private String itemName;
     private String itemPrice;
     private String itemDes;
-    private Long itemQuantity;
+    private Integer itemQuantity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,14 +44,14 @@ public class SingleListingActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        myFirebaseAuth = FirebaseAuth.getInstance();
-        myFirebaseUser = myFirebaseAuth.getCurrentUser();
+        mAuth = FirebaseAuth.getInstance();
+        mUser = mAuth.getCurrentUser();
 
         itemID = getIntent().getStringExtra("itemID");
         itemName = getIntent().getStringExtra("itemName");
         itemPrice = getIntent().getStringExtra("itemPrice");
         itemDes = getIntent().getStringExtra("itemDes");
-        itemQuantity = getIntent().getLongExtra("itemQuantity", 0);
+        itemQuantity = getIntent().getIntExtra("itemQuantity", 0);
 
         TextView iNameTv = (TextView) findViewById(R.id.itemNameTV);
         iNameTv.setText(itemName);
@@ -81,11 +81,11 @@ public class SingleListingActivity extends AppCompatActivity
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 //FirebaseUser user = myFirebaseAuth.getCurrentUser();
-                if (myFirebaseUser != null) {
+                if (mUser != null) {
                     // User is signed in
                     TextView loginInfor = (TextView) findViewById(R.id.logininfor);
-                    loginInfor.setText("Welcome, " + myFirebaseUser.getDisplayName() + "!");
-                    Log.d(TAG, AUTH_IN + myFirebaseUser.getUid());
+                    loginInfor.setText("Welcome, " + mUser.getDisplayName() + "!");
+                    Log.d(TAG, AUTH_IN + mUser.getUid());
                 } else {
                     // User is signed out
                     Log.d(TAG, AUTH_OUT);
@@ -100,7 +100,7 @@ public class SingleListingActivity extends AppCompatActivity
     public void onStart() {
         super.onStart();
         //Sets a listener to catch when the user is signing in.
-        myFirebaseAuth.addAuthStateListener(mAuthListener);
+        mAuth.addAuthStateListener(mAuthListener);
     }
 
     //On stop method
@@ -109,7 +109,7 @@ public class SingleListingActivity extends AppCompatActivity
         super.onStop();
         //Sets listener to catch when the user is signing out.
         if (mAuthListener != null) {
-            myFirebaseAuth.removeAuthStateListener(mAuthListener);
+            mAuth.removeAuthStateListener(mAuthListener);
         }
     }
     /**
@@ -135,7 +135,7 @@ public class SingleListingActivity extends AppCompatActivity
             //If item is logout
             case R.id.action_logout:
                 //Sign out of the authenticator and return to login activity.
-                myFirebaseAuth.signOut();
+                mAuth.signOut();
                 this.startActivity(new Intent(this, LoginActivity.class));
                 return true;
 
