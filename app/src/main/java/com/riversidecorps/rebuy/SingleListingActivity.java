@@ -35,7 +35,7 @@ public class SingleListingActivity extends AppCompatActivity
     private String itemName;
     private String itemPrice;
     private String itemDes;
-    private String itemQuantity;
+    private Long itemQuantity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,13 +51,13 @@ public class SingleListingActivity extends AppCompatActivity
         itemName = getIntent().getStringExtra("itemName");
         itemPrice = getIntent().getStringExtra("itemPrice");
         itemDes = getIntent().getStringExtra("itemDes");
-        itemQuantity = getIntent().getStringExtra("itemQuantity");
+        itemQuantity = getIntent().getLongExtra("itemQuantity", 0);
 
         TextView iNameTv = (TextView) findViewById(R.id.itemNameTV);
         iNameTv.setText(itemName);
 
         TextView iPriceTv = (TextView) findViewById(R.id.itemPriceTV);
-        iPriceTv.setText(itemPrice);
+        iPriceTv.setText(itemPrice + "   Quantity: " + itemQuantity.toString());
 
         TextView iDesTv = (TextView) findViewById(R.id.descriptionTV);
         iDesTv.setText(itemDes);
@@ -80,12 +80,12 @@ public class SingleListingActivity extends AppCompatActivity
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
+                //FirebaseUser user = myFirebaseAuth.getCurrentUser();
+                if (myFirebaseUser != null) {
                     // User is signed in
                     TextView loginInfor = (TextView) findViewById(R.id.logininfor);
-                    loginInfor.setText("Welcome, " + user.getDisplayName() + "!");
-                    Log.d(TAG, AUTH_IN + user.getUid());
+                    loginInfor.setText("Welcome, " + myFirebaseUser.getDisplayName() + "!");
+                    Log.d(TAG, AUTH_IN + myFirebaseUser.getUid());
                 } else {
                     // User is signed out
                     Log.d(TAG, AUTH_OUT);
