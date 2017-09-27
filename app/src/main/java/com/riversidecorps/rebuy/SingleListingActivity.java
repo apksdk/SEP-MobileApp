@@ -14,10 +14,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
 import static android.content.ContentValues.TAG;
 
 public class SingleListingActivity extends AppCompatActivity
@@ -26,6 +32,7 @@ public class SingleListingActivity extends AppCompatActivity
     private FirebaseAuth myFirebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseUser myFirebaseUser;
+    private FirebaseStorage mStorage = FirebaseStorage.getInstance();
 
     private static final String AUTH_IN = "onAuthStateChanged:signed_in:";
     private static final String AUTH_OUT = "onAuthStateChanged:signed_out";
@@ -36,6 +43,7 @@ public class SingleListingActivity extends AppCompatActivity
     private String itemPrice;
     private String itemDes;
     private String itemQuantity;
+    private ImageView itemImageIV;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,11 +55,24 @@ public class SingleListingActivity extends AppCompatActivity
         myFirebaseAuth = FirebaseAuth.getInstance();
         myFirebaseUser = myFirebaseAuth.getCurrentUser();
 
-        itemID = getIntent().getStringExtra("itemID");
+        itemID = getIntent().getStringExtra("itemId");
         itemName = getIntent().getStringExtra("itemName");
         itemPrice = getIntent().getStringExtra("itemPrice");
         itemDes = getIntent().getStringExtra("itemDes");
         itemQuantity = getIntent().getStringExtra("itemQuantity");
+
+
+        itemImageIV=findViewById(R.id.itemImageIV);
+        String imagePath = "itemImageListings/" + itemID + ".png";
+        //Upload image(s)
+        Log.i("imagePath",imagePath);
+
+        StorageReference itemImageRef = mStorage.getReference(imagePath);
+        Glide.with(this)
+                .using(new FirebaseImageLoader())
+                .load(itemImageRef)
+                .into(itemImageIV);
+
 
         TextView iNameTv = (TextView) findViewById(R.id.itemNameTV);
         iNameTv.setText(itemName);
