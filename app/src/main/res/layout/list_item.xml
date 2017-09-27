@@ -90,7 +90,10 @@
                         android:layout_height="match_parent"
                         android:src="@drawable/logo"
                         android:adjustViewBounds="true"
-                        android:layout_gravity="center"/>
+                        android:layout_gravity="center"
+                        android:layout_marginBottom="@dimen/appbar_padding_top"
+                        android:layout_marginTop="@dimen/appbar_padding_top"
+                        android:layout_marginLeft="@dimen/appbar_padding_top"/>
             <ProgressBar
                 android:id="@+id/progressBar"
                 style="?android:attr/progressBarStyleLarge"
@@ -109,7 +112,8 @@
             android:id="@+id/description_layout"
             android:gravity="right"
             android:orientation="vertical"
-            android:layout_marginLeft="@dimen/cardview_gap">
+            android:layout_marginLeft="@dimen/cardview_gap"
+            android:layout_marginTop="@dimen/appbar_padding_top">
 
                     <TextView
                         android:layout_height="wrap_content"

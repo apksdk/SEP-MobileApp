@@ -1,6 +1,7 @@
 package com.riversidecorps.rebuy;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -52,6 +53,7 @@ public class ViewListingsActivity extends AppCompatActivity
     private static final String LISTINGS = "Listings";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.i("TTT","onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_listings);
         mAuth = FirebaseAuth.getInstance();
@@ -157,6 +159,7 @@ public class ViewListingsActivity extends AppCompatActivity
     @Override
     protected void onRestart() {
         super.onRestart();
+        Log.i("TTT","onRestart");
     }
 
     @Override
@@ -197,26 +200,53 @@ public class ViewListingsActivity extends AppCompatActivity
     @Override
     public void onStart() {
         super.onStart();
+        Log.i("TTT","onStart");
         //Sets a listener to catch when the user is signing in.
         mAuth.addAuthStateListener(mAuthListener);
+    }
+
+    @Override
+    protected void onPause() {
+        Log.i("TTT","onPause");
+        super.onPause();
     }
 
     //On stop method
     @Override
     public void onStop() {
         super.onStop();
+        Log.i("TTT","onStop");
         //Sets listener to catch when the user is signing out.
         if (mAuthListener != null) {
             mAuth.removeAuthStateListener(mAuthListener);
         }
     }
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
 
+            Log.i("TTT","ORIENTATION_LANDSCAPE");
 
-    /**
-     * Creates the options menu on the action bar.
-     * @param menu Menu at the top right of the screen
-     * @return true
-     */
+            // land do nothing is ok
+        } else if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            Log.i("TTT","ORIENTATION_LANDSCAPE");
+
+            // port do nothing is ok
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.i("TTT","onResume");
+    }
+
+        /**
+         * Creates the options menu on the action bar.
+         * @param menu Menu at the top right of the screen
+         * @return true
+         */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         //Inflates the menu menu_other which includes logout and quit functions.
