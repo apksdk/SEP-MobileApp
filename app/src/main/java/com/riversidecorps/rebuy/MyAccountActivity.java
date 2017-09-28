@@ -187,6 +187,7 @@ public class
                 viewHolder.setItemPriceTV(model.getItemPrice());
                 //Get the primary key of the item
                 viewHolder.setItemID(getRef(position).getKey());
+                Glide.with(MyAccountActivity.this).load(model.getItemImage()).into(viewHolder.getItemImagePreviewIV());
                 Log.i("GetItemID", getRef(position).getKey());
                 viewHolder.setUserID(userID);
             }
