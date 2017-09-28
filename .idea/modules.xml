@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/SEP-MobileApp.iml" filepath="$PROJECT_DIR$/SEP-MobileApp.iml" />
-      <module fileurl="file://$PROJECT_DIR$/SEPGIT.iml" filepath="$PROJECT_DIR$/SEPGIT.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

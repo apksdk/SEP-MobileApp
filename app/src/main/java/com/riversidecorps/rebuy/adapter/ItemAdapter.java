@@ -102,10 +102,10 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
         viewHolder.item_date.setText(date);
 
         String itemId=itemLists.get(position).getmItemId();
-        Log.i("itemId",itemId);
+        //Log.i("itemId",itemId);
         String imagePath = "itemImageListings/" + itemId + ".png";
         //Upload image(s)
-        Log.i("imagePath",imagePath);
+        //Log.i("imagePath",imagePath);
 
         StorageReference itemImageRef = mStorage.getReference(imagePath);
         Glide.with(context)
