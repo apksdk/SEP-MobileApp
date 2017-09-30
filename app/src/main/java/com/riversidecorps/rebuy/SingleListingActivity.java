@@ -21,6 +21,11 @@ import com.bumptech.glide.Glide;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -34,7 +39,7 @@ public class SingleListingActivity extends AppCompatActivity
     private FirebaseUser mUser = mAuth.getCurrentUser();
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseStorage mStorage = FirebaseStorage.getInstance();
-
+    private FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
 
     private static final String AUTH_IN = "onAuthStateChanged:signed_in:";
     private static final String AUTH_OUT = "onAuthStateChanged:signed_out";
@@ -46,6 +51,9 @@ public class SingleListingActivity extends AppCompatActivity
     private String itemDes;
     private Integer itemQuantity;
     private ImageView mitemImageIV;
+    private String userID;
+    private String userName;
+    private TextView loginInfor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,14 +64,13 @@ public class SingleListingActivity extends AppCompatActivity
 
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
-
         itemID = getIntent().getStringExtra("itemId");
         itemName = getIntent().getStringExtra("itemName");
         itemPrice = getIntent().getStringExtra("itemPrice");
         itemDes = getIntent().getStringExtra("itemDes");
         itemQuantity = getIntent().getIntExtra("itemQuantity", 0);
-
-
+        userID = mUser.getUid();
+        loginInfor = findViewById(R.id.logininfor);
         mitemImageIV=findViewById(itemImageIV);
         String imagePath = "itemImageListings/" + itemID + ".png";
         //Upload image(s)
@@ -99,6 +106,18 @@ public class SingleListingActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        DatabaseReference userRef = mDatabase.getReference().child("users").child(userID).child("username");
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                userName=dataSnapshot.getValue(String.class);
+                loginInfor.setText("Welcome, " + userName + "!");
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+
         //Set listener that triggers when a user signs out
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -106,8 +125,6 @@ public class SingleListingActivity extends AppCompatActivity
                 //FirebaseUser user = myFirebaseAuth.getCurrentUser();
                 if (mUser != null) {
                     // User is signed in
-                    TextView loginInfor = (TextView) findViewById(R.id.logininfor);
-                    loginInfor.setText("Welcome, " + mUser.getDisplayName() + "!");
                     Log.d(TAG, AUTH_IN + mUser.getUid());
                 } else {
                     // User is signed out
