@@ -9,9 +9,12 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.riversidecorps.rebuy.R;
+import com.riversidecorps.rebuy.ViewOffersActivity;
 import com.riversidecorps.rebuy.models.Listing;
+import com.riversidecorps.rebuy.models.Offer;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -82,9 +85,9 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
         viewHolder.title_pre.setText(R.string.title_pre);
         viewHolder.price_pre.setText(R.string.price_pre);
         viewHolder.quantity_pre.setText(R.string.quantity_pre);
-        viewHolder.seller_pre.setText(R.string.seller_pre);
+        viewHolder.seller_pre.setText("Seller:");
         viewHolder.description_pre.setText(R.string.description_pre);
-        viewHolder.date_pre.setText(R.string.date_pre);
+        viewHolder.date_pre.setText("Date:");
 
         viewHolder.item_name.setText(itemLists.get(position).getItemName());
         viewHolder.item_price.setText(itemLists.get(position).getItemPrice());
@@ -99,7 +102,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
             viewHolder.view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context,com.riversidecorps.rebuy.SingleListingActivity.class );
+                Intent intent = new Intent(context,com.riversidecorps.rebuy.SingleOfferActivity.class);
                 intent.putExtra("itemName", itemLists.get(viewHolder.getAdapterPosition()).getItemName());
                 intent.putExtra("itemPrice", itemLists.get(viewHolder.getAdapterPosition()).getItemPrice());
                 intent.putExtra("itemDes", itemLists.get(viewHolder.getAdapterPosition()).getItemDescription());

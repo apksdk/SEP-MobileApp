@@ -17,7 +17,7 @@ public class Offer {
     private Boolean ItemSoldout;
     private String OfferDate;
 
-        /* Instantiates a new Listing.*/
+        /* Instantiates a new Offer.*/
     public Offer() {
     }
 
