@@ -33,10 +33,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import static android.content.ContentValues.TAG;
-import static com.riversidecorps.rebuy.R.id.itemImageIV;
 import static com.riversidecorps.rebuy.R.id.itemImagePreviewIV;
 
-public class OffersActivity extends AppCompatActivity
+public class ViewOffersActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener {
 
     private FirebaseAuth myFirebaseAuth;
@@ -60,7 +59,7 @@ public class OffersActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_offers);
+        setContentView(R.layout.activity_view_offers);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -217,9 +216,9 @@ public class OffersActivity extends AppCompatActivity
     public void onClick(View view) {
         if(view == makeOfferBtn){
             makeOffer();
-            OffersActivity.this.startActivity(new Intent(OffersActivity.this, MyAccountActivity.class));
+            ViewOffersActivity.this.startActivity(new Intent(ViewOffersActivity.this, MyAccountActivity.class));
         } else if(view == cancelBtn){
-            OffersActivity.this.startActivity(new Intent(OffersActivity.this, MyAccountActivity.class));
+            ViewOffersActivity.this.startActivity(new Intent(ViewOffersActivity.this, MyAccountActivity.class));
         }
     }
 

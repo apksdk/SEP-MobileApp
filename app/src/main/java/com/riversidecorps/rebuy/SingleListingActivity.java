@@ -192,7 +192,7 @@ public class SingleListingActivity extends AppCompatActivity
         } else if (id == R.id.nav_message_inbox) {
             startActivity(new Intent(this, MessageInboxActivity.class));
         } else if (id == R.id.nav_offers) {
-            startActivity(new Intent(this, OffersActivity.class));
+            startActivity(new Intent(this, ViewOffersActivity.class));
         } else if (id == R.id.nav_search_listings) {
             startActivity(new Intent(this, SearchListingsActivity.class));
         } else if (id == R.id.nav_create_listing) {
@@ -212,7 +212,7 @@ public class SingleListingActivity extends AppCompatActivity
             iNameTv.setText(itemName);
             TextView itemPriceTV =(TextView) findViewById(R.id.itemPriceTV);
             itemPriceTV.setText(itemPrice);
-            Intent OfferActivity = new Intent (this, OffersActivity.class);
+            Intent OfferActivity = new Intent (this, ViewOffersActivity.class);
             OfferActivity.putExtra("itemName",iNameTv.getText().toString());
             OfferActivity.putExtra("itemPrice",itemPriceTV.getText().toString());
             OfferActivity.putExtra("itemQuantity",itemQuantity);

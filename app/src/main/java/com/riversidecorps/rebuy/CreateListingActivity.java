@@ -1,7 +1,9 @@
 package com.riversidecorps.rebuy;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -71,6 +73,8 @@ public class CreateListingActivity extends AppCompatActivity
     private static final int PERMISSION_REQUEST_READ_STORAGE = 1;
     private static final int REQUEST_GALLERY_IMAGE = 2;
 
+    private ProgressDialog progressDialog;
+
     private EditText itemNameET;
     private EditText itemQantityET;
     private EditText itemPriceET;
@@ -97,6 +101,9 @@ public class CreateListingActivity extends AppCompatActivity
         ButterKnife.bind(this);
 
         databaseReference = FirebaseDatabase.getInstance().getReference();
+
+        //Initialises progress dialog
+        progressDialog = new ProgressDialog(this);
 
         itemNameET = (EditText) findViewById(R.id.itemNameET);
         itemQantityET = (EditText) findViewById(R.id.itemQuantityET);
@@ -247,6 +254,9 @@ public class CreateListingActivity extends AppCompatActivity
     private void saveListing() {
         //Check if all required fields are filled out
         if (validateForm()) {
+            //Else show a progress dialog informing the user they are being logged in
+            progressDialog.setMessage(getString(R.string.creating_listing_message));
+            progressDialog.show();
             // Retrieve all relevant data for the listing
             String name = itemNameET.getText().toString().trim();
             Integer quantity = Integer.parseInt(itemQantityET.getText().toString().trim());
@@ -283,7 +293,7 @@ public class CreateListingActivity extends AppCompatActivity
                     newListing.setItemImage(taskSnapshot.getDownloadUrl().toString());
                     newListing.setmItemId(mUniqueId);
 
-                    Log.i("TTT Itemid: ",newListing.getmItemId());
+                    Log.i("Itemid: ",newListing.getmItemId());
                     newMinListing.setItemImage(taskSnapshot.getDownloadUrl().toString());
                     //Save listing on Firebase
                     final String listingID = databaseReference.child(DB_LISTING).push().getKey();
@@ -298,6 +308,8 @@ public class CreateListingActivity extends AppCompatActivity
                                 @Override
                                 public void onSuccess(Void aVoid) {
                                     Toast.makeText(getBaseContext(), "Your listing has been successfully created!", Toast.LENGTH_LONG).show();
+                                    //Close the progress dialog
+                                    progressDialog.dismiss();
                                     finish();
                                 }
                             });

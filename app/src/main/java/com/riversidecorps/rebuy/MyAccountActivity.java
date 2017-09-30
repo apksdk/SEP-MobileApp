@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.icu.text.NumberFormat;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -42,12 +41,9 @@ import com.riversidecorps.rebuy.models.Listing;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.util.Currency;
-import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 import static android.content.ContentValues.TAG;
 
@@ -134,19 +130,9 @@ public class
 
         final String userID = mUser.getUid();
 
-        DatabaseReference userRef = mDatabase.getReference().child("users").child(userID).child("username");
-        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                userIDTV.setText(dataSnapshot.getValue(String.class));
-                usernameNavTV.setText(userIDTV.getText().toString());
-            }
+        userIDTV.setText(mUser.getDisplayName());
+        usernameNavTV.setText(userIDTV.getText().toString());
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
         //Display user details
         //userAvatarIV.setImageURI(mUser.getPhotoUrl());
         userEmailTV.setText(mUser.getEmail());
@@ -320,7 +306,7 @@ public class
         } else if (id == R.id.nav_message_inbox) {
             startActivity(new Intent(this, MessageInboxActivity.class));
         } else if (id == R.id.nav_offers) {
-            startActivity(new Intent(this, OffersActivity.class));
+            startActivity(new Intent(this, ViewOffersActivity.class));
         } else if (id == R.id.nav_search_listings) {
             startActivity(new Intent(this, SearchListingsActivity.class));
         } else if (id == R.id.nav_create_listing) {

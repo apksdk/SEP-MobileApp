@@ -19,6 +19,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.riversidecorps.rebuy.R;
@@ -250,6 +251,10 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     if (task.isSuccessful()) {
                         Toast.makeText(RegisterActivity.this, REGISTER_SUCCESS, Toast.LENGTH_SHORT).show();
                         loginUser(email, password, username);
+                        UserProfileChangeRequest profileChangeRequest = new UserProfileChangeRequest.Builder()
+                                .setDisplayName(usernameEt.getText().toString())
+                                .build();
+                        mAuth.getCurrentUser().updateProfile(profileChangeRequest);
                         //If unsuccessful show a toast telling the user
                     } else {
                         Toast.makeText(RegisterActivity.this, REGISTER_FAILED, Toast.LENGTH_SHORT).show();

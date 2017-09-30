@@ -43,6 +43,7 @@
     </string>
     <string name="confirm_password">Confirm Password</string>
     <string name="action_reset_password">Reset Password</string>
+    <string name="failed_login">Could not login, please try again</string>
 
     <!-- Strings related to the chat -->
     <string name="send_btn">Send</string>
@@ -75,4 +76,8 @@
     <string name="date_pre">Date:</string>
 
     <string name="item_id" >ITEM_ID</string>
+
+    <!-- Strings for progress dialogs -->
+    <string name="login_message" >Logging in…</string>
+    <string name="creating_listing_message" >Creating Listing…</string>
 </resources>
