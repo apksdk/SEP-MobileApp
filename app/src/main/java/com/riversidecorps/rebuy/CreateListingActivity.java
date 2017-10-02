@@ -258,7 +258,7 @@ public class CreateListingActivity extends AppCompatActivity
             Date newDate = new Date(date.getTime() + (604800000L * 2) + (24 * 60 * 60));
             SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd");
             String stringDate = dt.format(newDate);
-
+            final String mUniqueId = UUID.randomUUID().toString();
             //Create new listing
             final Listing newListing = new Listing(userName, name, quantity, price, description, stringDate);
             //Create new listing w/ minimal information - used for seller view overall listings
@@ -272,7 +272,7 @@ public class CreateListingActivity extends AppCompatActivity
             itemImage.compress(Bitmap.CompressFormat.PNG, 100, bAOS);
             byte[] itemImageBytes = bAOS.toByteArray();
             //Create image path for storage
-            String imagePath = "itemImageListings/" + UUID.randomUUID() + ".png";
+            String imagePath = "itemImageListings/" + mUniqueId + ".png";
             //Upload image(s)
             StorageReference itemImageRef = mStorage.getReference(imagePath);
             UploadTask uploadTask = itemImageRef.putBytes(itemImageBytes);
@@ -281,6 +281,9 @@ public class CreateListingActivity extends AppCompatActivity
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     //Add image URL to listing
                     newListing.setItemImage(taskSnapshot.getDownloadUrl().toString());
+                    newListing.setmItemId(mUniqueId);
+
+                    Log.i("TTT Itemid: ",newListing.getmItemId());
                     newMinListing.setItemImage(taskSnapshot.getDownloadUrl().toString());
                     //Save listing on Firebase
                     final String listingID = databaseReference.child(DB_LISTING).push().getKey();
