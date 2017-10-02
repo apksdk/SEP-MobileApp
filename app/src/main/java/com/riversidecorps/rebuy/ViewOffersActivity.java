@@ -24,7 +24,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.riversidecorps.rebuy.adapter.ItemAdapter;
+import com.riversidecorps.rebuy.adapter.OfferAdapter;
 import com.riversidecorps.rebuy.models.Offer;
 
 import java.text.DateFormat;
@@ -39,7 +39,7 @@ import static android.content.ContentValues.TAG;
 public class ViewOffersActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private RecyclerView mRecyclerView;
-    private ItemAdapter mAdapter;
+    private OfferAdapter mAdapter;
     private ArrayList<Offer> mOfferList = new ArrayList<>();
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private FirebaseUser mUser = mAuth.getCurrentUser();
@@ -94,7 +94,7 @@ public class ViewOffersActivity extends AppCompatActivity
             }
         });
         mRecyclerView = findViewById(R.id.recycler_view);
-        mAdapter = new ItemAdapter(this, mOfferList);
+        mAdapter = new OfferAdapter(this, mOfferList);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -174,13 +174,13 @@ public class ViewOffersActivity extends AppCompatActivity
         } else if (id == R.id.nav_message_inbox) {
             startActivity(new Intent(this, MessageInboxActivity.class));
         } else if (id == R.id.nav_offers) {
-            startActivity(new Intent(this, OffersActivity.class));
+            //Do nothing since current activity is view listings.
         } else if (id == R.id.nav_search_listings) {
             startActivity(new Intent(this, SearchListingsActivity.class));
         } else if (id == R.id.nav_create_listing) {
             startActivity(new Intent(this, CreateListingActivity.class));
         } else if (id == R.id.nav_view_listings) {
-            //Do nothing since current activity is view listings.
+            startActivity(new Intent(this, ViewListingsActivity.class));
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

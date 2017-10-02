@@ -44,6 +44,7 @@
             android:layout_below="@+id/itemOriginalPriceTV"
             android:layout_toRightOf="@+id/itemImagePreviewIV"
             android:hint="Offering Price" />
+
         <TextView
             android:id="@+id/itemOfferMessagePreviewTV"
             android:layout_width="wrap_content"
@@ -51,6 +52,7 @@
             android:layout_below="@+id/itemOfferPriceET"
             android:layout_toRightOf="@+id/itemImagePreviewIV"
             android:text="Buyer's Message Preview" />
+
         <TextView
             android:id="@+id/offerAuthorTV"
             android:layout_width="wrap_content"

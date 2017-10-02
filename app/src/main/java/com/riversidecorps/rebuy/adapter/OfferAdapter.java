@@ -30,16 +30,22 @@ public class OfferAdapter extends RecyclerView.Adapter<OfferAdapter.ViewHolder> 
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView title_pre;
         TextView item_name;
+
         TextView buyer_pre;
         TextView item_buyer;
+
         TextView original_price_pre;
         TextView item_original_price;
+
         TextView offer_price_pre;
         TextView item_offer_price;
-        TextView description_pre;
-        TextView item_description;
+
         TextView quantity_pre;
         TextView item_quantity;
+
+        TextView description_pre;
+        TextView item_description;
+
         TextView date_pre;
         TextView item_date;
         private View view;
@@ -53,8 +59,11 @@ public class OfferAdapter extends RecyclerView.Adapter<OfferAdapter.ViewHolder> 
             buyer_pre = (TextView) view.findViewById(R.id.buyer_pre);
             item_buyer = (TextView) view.findViewById(R.id.item_buyer);
 
-            price_pre = (TextView) view.findViewById(R.id.price_pre);
-            item_price = (TextView) view.findViewById(R.id.item_price);
+            original_price_pre = (TextView) view.findViewById(R.id.price_pre);
+            item_original_price = (TextView) view.findViewById(R.id.item_price);
+
+            offer_price_pre = (TextView) view.findViewById(R.id.price_pre);
+            item_offer_price = (TextView) view.findViewById(R.id.item_price);
 
             quantity_pre = (TextView) view.findViewById(R.id.quantity_pre);
             item_quantity = (TextView) view.findViewById(R.id.item_quantity);
@@ -64,7 +73,6 @@ public class OfferAdapter extends RecyclerView.Adapter<OfferAdapter.ViewHolder> 
 
             date_pre = (TextView) view.findViewById(R.id.date_pre);
             item_date = (TextView) view.findViewById(R.id.item_date);
-
 
         }
     }
@@ -77,15 +85,15 @@ public class OfferAdapter extends RecyclerView.Adapter<OfferAdapter.ViewHolder> 
 
     @Override
     public ViewHolder onCreateViewHolder (ViewGroup viewGroup, int i) {
-        return new ViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.list_item, viewGroup, false));
+        return new ViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.offer_item, viewGroup, false));
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder viewHolder, int position) {
         viewHolder.title_pre.setText("Title:");
-        viewHolder.buyer_pre.setText("Seller:");
-        viewHolder.original_price_pre.setText("Price:");
-        viewHolder.offer_price_pre.setText("Price:");
+        viewHolder.buyer_pre.setText("Buyer:");
+        viewHolder.original_price_pre.setText("Original Price:");
+        viewHolder.offer_price_pre.setText("Offer Price:");
         viewHolder.quantity_pre.setText("Quantity:");
         viewHolder.description_pre.setText("Description:");
         viewHolder.date_pre.setText("Date:");
@@ -103,12 +111,13 @@ public class OfferAdapter extends RecyclerView.Adapter<OfferAdapter.ViewHolder> 
         viewHolder.view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context,com.riversidecorps.rebuy.SingleListingActivity.class );
+                Intent intent = new Intent(context,com.riversidecorps.rebuy.ViewOffersActivity.class );
                 intent.putExtra("itemName", offerLists.get(viewHolder.getAdapterPosition()).getItemName());
-                intent.putExtra("itemBuyer", offerLists.get(viewHolder.getAdapterPosition().getItemBuyer()));
-                intent.putExtra("itemPrice", offerLists.get(viewHolder.getAdapterPosition()).getItemPrice());
-                intent.putExtra("itemDes", offerLists.get(viewHolder.getAdapterPosition()).getItemDescription());
+                intent.putExtra("itemBuyer", offerLists.get(viewHolder.getAdapterPosition()).getItemBuyer());
+                intent.putExtra("itemOriginalPrice", offerLists.get(viewHolder.getAdapterPosition()).getItemOriginalPrice());
+                intent.putExtra("itemOfferPrice", offerLists.get(viewHolder.getAdapterPosition()).getOfferPrice());
                 intent.putExtra("itemQuantity", offerLists.get(viewHolder.getAdapterPosition()).getItemQuantity());
+                intent.putExtra("itemDes", offerLists.get(viewHolder.getAdapterPosition()).getItemDescription());
                 context.startActivity(intent);
             }
         });
@@ -125,6 +134,6 @@ public class OfferAdapter extends RecyclerView.Adapter<OfferAdapter.ViewHolder> 
 
     @Override
     public int getItemCount() {
-        return itemLists.size();
+        return offerLists.size();
     }
 }
