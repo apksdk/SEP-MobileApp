@@ -50,11 +50,11 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
             price_pre = (TextView) view.findViewById(R.id.price_pre);
             item_price = (TextView) view.findViewById(R.id.item_price);
 
-            quantity_pre = (TextView) view.findViewById(R.id.quantity_pre);
+            /*quantity_pre = (TextView) view.findViewById(R.id.quantity_pre);
             item_quantity = (TextView) view.findViewById(R.id.item_quantity);
 
             seller_pre = (TextView) view.findViewById(R.id.seller_pre);
-            item_seller = (TextView) view.findViewById(R.id.item_seller);
+            item_seller = (TextView) view.findViewById(R.id.item_seller);*/
 
             description_pre = (TextView) view.findViewById(R.id.description_pre);
             item_description = (TextView) view.findViewById(R.id.item_description);

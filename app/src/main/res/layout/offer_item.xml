@@ -40,24 +40,6 @@
             android:maxWidth="150dp"
             android:layout_alignParentBottom="true"/>
 
-        <TextView
-            android:id="@+id/buyer_pre"
-            android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:layout_toLeftOf="@+id/item_original_price"
-            android:textColor="@color/colorPrimary"
-            android:layout_alignParentTop="true"/>
-        <TextView
-            android:id="@+id/item_buyer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            android:paddingRight="16dp"
-            android:textSize="16sp"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true"/>
 
         <TextView
             android:id="@+id/price_pre"
@@ -69,7 +51,7 @@
             android:textColor="@color/colorPrimary"
             android:layout_alignParentTop="true"/>
         <TextView
-            android:id="@+id/item_original_price"
+            android:id="@+id/item_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@android:color/transparent"
