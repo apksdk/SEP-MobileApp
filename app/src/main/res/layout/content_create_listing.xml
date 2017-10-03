@@ -12,42 +12,78 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true">
 
         <LinearLayout
+            android:id="@+id/linearLayoutMain"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:id="@+id/linearLayoutMain">
+            android:orientation="vertical">
 
             <RelativeLayout
+                android:id="@+id/createListingLayout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/createListingLayout">
+                android:layout_height="wrap_content">
 
-                <ImageView
-                    android:id="@+id/itemIV"
-                    android:layout_width="128dp"
-                    android:layout_height="128dp"
-                    android:layout_centerHorizontal="true"
-                    app:srcCompat="@drawable/ic_menu_camera" />
+                <!--<HorizontalScrollView-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:id="@+id/addImageSV"-->
+                <!--android:layout_centerHorizontal="true"-->
+                <!--android:layout_height="wrap_content">-->
+
+                <LinearLayout
+                    android:id="@+id/itemImagesLayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true">
+
+                    <ImageView
+                        android:id="@+id/itemIV"
+                        android:layout_width="128dp"
+                        android:layout_height="128dp"
+                        android:layout_weight="1"
+                        android:clickable="true"
+                        android:onClick="changeItemImage"
+                        app:srcCompat="@drawable/ic_menu_camera" />
+
+                    <ImageView
+                        android:id="@+id/item2IV"
+                        android:layout_width="128dp"
+                        android:layout_height="128dp"
+                        android:layout_weight="1"
+                        android:clickable="true"
+                        android:onClick="changeItemImage"
+                        android:visibility="gone"
+                        app:srcCompat="@drawable/ic_menu_camera" />
+
+                    <ImageView
+                        android:id="@+id/item3IV"
+                        android:layout_width="128dp"
+                        android:layout_height="128dp"
+                        android:layout_weight="1"
+                        android:clickable="true"
+                        android:onClick="changeItemImage"
+                        android:visibility="gone"
+                        app:srcCompat="@drawable/ic_menu_camera" />
+                </LinearLayout>
+                <!--</HorizontalScrollView>-->
 
                 <Button
                     android:id="@+id/addImageBTN"
                     android:layout_width="48dp"
                     android:layout_height="wrap_content"
-                    android:layout_alignBottom="@+id/itemIV"
+                    android:layout_alignBottom="@+id/itemImagesLayout"
                     android:layout_alignParentTop="true"
-                    android:layout_toRightOf="@+id/itemIV"
+                    android:layout_toRightOf="@+id/itemImagesLayout"
                     android:text="+" />
 
                 <TextView
                     android:id="@+id/addImageHintTV"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/itemIV"
+                    android:layout_below="@+id/itemImagesLayout"
                     android:layout_centerHorizontal="true"
                     android:text="Tap to add an image" />
 
@@ -122,11 +158,11 @@
             </RelativeLayout>
 
             <LinearLayout
+                android:id="@+id/linearLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:orientation="horizontal"
-                android:id="@+id/linearLayout">
+                android:orientation="horizontal">
 
                 <Button
                     android:id="@+id/cancelListingBTN"
@@ -146,10 +182,7 @@
         </LinearLayout>
 
 
-
     </ScrollView>
-
-
 
 
 </RelativeLayout>

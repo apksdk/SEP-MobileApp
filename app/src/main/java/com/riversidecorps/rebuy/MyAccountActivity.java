@@ -319,8 +319,4 @@ public class
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
-    private void secondFinish() {
-        finish();
-    }
 }

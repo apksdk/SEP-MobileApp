@@ -1,9 +1,9 @@
 package com.riversidecorps.rebuy;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -16,6 +16,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -26,6 +27,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -88,8 +90,20 @@ public class CreateListingActivity extends AppCompatActivity
     @BindView(R.id.itemIV)
     ImageView itemIV;
 
+    @BindView(R.id.item2IV)
+    ImageView item2IV;
+
+    @BindView(R.id.item3IV)
+    ImageView item3IV;
+
+    @BindView(R.id.addImageBTN)
+    Button addImageBTN;
+
     @BindView(R.id.createListingLayout)
     RelativeLayout createListingLayout;
+
+    @BindView(R.id.itemImagesLayout)
+    LinearLayout itemImagesLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -220,6 +234,7 @@ public class CreateListingActivity extends AppCompatActivity
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
+            //Confirm exit if there's change
         }
     }
 
@@ -245,8 +260,25 @@ public class CreateListingActivity extends AppCompatActivity
     }
 
     public void cancelListingBtnHandler(View view) {
-        //Needs to check if there's changes, then ask if they want to confirm
-        finish();
+        for (int i = 0; i < createListingLayout.getChildCount(); i++) {
+            if (createListingLayout.getChildAt(i) instanceof EditText) {
+                EditText currentET = (EditText) createListingLayout.getChildAt(i);
+                if (!currentET.getText().toString().isEmpty()) {
+                    new AlertDialog.Builder(CreateListingActivity.this)
+                            .setTitle("Exit Confirmation")
+                            .setMessage("Are you sure you want to exit without saving your changes?")
+                            .setIcon(R.drawable.ic_dialog_warning)
+                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    finish();
+                                }
+                            })
+                            .setNegativeButton("No", null)
+                            .show();
+                }
+            }
+        }
     }
 
     // TO DO: Get the current time if possible
@@ -268,7 +300,7 @@ public class CreateListingActivity extends AppCompatActivity
             Date newDate = new Date(date.getTime() + (604800000L * 2) + (24 * 60 * 60));
             SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd");
             String stringDate = dt.format(newDate);
-            final String mUniqueId = UUID.randomUUID().toString();
+            final String uniqueId = UUID.randomUUID().toString();
             //Create new listing
             final Listing newListing = new Listing(userName, name, quantity, price, description, stringDate);
             //Create new listing w/ minimal information - used for seller view overall listings
@@ -282,7 +314,7 @@ public class CreateListingActivity extends AppCompatActivity
             itemImage.compress(Bitmap.CompressFormat.PNG, 100, bAOS);
             byte[] itemImageBytes = bAOS.toByteArray();
             //Create image path for storage
-            String imagePath = "itemImageListings/" + mUniqueId + ".png";
+            String imagePath = "itemImageListings/" + uniqueId + ".png";
             //Upload image(s)
             StorageReference itemImageRef = mStorage.getReference(imagePath);
             UploadTask uploadTask = itemImageRef.putBytes(itemImageBytes);
@@ -291,9 +323,9 @@ public class CreateListingActivity extends AppCompatActivity
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     //Add image URL to listing
                     newListing.setItemImage(taskSnapshot.getDownloadUrl().toString());
-                    newListing.setmItemId(mUniqueId);
+                    newListing.setmItemId(uniqueId);
 
-                    Log.i("Itemid: ",newListing.getmItemId());
+                    Log.i("Itemid: ", newListing.getmItemId());
                     newMinListing.setItemImage(taskSnapshot.getDownloadUrl().toString());
                     //Save listing on Firebase
                     final String listingID = databaseReference.child(DB_LISTING).push().getKey();
@@ -349,6 +381,31 @@ public class CreateListingActivity extends AppCompatActivity
             saveListing();
         } else if (view == cancelListingBTN) {
             finish();
+        } else if (view instanceof ImageView) {
+            changeItemImage(view);
+        }
+    }
+
+    private int mItemIVCount = 1;
+
+    @OnClick(R.id.addImageBTN)
+    public void addImageBTNHandler(View view) {
+        if (mItemIVCount == 1) {
+            item2IV.setVisibility(View.VISIBLE);
+            mItemIVCount++;
+        } else if (mItemIVCount == 2) {
+            item3IV.setVisibility(View.VISIBLE);
+            mItemIVCount++;
+            addImageBTN.setVisibility(View.GONE);
+//            Log.d("XID", String.valueOf(itemIV.getId()));
+//            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) itemIV.getLayoutParams();
+//            ImageView previousIV = (ImageView) itemImagesLayout.getChildAt(itemIVCount);
+//            ImageView newImageIV = new ImageView(CreateListingActivity.this);
+//            newImageIV.setId(R.id.newItemIV);
+//            newImageIV.setImageResource(R.drawable.common_google_signin_btn_text_dark_focused);
+//            params.addRule(RelativeLayout.RIGHT_OF, previousIV.getId());
+//            Log.d("XID", String.valueOf(previousIV.getId()));
+//            itemImagesLayout.addView(newImageIV, params);
         }
     }
 
@@ -358,7 +415,6 @@ public class CreateListingActivity extends AppCompatActivity
      * @param view ImageView
      */
     //TO DO: Maybe allow users to take images using their camera?
-    @OnClick(R.id.itemIV)
     public void changeItemImage(View view) {
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSION_REQUEST_READ_STORAGE);
