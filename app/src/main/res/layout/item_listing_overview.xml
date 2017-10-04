@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="wrap_content"
     android:id="@+id/quizTopicLayout"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:layout_marginBottom="8dp"
-    android:layout_marginTop="8dp"
-    android:layout_height="wrap_content">
+    android:layout_marginTop="8dp">
 
     <ImageView
         android:id="@+id/itemImagePreviewIV"
         android:layout_width="64dp"
         android:layout_height="64dp"
+        android:layout_marginRight="8dp"
         android:contentDescription="Item Image Preview"
         app:srcCompat="@drawable/logo" />
 
@@ -18,8 +19,8 @@
         android:id="@+id/itemNameTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/itemImagePreviewIV"
         android:layout_toEndOf="@+id/itemImagePreviewIV"
+        android:layout_toRightOf="@+id/itemImagePreviewIV"
         android:text="Item Name"
         android:textSize="18sp" />
 
@@ -27,9 +28,9 @@
         android:id="@+id/itemPriceTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/itemImagePreviewIV"
-        android:layout_toEndOf="@+id/itemImagePreviewIV"
         android:layout_below="@+id/itemNameTV"
+        android:layout_toEndOf="@+id/itemImagePreviewIV"
+        android:layout_toRightOf="@+id/itemImagePreviewIV"
         android:text="Item Price"
         android:textSize="16sp" />
 
@@ -37,8 +38,8 @@
         android:id="@+id/removeListingBTN"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:text="Remove" />
 

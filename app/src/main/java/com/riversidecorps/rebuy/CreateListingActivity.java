@@ -50,6 +50,7 @@ import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 import java.util.UUID;
 
 import butterknife.BindView;
@@ -72,7 +73,7 @@ public class CreateListingActivity extends AppCompatActivity
     private static final String AUTH_IN = "onAuthStateChanged:signed_in:";
     private static final String AUTH_OUT = "onAuthStateChanged:signed_out";
 
-    private static final int PERMISSION_REQUEST_READ_STORAGE = 1;
+    private static final int PERMISSION_REQUEST_READ_STORAGE = 1000;
     private static final int REQUEST_GALLERY_IMAGE = 2;
 
     private ProgressDialog progressDialog;
@@ -85,7 +86,8 @@ public class CreateListingActivity extends AppCompatActivity
     private Button cancelListingBTN;
 
     private String userName;
-    private ArrayList<Bitmap> imageList;
+    private ArrayList<String> imageList = new ArrayList<>();
+    private int requestingIV;
 
     @BindView(R.id.itemIV)
     ImageView itemIV;
@@ -283,9 +285,12 @@ public class CreateListingActivity extends AppCompatActivity
 
     // TO DO: Get the current time if possible
     // TO DO: Multiple image upload support
+    private int imageCount;
+
     private void saveListing() {
         //Check if all required fields are filled out
         if (validateForm()) {
+            imageCount = 0;
             //Else show a progress dialog informing the user they are being logged in
             progressDialog.setMessage(getString(R.string.creating_listing_message));
             progressDialog.show();
@@ -296,60 +301,68 @@ public class CreateListingActivity extends AppCompatActivity
             String description = itemDescriptionET.getText().toString().trim();
             final String sellerID = myFirebaseUser.getUid();
             //Get current date
-            Date date = new Date();
-            Date newDate = new Date(date.getTime() + (604800000L * 2) + (24 * 60 * 60));
-            SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd");
-            String stringDate = dt.format(newDate);
-            final String uniqueId = UUID.randomUUID().toString();
+            String stringDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
             //Create new listing
             final Listing newListing = new Listing(userName, name, quantity, price, description, stringDate);
             //Create new listing w/ minimal information - used for seller view overall listings
             final Listing newMinListing = new Listing(name, price, stringDate);
-            //Get the image from imageView
-            itemIV.setDrawingCacheEnabled(true);
-            itemIV.buildDrawingCache();
-            Bitmap itemImage = itemIV.getDrawingCache();
-            //Convert image to byte array
-            ByteArrayOutputStream bAOS = new ByteArrayOutputStream();
-            itemImage.compress(Bitmap.CompressFormat.PNG, 100, bAOS);
-            byte[] itemImageBytes = bAOS.toByteArray();
-            //Create image path for storage
-            String imagePath = "itemImageListings/" + uniqueId + ".png";
-            //Upload image(s)
-            StorageReference itemImageRef = mStorage.getReference(imagePath);
-            UploadTask uploadTask = itemImageRef.putBytes(itemImageBytes);
-            uploadTask.addOnSuccessListener(CreateListingActivity.this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    //Add image URL to listing
-                    newListing.setItemImage(taskSnapshot.getDownloadUrl().toString());
-                    newListing.setmItemId(uniqueId);
-                    newListing.setmItemSellerId(sellerID);
+            for (int i = 0; i < itemImagesLayout.getChildCount(); i++) {
+                if (itemImagesLayout.getChildAt(i) instanceof ImageView && itemImagesLayout.getChildAt(i).getVisibility() != View.GONE) {
+                    imageCount++;
+                }
+            }
 
-                    Log.i("Itemid: ", newListing.getmItemId());
-                    newMinListing.setItemImage(taskSnapshot.getDownloadUrl().toString());
-                    //Save listing on Firebase
-                    final String listingID = databaseReference.child(DB_LISTING).push().getKey();
-                    databaseReference.child(DB_LISTING).child(listingID).setValue(newListing).addOnSuccessListener(CreateListingActivity.this, new OnSuccessListener<Void>() {
-                        /**
-                         * Create a toast when listing has been stored to inform the user that their listing has been successfully created
-                         * @param aVoid void
-                         */
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            databaseReference.child("users").child(sellerID).child("Listings").child(listingID).setValue(newMinListing).addOnSuccessListener(CreateListingActivity.this, new OnSuccessListener<Void>() {
+            for (int i = 0; i < imageCount; i++) {
+                ImageView currentIV = (ImageView) itemImagesLayout.getChildAt(i);
+                final String uniqueId = UUID.randomUUID().toString();
+                //Get the image from imageView
+                currentIV.setDrawingCacheEnabled(true);
+                currentIV.buildDrawingCache();
+                Bitmap itemImage = currentIV.getDrawingCache();
+                //Convert image to byte array
+                ByteArrayOutputStream bAOS = new ByteArrayOutputStream();
+                itemImage.compress(Bitmap.CompressFormat.PNG, 100, bAOS);
+                byte[] itemImageBytes = bAOS.toByteArray();
+                //Create image path for storage
+                String imagePath = "itemImageListings/" + uniqueId + ".png";
+                //Upload image(s)
+                StorageReference itemImageRef = mStorage.getReference(imagePath);
+                UploadTask uploadTask = itemImageRef.putBytes(itemImageBytes);
+                uploadTask.addOnSuccessListener(CreateListingActivity.this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        imageList.add(taskSnapshot.getDownloadUrl().toString());
+
+                        if (imageList.size() == imageCount) {
+                            //Add image URL to listing
+                            newListing.setItemImages(imageList);
+                            newListing.setmItemId(uniqueId);
+                            newListing.setmItemSellerId(sellerID);
+                            newMinListing.setItemImage(imageList.get(0));
+                            //Save listing on Firebase
+                            final String listingID = databaseReference.child(DB_LISTING).push().getKey();
+                            databaseReference.child(DB_LISTING).child(listingID).setValue(newListing).addOnSuccessListener(CreateListingActivity.this, new OnSuccessListener<Void>() {
+                                /**
+                                 * Create a toast when listing has been stored to inform the user that their listing has been successfully created
+                                 * @param aVoid void
+                                 */
                                 @Override
                                 public void onSuccess(Void aVoid) {
-                                    Toast.makeText(getBaseContext(), "Your listing has been successfully created!", Toast.LENGTH_LONG).show();
-                                    //Close the progress dialog
-                                    progressDialog.dismiss();
-                                    finish();
+                                    databaseReference.child("users").child(sellerID).child("Listings").child(listingID).setValue(newMinListing).addOnSuccessListener(CreateListingActivity.this, new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            Toast.makeText(getBaseContext(), "Your listing has been successfully created!", Toast.LENGTH_LONG).show();
+                                            //Close the progress dialog
+                                            progressDialog.dismiss();
+                                            finish();
+                                        }
+                                    });
                                 }
                             });
                         }
-                    });
-                }
-            });
+                    }
+                });
+            }
         }
     }
 
@@ -422,7 +435,13 @@ public class CreateListingActivity extends AppCompatActivity
         } else {
             Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             intent.setType("image/");
-            startActivityForResult(intent, REQUEST_GALLERY_IMAGE);
+
+            for (int i = 0; i < itemImagesLayout.getChildCount(); i++) {
+                if (itemImagesLayout.getChildAt(i) == view) {
+                    requestingIV = i;
+                    startActivityForResult(intent, REQUEST_GALLERY_IMAGE);
+                }
+            }
         }
     }
 
@@ -472,7 +491,17 @@ public class CreateListingActivity extends AppCompatActivity
                     //Convert image stream to bitmap
                     Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
                     //Set item image
-                    itemIV.setImageBitmap(selectedImage);
+                    switch (requestingIV) {
+                        case 0:
+                            itemIV.setImageBitmap(selectedImage);
+                            break;
+                        case 1:
+                            item2IV.setImageBitmap(selectedImage);
+                            break;
+                        case 2:
+                            item3IV.setImageBitmap(selectedImage);
+                            break;
+                    }
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }

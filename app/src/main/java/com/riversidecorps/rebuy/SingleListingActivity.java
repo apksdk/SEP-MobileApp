@@ -83,13 +83,13 @@ public class SingleListingActivity extends AppCompatActivity
         itemDes = getIntent().getStringExtra("itemDes");
         itemQuantity = getIntent().getIntExtra("itemQuantity", 0);
         itemSellerID = getIntent().getStringExtra("itemSellerId");
-        Log.i("mm",itemSellerID);
+//        Log.i("mm",itemSellerID);
         userID = mUser.getUid();
         loginInfor = findViewById(R.id.logininfor);
         mitemImageIV=findViewById(itemImageIV);
         String imagePath = "itemImageListings/" + itemID + ".png";
         //Upload image(s)
-        Log.i("imagePath",imagePath);
+//        Log.i("imagePath",imagePath);
 
         StorageReference itemImageRef = mStorage.getReference(imagePath);
         Glide.with(this)

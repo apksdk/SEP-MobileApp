@@ -253,4 +253,12 @@ public class Listing {
     public void setmItemId(String mItemId) {
         this.mItemId = mItemId;
     }
+
+    public ArrayList<String> getItemImages() {
+        return mItemImages;
+    }
+
+    public void setItemImages(ArrayList<String> mItemImages) {
+        this.mItemImages = mItemImages;
+    }
 }
