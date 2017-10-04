@@ -66,6 +66,14 @@ public class ViewListingsActivity extends AppCompatActivity
             //User is logged in;
         }
 
+        mRecyclerView = findViewById(R.id.recycler_view);
+        mAdapter = new ItemAdapter(this, mItemList);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        mRecyclerView.setAdapter(mAdapter);
+        mAdapter.notifyDataSetChanged();
+
         String userId = mUser.getUid();
 
         // Attach a listener to read the data at our posts reference
@@ -84,10 +92,12 @@ public class ViewListingsActivity extends AppCompatActivity
                     String itemDate = (String) messageSnapshot.child("createdDate").getValue();
                     DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
                     String itemId =  (String) messageSnapshot.child("mItemId").getValue();
+                    String itemSellerId =  (String) messageSnapshot.child("mItemSellerId").getValue();
                     try {
                         Date date = format.parse(itemDate);
                         Listing newListing = new Listing(sellerName,name,Integer.parseInt(quantity.toString()),price,description,itemDate);
                         newListing.setmItemId(itemId);
+                        newListing.setmItemSellerId(itemSellerId);
                         mItemList.add(newListing);
                     } catch (ParseException e) {
                         e.printStackTrace();
@@ -101,13 +111,7 @@ public class ViewListingsActivity extends AppCompatActivity
                 System.out.println("The read failed: " + databaseError.getCode());
             }
         });
-        mRecyclerView = findViewById(R.id.recycler_view);
-        mAdapter = new ItemAdapter(this, mItemList);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        mRecyclerView.setAdapter(mAdapter);
-        mAdapter.notifyDataSetChanged();
+
 
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

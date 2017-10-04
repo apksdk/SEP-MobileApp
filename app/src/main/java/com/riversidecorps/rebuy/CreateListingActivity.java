@@ -324,6 +324,7 @@ public class CreateListingActivity extends AppCompatActivity
                     //Add image URL to listing
                     newListing.setItemImage(taskSnapshot.getDownloadUrl().toString());
                     newListing.setmItemId(uniqueId);
+                    newListing.setmItemSellerId(sellerID);
 
                     Log.i("Itemid: ", newListing.getmItemId());
                     newMinListing.setItemImage(taskSnapshot.getDownloadUrl().toString());

@@ -19,15 +19,7 @@ public class Listing {
     private Boolean mItemCompleted;
     private String mCreatedDate;
     private String mItemId;
-
-    public String getmItemId() {
-        return mItemId;
-    }
-
-    public void setmItemId(String mItemId) {
-        this.mItemId = mItemId;
-    }
-
+    private String mItemSellerId;
     /**
      * Instantiates a new Listing.
      * <p>
@@ -229,5 +221,36 @@ public class Listing {
      */
     public void setItemImage(String mItemImage) {
         this.mItemImage = mItemImage;
+    }
+
+    /**
+     * Gets item seller ID.
+     *
+     * @return the item seller ID
+     */
+    public String getmItemSellerId() { return mItemSellerId; }
+    /**
+     * Sets item seller ID.
+     *
+     * @param mItemSellerId the m item seller id
+     */
+    public void setmItemSellerId(String mItemSellerId) { this.mItemSellerId = mItemSellerId; }
+
+    /**
+     * Gets item item ID.
+     *
+     * @return the item ID
+     */
+    public String getmItemId() {
+        return mItemId;
+    }
+
+    /**
+     * Sets item ID.
+     *
+     * @param mItemId the m item id
+     */
+    public void setmItemId(String mItemId) {
+        this.mItemId = mItemId;
     }
 }
