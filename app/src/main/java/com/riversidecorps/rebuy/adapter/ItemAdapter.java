@@ -3,7 +3,6 @@ package com.riversidecorps.rebuy.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,12 +35,8 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
         TextView item_name;
         TextView price_pre;
         TextView item_price;
-        TextView seller_pre;
-        TextView item_seller;
         TextView description_pre;
         TextView item_description;
-        TextView quantity_pre;
-        TextView item_quantity;
         TextView date_pre;
         TextView item_date;
         private View view;
@@ -56,11 +51,6 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
             price_pre = (TextView) view.findViewById(R.id.price_pre);
             item_price = (TextView) view.findViewById(R.id.item_price);
             itemImage = (ImageView) view.findViewById(R.id.item_image);
-        /*    quantity_pre = (TextView) view.findViewById(R.id.quantity_pre);
-            item_quantity = (TextView) view.findViewById(R.id.item_quantity);
-
-            seller_pre = (TextView) view.findViewById(R.id.seller_pre);
-            item_seller = (TextView) view.findViewById(R.id.item_seller);*/
             description_pre = (TextView) view.findViewById(R.id.description_pre);
             item_description = (TextView) view.findViewById(R.id.item_description);
 
@@ -86,35 +76,23 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
     public void onBindViewHolder(final ViewHolder viewHolder, int position) {
         viewHolder.title_pre.setText(R.string.title_pre);
         viewHolder.price_pre.setText(R.string.price_pre);
-       /* viewHolder.quantity_pre.setText(R.string.quantity_pre);
-        viewHolder.seller_pre.setText(R.string.seller_pre);*/
+//        viewHolder.seller_pre.setText(R.string.seller_pre);
         viewHolder.description_pre.setText(R.string.description_pre);
         viewHolder.date_pre.setText(R.string.date_pre);
 
         viewHolder.item_name.setText(itemLists.get(position).getItemName());
         viewHolder.item_price.setText(itemLists.get(position).getItemPrice());
-      /*  viewHolder.item_quantity.setText(itemLists.get(position).getItemQuantity().toString());
-        viewHolder.item_seller.setText(itemLists.get(position).getItemSeller());*/
         viewHolder.item_description.setText(itemLists.get(position).getItemDescription());
         String date = itemLists.get(position).getCreatedDate();
-//        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-//        String formatedDate = formatter.format(date);
         viewHolder.item_date.setText(date);
 
         String itemId=itemLists.get(position).getmItemId();
-        //Log.i("itemId",itemId);
         String imagePath = "itemImageListings/" + itemId + ".png";
-        //Upload image(s)
-        //Log.i("imagePath",imagePath);
-
         StorageReference itemImageRef = mStorage.getReference(imagePath);
         Glide.with(context)
                 .using(new FirebaseImageLoader())
                 .load(itemImageRef)
                 .into(viewHolder.itemImage);
-
-
-
             viewHolder.view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -124,6 +102,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
                 intent.putExtra("itemDes", itemLists.get(viewHolder.getAdapterPosition()).getItemDescription());
                 intent.putExtra("itemQuantity", itemLists.get(viewHolder.getAdapterPosition()).getItemQuantity());
                 intent.putExtra("itemId", itemLists.get(viewHolder.getAdapterPosition()).getmItemId());
+                intent.putExtra("itemSellerId", itemLists.get(viewHolder.getAdapterPosition()).getmItemSellerId());
                 context.startActivity(intent);
 
             }

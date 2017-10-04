@@ -3,7 +3,6 @@ package com.riversidecorps.rebuy;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -292,6 +291,7 @@ public class CreateListingActivity extends AppCompatActivity
                     //Add image URL to listing
                     newListing.setItemImage(taskSnapshot.getDownloadUrl().toString());
                     newListing.setmItemId(mUniqueId);
+                    newListing.setmItemSellerId(sellerID);
 
                     Log.i("Itemid: ",newListing.getmItemId());
                     newMinListing.setItemImage(taskSnapshot.getDownloadUrl().toString());

@@ -1,5 +1,7 @@
 package com.riversidecorps.rebuy;
 
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -7,18 +9,23 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -29,8 +36,12 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import static android.content.ContentValues.TAG;
 import static com.riversidecorps.rebuy.R.id.itemImageIV;
+import static com.riversidecorps.rebuy.R.id.itemPriceTV;
 
 public class SingleListingActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener{
@@ -40,10 +51,12 @@ public class SingleListingActivity extends AppCompatActivity
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseStorage mStorage = FirebaseStorage.getInstance();
     private FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
-
+    private DatabaseReference databaseReference;
+    private ProgressDialog progressDialog;
+    private static final String DB_MESSAGES = "messages";
     private static final String AUTH_IN = "onAuthStateChanged:signed_in:";
     private static final String AUTH_OUT = "onAuthStateChanged:signed_out";
-    private Button offerBTN,buyBTN;
+    private Button offerBTN,buyBTN,messageBTN;
 
     private String itemID;
     private String itemName;
@@ -54,14 +67,14 @@ public class SingleListingActivity extends AppCompatActivity
     private String userID;
     private String userName;
     private TextView loginInfor;
-
+    private String itemSellerID;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_single_listing);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        progressDialog = new ProgressDialog(this);
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
         itemID = getIntent().getStringExtra("itemId");
@@ -69,6 +82,8 @@ public class SingleListingActivity extends AppCompatActivity
         itemPrice = getIntent().getStringExtra("itemPrice");
         itemDes = getIntent().getStringExtra("itemDes");
         itemQuantity = getIntent().getIntExtra("itemQuantity", 0);
+        itemSellerID = getIntent().getStringExtra("itemSellerId");
+        Log.i("mm",itemSellerID);
         userID = mUser.getUid();
         loginInfor = findViewById(R.id.logininfor);
         mitemImageIV=findViewById(itemImageIV);
@@ -82,11 +97,11 @@ public class SingleListingActivity extends AppCompatActivity
                 .load(itemImageRef)
                 .into(mitemImageIV);
 
-
+        databaseReference = FirebaseDatabase.getInstance().getReference();
         TextView iNameTv = (TextView) findViewById(R.id.itemNameTV);
         iNameTv.setText(itemName);
 
-        TextView iPriceTv = (TextView) findViewById(R.id.itemPriceTV);
+        TextView iPriceTv = (TextView) findViewById(itemPriceTV);
         iPriceTv.setText(itemPrice + "   Quantity: " + itemQuantity.toString());
 
         TextView iDesTv = (TextView) findViewById(R.id.descriptionTV);
@@ -95,8 +110,10 @@ public class SingleListingActivity extends AppCompatActivity
 
         offerBTN = (Button)findViewById(R.id.offerBTN);
         buyBTN = (Button)findViewById(R.id.buyBTN);
+        messageBTN=findViewById(R.id.messageBTN);
         offerBTN.setOnClickListener(this);
         buyBTN.setOnClickListener(this);
+        messageBTN.setOnClickListener(this);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -221,7 +238,6 @@ public class SingleListingActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
     @Override
     public void onClick(View view) {
         if(view == offerBTN ){
@@ -237,5 +253,44 @@ public class SingleListingActivity extends AppCompatActivity
             OfferActivity.putExtra("itemId", getIntent().getStringExtra("itemId"));
             startActivity(OfferActivity);
         }
+        if(view == messageBTN){
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("Message");
+            builder.setIcon(R.drawable.ic_message_dialog);
+
+            final EditText input = new EditText(this);
+            input.setInputType(InputType.TYPE_CLASS_TEXT);
+            builder.setView(input);
+            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    progressDialog.setMessage(getString(R.string.creating_listing_message));
+                    progressDialog.show();
+                    String datetime = new SimpleDateFormat("yyyy-MM-dd hh:mm a").format(new Date());
+                    String message = input.getText().toString();
+                    final String messageID = databaseReference.child("users").child(itemSellerID).child("messages").push().getKey();
+                    databaseReference.child("users").child(itemSellerID).child("messages").child(messageID).child("content").setValue(message);
+                    databaseReference.child("users").child(itemSellerID).child("messages").child(messageID).child("title").setValue(itemName);
+                    databaseReference.child("users").child(itemSellerID).child("messages").child(messageID).child("buyer").setValue(userName);
+                    databaseReference.child("users").child(itemSellerID).child("messages").child(messageID).child("datetime").setValue(datetime).addOnSuccessListener(SingleListingActivity.this, new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Toast.makeText(getBaseContext(), "Your message has been sent to the seller!", Toast.LENGTH_LONG).show();
+                            //Close the progress dialog
+                            progressDialog.dismiss();
+                            finish();
+                        }
+                    });
+                }
+            });
+            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+            builder.show();
+        }
+
     }
 }
