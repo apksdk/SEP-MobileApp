@@ -1,5 +1,7 @@
 package com.riversidecorps.rebuy;
 
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -14,6 +16,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -29,16 +32,21 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.riversidecorps.rebuy.models.Listing;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
@@ -50,8 +58,8 @@ import static android.content.ContentValues.TAG;
 /**
  * The type My account activity.
  */
-public class 
-  MyAccountActivity extends AppCompatActivity
+public class
+MyAccountActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final int PERMISSION_REQUEST_READ_STORAGE = 1;
@@ -60,6 +68,7 @@ public class
     private FirebaseUser mUser = mAuth.getCurrentUser();
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
+    private FirebaseStorage mStorage = FirebaseStorage.getInstance();
 
     private static final String AUTH_IN = "onAuthStateChanged:signed_in:";
     private static final String AUTH_OUT = "onAuthStateChanged:signed_out";
@@ -79,7 +88,7 @@ public class
     // TO DO - CHECK OFFLINE & DISPLAY ERROR IF SO, LOAD IMAGES
     // ALSO MAYBE CREATE NEW SECTION FOR LISTING PREVIEWS IN FIREBASE TO AVOID LOADING OTHER INFOS
     @Override
-        protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_account);
 
@@ -134,7 +143,10 @@ public class
         usernameNavTV.setText(userIDTV.getText().toString());
 
         //Display user details
-        //userAvatarIV.setImageURI(mUser.getPhotoUrl());
+        Glide.with(this)
+                .load(mUser.getPhotoUrl())
+                .placeholder(R.mipmap.ic_launcher_round)
+                .into(userAvatarIV);
         userEmailTV.setText(mUser.getEmail());
 
         //Set up nav menu
@@ -147,8 +159,6 @@ public class
         currentListingsRV.addItemDecoration(dividerItemDecoration);
 
         DatabaseReference ref = mDatabase.getReference().child("users").child(userID).child("Listings");
-//        Listing listing = new Listing("testuser", "Test Item", 1, "$4.99", "Default Description", "22/09/2017");
-//        ref.push().setValue(listing);
         Query query = ref.orderByChild("itemDeleted").equalTo(false);
         FirebaseRecyclerAdapter<Listing, ListingHolder> mAdapter = new FirebaseRecyclerAdapter<Listing, ListingHolder>(
                 Listing.class,
@@ -223,8 +233,57 @@ public class
                 try {
                     Uri imageUri = data.getData();
                     InputStream imageStream = getContentResolver().openInputStream(imageUri);
-                    Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
-                    userAvatarIV.setImageBitmap(selectedImage);
+                    final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+                    ImageView previewIV = new ImageView(this);
+                    previewIV.setImageBitmap(selectedImage);
+                    new AlertDialog.Builder(MyAccountActivity.this)
+                            .setMessage("Would you like to change your picture to this?")
+                            .setTitle("Change User Image Confirmation")
+                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                //Upload Image
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    final ProgressDialog progressDialog = new ProgressDialog(MyAccountActivity.this);
+                                    progressDialog.setTitle("Saving Avatar");
+                                    progressDialog.setMessage("Saving your avatar...");
+                                    progressDialog.setCancelable(false);
+                                    progressDialog.show();
+                                    //Get the image from imageView
+                                    userAvatarIV.setDrawingCacheEnabled(true);
+                                    userAvatarIV.buildDrawingCache();
+                                    Bitmap avatarImage = userAvatarIV.getDrawingCache();
+                                    //Convert image to byte array
+                                    ByteArrayOutputStream bAOS = new ByteArrayOutputStream();
+                                    avatarImage.compress(Bitmap.CompressFormat.PNG, 100, bAOS);
+                                    byte[] avatarImageBytes = bAOS.toByteArray();
+                                    String userAvatarPath = "users/" + mUser.getUid() + "/avatar.png";
+                                    StorageReference userAvatarRef = mStorage.getReference(userAvatarPath);
+                                    UploadTask uploadTask = userAvatarRef.putBytes(avatarImageBytes);
+                                    uploadTask.addOnSuccessListener(MyAccountActivity.this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                        @Override
+                                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                            UserProfileChangeRequest profileChangeRequest = new UserProfileChangeRequest.Builder()
+                                                    .setPhotoUri(taskSnapshot.getDownloadUrl())
+                                                    .build();
+                                            mUser.updateProfile(profileChangeRequest).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    if(task.isSuccessful()) {
+                                                        Toast.makeText(MyAccountActivity.this, "You have successfully saved your avatar.", Toast.LENGTH_SHORT).show();
+                                                        userAvatarIV.setImageBitmap(selectedImage);
+                                                    } else {
+                                                        Toast.makeText(MyAccountActivity.this, "There was an error while saving your avatar. Please try again.", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                    progressDialog.dismiss();
+                                                }
+                                            });
+                                        }
+                                    });
+                                }
+                            })
+                            .setNegativeButton("No", null)
+                            .setView(previewIV)
+                            .show();
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -249,8 +308,10 @@ public class
             mAuth.removeAuthStateListener(mAuthListener);
         }
     }
+
     /**
      * Creates the options menu on the action bar.
+     *
      * @param menu Menu at the top right of the screen
      * @return true
      */
@@ -263,12 +324,13 @@ public class
 
     /**
      * Sets a listener that triggers when an option from the taskbar menu is selected.
+     *
      * @param item Which item on the menu was selected.
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         //Finds which item was selected
-        switch(item.getItemId()){
+        switch (item.getItemId()) {
             //If item is logout
             case R.id.action_logout:
                 //Sign out of the authenticator and return to login activity.
