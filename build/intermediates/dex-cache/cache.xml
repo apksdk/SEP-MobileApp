@@ -1,0 +1,464 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        is-multidex="true"
+        jar="C:\Users\Seannycow\.android\build-cache\476e496c4fd220a6b7a3517d355ac7b5912a3cee\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="07b52724ade6a26fecb53090da1574913fc78639">
+        <dex dex="C:\Users\Seannycow\Documents\GitHub\SEP-MobileApp\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_5e1a58939c9c0a32a289605a440016fbf71c77f7\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Seannycow\.android\build-cache\dded5299924ca0f19c40c608dc04ad4c8b1ab90d\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="341fc0b4661ec63331b1d95d8ceaeb04f5fd25cd">
+        <dex dex="C:\Users\Seannycow\Documents\GitHub\SEP-MobileApp\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_dff4dcbb535d068ac1796cd7bee4e062eff348b4\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Seannycow\.android\build-cache\331321105bef717ea58ddc4aedc2392845036dff\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="ce672872bb6f9a775bb52a91dc825d41e393e57b">
+        <dex dex="C:\Users\Seannycow\Documents\GitHub\SEP-MobileApp\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_0a9eee95dec0c2617480409e1ee3048de8f87ac0\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Seannycow\.android\build-cache\38e9ec4c6f75625e47ed929ff7e1f3bbbac3ceb7\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="36a6c288ed760d2d899126fa90761b84af10dd2d">
+        <dex dex="C:\Users\Seannycow\Documents\GitHub\SEP-MobileApp\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_ba19ec2c6dcbdc759a494f0c7a758da31c4d7dc6\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Seannycow\.android\build-cache\6c1069b1d20d308af16d53580a29f8c258402ee2\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="03589bac12234193d4a7a9b106a6db1b367afe99">
+        <dex dex="C:\Users\Seannycow\Documents\GitHub\SEP-MobileApp\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_ad75d4b0c723b22177ee400039caf766ad96b8e5\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Seannycow\.android\build-cache\04cc10746fb1e0175b8e46bcee56e4fa4815308b\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="1f257478030cb1f0f04809b8cf8d63c48b651cbc">
+        <dex dex="C:\Users\Seannycow\Documents\GitHub\SEP-MobileApp\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_a9f1e102d9ec7df4168574e893983e49f4864d68\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Seannycow\.android\build-cache\35af56f70da9406ddcb65ab4eaa2b930fb4531ef\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="5753660caa486676aacf05857930d76589a09af9">
+        <dex dex="C:\Users\Seannycow\Documents\GitHub\SEP-MobileApp\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_bb27abe8128891140a9e78965bae83ffd0a24f3c\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Seannycow\.android\build-cache\891d31ba4391ec72808b6fc67c1071c1aec82c79\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="6a2bcb61342d09fe9acf55c9daf63961c8866cc0">
+        <dex dex="C:\Users\Seannycow\Documents\GitHub\SEP-MobileApp\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_888e15b15656b7d23382bbcc328f4b0b8569f92e\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Seannycow\.android\build-cache\cc6bcd8f12d8700085e2978ec6f35545e9d0d9f4\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="374d595ee099a19b6c1c3718cdb4c345be7a3d45">
+        <dex dex="C:\Users\Seannycow\Documents\GitHub\SEP-MobileApp\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_bd62bae1e68afb33e5b4751d108d83cdcb3f5154\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Seannycow\Documents\GitHub\SEP-MobileApp\app\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="bdba886cfc8a7b31f530efe81b3925a5a49ccd13">
+        <dex dex="C:\Users\Seannycow\Documents\GitHub\SEP-MobileApp\app\build\intermediates\transforms\dex\debug\folders\1000\10000\instant-run-bootstrap_b1188c79b33131878420ffaf9aa9c8fd4b9104a2\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Seannycow\.android\build-cache\bc7f7483032b8f8f2d70b52efedea6f12109287d\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="cfb0e06b74b6d9f1a0743d38a97808cf214bdcb1">
+        <dex dex="C:\Users\Seannycow\Documents\GitHub\SEP-MobileApp\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_a2142012878fc0b3541e24fd353c3223f693266f\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Seannycow\.android\build-cache\fe7f185fd97876ebe68320251145a1639912c48c\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="5b65ec1ebc84af3baecfd28954c9e7ff01b937a8">
+        <dex dex="C:\Users\Seannycow\Documents\GitHub\SEP-MobileApp\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_769a6f8414aaf1aa05e79600f9ab60c8f894b064\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Seannycow\.android\build-cache\429c356f7480cd75ad8229ff021ad3b3c70087be\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="38cbea06a82d3b0db4214dc3cc0fdd7940c8abe7">
+        <dex dex="C:\Users\Seannycow\Documents\GitHub\SEP-MobileApp\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_c61a93873dc2eff5282863839ca3ec18472a9fa3\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Seannycow\.gradle\caches\modules-2\files-2.1\com.android.support\support-annotations\26.0.1\e1bb32b12b25e2f78e6786059ca7ea878f8345e0\support-annotations-26.0.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="e1bb32b12b25e2f78e6786059ca7ea878f8345e0">
+        <dex dex="C:\Users\Seannycow\Documents\GitHub\SEP-MobileApp\app\build\intermediates\transforms\dex\debug\folders\1000\10\support-annotations-26.0.1_9372d7246ee660e8383063e3fe3288056ef82631\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Seannycow\.android\build-cache\7fbdf68d3710224e6ea9b558530f3730130785e3\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="d7c42c80f6509b9ea4db28ca7859ffae08ec5741">
+        <dex dex="C:\Users\Seannycow\Documents\GitHub\SEP-MobileApp\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_7ea1da9d326ee794aa890c006cd9efe91e398e87\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Seannycow\.android\build-cache\9104ea8f3ab0784bd0f80723e740de04a4d32488\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="67a51ae54d61ca318e61c73cdd9b27ec56af03bc">
+        <dex dex="C:\Users\Seannycow\Documents\GitHub\SEP-MobileApp\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_14261f168858ddbb7fca947fb8ead555f138d5fe\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Seannycow\.android\build-cache\770b56a39bc342f8db406be19758344b2dfcfe82\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="c390af22079a61fdc42712c19f15a700f1fc2cbf">
+        <dex dex="C:\Users\Seannycow\Documents\GitHub\SEP-MobileApp\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_7c67ae41d0c382560be948eba49e8bb91f417a57\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Seannycow\.android\build-cache\9f9565a43e623ef8b68079a08120da098b51a862\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="28ed270c519ff2874343e0824808da2efda0df9c">
+        <dex dex="C:\Users\Seannycow\Documents\GitHub\SEP-MobileApp\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_6bf3fb918593a4eb67ab346543cf17bef7e30f35\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Seannycow\.gradle\caches\modules-2\files-2.1\com.github.bumptech.glide\glide\3.8.0\9bada650e1afe9c6174ddc0d113c1fce4dc26fe0\glide-3.8.0.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="9bada650e1afe9c6174ddc0d113c1fce4dc26fe0">
+        <dex dex="C:\Users\Seannycow\Documents\GitHub\SEP-MobileApp\app\build\intermediates\transforms\dex\debug\folders\1000\10\glide-3.8.0_229dd57a46f95bc6de0caeafa6834b343c2b91f0\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Seannycow\.android\build-cache\50d9bf6814ce0e43ead08f778fd20fb7374a4b3a\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="906fdd57c143ec9adc27a76a697fed1c0cfd6348">
+        <dex dex="C:\Users\Seannycow\Documents\GitHub\SEP-MobileApp\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_8f87d44e6a933478d8477042fecbfd15927dc5ee\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Seannycow\.gradle\caches\modules-2\files-2.1\com.android.support.constraint\constraint-layout-solver\1.1.0-beta1\4205dd8c33ada1468ab377afff0be95304ef72a\constraint-layout-solver-1.1.0-beta1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="04205dd8c33ada1468ab377afff0be95304ef72a">
+        <dex dex="C:\Users\Seannycow\Documents\GitHub\SEP-MobileApp\app\build\intermediates\transforms\dex\debug\folders\1000\10\constraint-layout-solver-1.1.0-beta1_80cbab906ea86a376e5f19d71be25c1419e37f83\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Seannycow\.android\build-cache\2f2bdcd68d9c9a62acd324ba3fa3c31f44092758\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="edba0aec4aedd4edb3a520b4ee87adc52be762da">
+        <dex dex="C:\Users\Seannycow\Documents\GitHub\SEP-MobileApp\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_733c8cd0d447250348eee6542ead9061568d99d2\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Seannycow\.gradle\caches\modules-2\files-2.1\android.arch.core\common\1.0.0-alpha8\eca55e2b62e608e3656425ef08e814b4afd8fc9d\common-1.0.0-alpha8.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="eca55e2b62e608e3656425ef08e814b4afd8fc9d">
+        <dex dex="C:\Users\Seannycow\Documents\GitHub\SEP-MobileApp\app\build\intermediates\transforms\dex\debug\folders\1000\10\common-1.0.0-alpha8_ccd1817de909c52e6d616ea974f671f13c146a50\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Seannycow\.android\build-cache\12e9ffa1ec5c9b74d58ce88c3a88b2363a5c9baf\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="e7424f816f538c2acfba6169b25e297ea22afbd8">
+        <dex dex="C:\Users\Seannycow\Documents\GitHub\SEP-MobileApp\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_85843036d03d544dca51025beab6e3ce2a5a4949\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Seannycow\.android\build-cache\a18ace709e3b9457a04f486093a9d54b63fc47b5\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="6666dd525c3da197e7d07f4f23ef5fc7881a697b">
+        <dex dex="C:\Users\Seannycow\Documents\GitHub\SEP-MobileApp\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_d0f3ef2ce8a8489027ff615250125af53862855b\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Seannycow\.android\build-cache\187a04549ce971c0f1888b600878049b3c280cb2\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="3da345d7c08a7e9d83a34d8723057624b941c0ea">
+        <dex dex="C:\Users\Seannycow\Documents\GitHub\SEP-MobileApp\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_33c2cf72495cdbaedfb2ec84bdaf74c36be52552\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Seannycow\.android\build-cache\dc25fad9ecd9c9c6aad8e83bf5d5543bd0f5b893\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="c478771eacdf8217e093a1b967b8152cfdaadc94">
+        <dex dex="C:\Users\Seannycow\Documents\GitHub\SEP-MobileApp\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_58536f93a6e1d6ef8ee897df28e907cb598f1398\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Seannycow\.android\build-cache\16c7061b87caefe1ca80d6726e5e1774c593fe06\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="d1e7ad8d5340b695e52cc5a14819f4264a4f4b8e">
+        <dex dex="C:\Users\Seannycow\Documents\GitHub\SEP-MobileApp\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_9e5421fad99b53742802fc50e26aa924ded0f7b1\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Seannycow\.android\build-cache\437a882896056459b370c2af7a6c4309363b91d1\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="3c433e48557e476290f45fb6cb568d1a103c9978">
+        <dex dex="C:\Users\Seannycow\Documents\GitHub\SEP-MobileApp\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_5efaaf772c50cbef3124ada3409765e98fc18d89\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Seannycow\.android\build-cache\5251803db7f0c25399d54102e54f68d252b3a59a\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="132a3661719fdac703f2a6f6a7b178c85cfe3cc6">
+        <dex dex="C:\Users\Seannycow\Documents\GitHub\SEP-MobileApp\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_d585acab28e9901d410545e8c15ba9c7df746edd\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Seannycow\Documents\GitHub\SEP-MobileApp\app\build\intermediates\incremental-runtime-classes\debug\instant-run.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="3be78ebc2706b2e1fe2f12d5726887a92d6c183b">
+        <dex dex="C:\Users\Seannycow\Documents\GitHub\SEP-MobileApp\app\build\intermediates\transforms\dex\debug\folders\1000\10000\instant-run_a4ba668070f24cb15345478517f74451e1916764\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Seannycow\.android\build-cache\73ed57bac8cbdcdc73ce2162cfc7d5334804af60\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="22c673e65215e0764add61e3102946de895439e4">
+        <dex dex="C:\Users\Seannycow\Documents\GitHub\SEP-MobileApp\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_9d2535782b77ba1a9094354f281d20bc25f368e9\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Seannycow\.android\build-cache\54fa28c3b37001e6d9d3766d5e07e14f01682f87\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="a4590fa7eadce322ca893129fdc999074e1aa5bf">
+        <dex dex="C:\Users\Seannycow\Documents\GitHub\SEP-MobileApp\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_c2838ad20adee8b6d1b228633aec30d452af82c7\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Seannycow\.gradle\caches\modules-2\files-2.1\android.arch.lifecycle\common\1.0.0-alpha8\a90cf14b188c4223c980c83784335e30d3bb89f4\common-1.0.0-alpha8.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="a90cf14b188c4223c980c83784335e30d3bb89f4">
+        <dex dex="C:\Users\Seannycow\Documents\GitHub\SEP-MobileApp\app\build\intermediates\transforms\dex\debug\folders\1000\10\common-1.0.0-alpha8_b8d51845fbcb5c9c49513755fc8f012f08cdee79\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Seannycow\.android\build-cache\ad601c037329ce90e6aa884006dc92d51789dfda\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="681eeeaec5300e5257ad9bf889c3859ba3833d5a">
+        <dex dex="C:\Users\Seannycow\Documents\GitHub\SEP-MobileApp\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_c6e34f055b67e9d0b587f9aa705d38ca3a0e7383\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Seannycow\.android\build-cache\27ba1676b2553fcf04110c56f56e867529ecaa4a\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="56ae1b700bdd20fdf8c5347fadcc96228fc1bf16">
+        <dex dex="C:\Users\Seannycow\Documents\GitHub\SEP-MobileApp\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_c000f2b503dd0b750e91c75ddb82f591a4e056c2\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Seannycow\.android\build-cache\65aa6dafeb2a869e37f34fd4711aac2903a44b46\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="10c32fcf3d0acc4b208fc39f8d2e16b69ef8bd3b">
+        <dex dex="C:\Users\Seannycow\Documents\GitHub\SEP-MobileApp\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_a83dddc25eed778c57462adb74088353e79f6e34\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Seannycow\.android\build-cache\1a4b69c6436879251ab02714674b4e2f336e8773\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="dff4d8f88fe2c0e57306e6981fd9b90caeead7e3">
+        <dex dex="C:\Users\Seannycow\Documents\GitHub\SEP-MobileApp\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_153fdfca1782cc07f9f163b2f6482ca5e3bba109\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Seannycow\.android\build-cache\f300bc0b7149b65dba6af349fbbc489b48e7be58\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="71af915b7f4f7ec0b5f768b365145bb6a5cb9a66">
+        <dex dex="C:\Users\Seannycow\Documents\GitHub\SEP-MobileApp\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_841fbb423c1c49ff9502c745a35ffabc08014fe5\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Seannycow\.android\build-cache\70e7ac60c3a7c94e03b8ab3895b34382e9441d23\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="cad6f251cba07624f49b0c5b6287731a3c9957b8">
+        <dex dex="C:\Users\Seannycow\Documents\GitHub\SEP-MobileApp\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_840205682c055d4f664f8b4c4d098ad4634b1238\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Seannycow\.android\build-cache\a66851b5337b2d41144fcf66982d736614361b1d\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="8bdf5cd702d3d860cd85783a776c26605f557882">
+        <dex dex="C:\Users\Seannycow\Documents\GitHub\SEP-MobileApp\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_f893bd8bcee71e63e9bc926012e8d86293e87983\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Seannycow\.android\build-cache\e0712fa6faffb3aba0c1619f4e81046ab059a9ab\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="083e7bc5a9d9404b49b8f34e5091532361fa28e6">
+        <dex dex="C:\Users\Seannycow\Documents\GitHub\SEP-MobileApp\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_015d637947fab2d4526861f99993ebd19cfa060d\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Seannycow\.gradle\caches\modules-2\files-2.1\com.jakewharton\butterknife-annotations\8.8.1\bc373fb6bc7bca3035041b924f158fd2b946ee8d\butterknife-annotations-8.8.1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="bc373fb6bc7bca3035041b924f158fd2b946ee8d">
+        <dex dex="C:\Users\Seannycow\Documents\GitHub\SEP-MobileApp\app\build\intermediates\transforms\dex\debug\folders\1000\10\butterknife-annotations-8.8.1_9af216ad483f61c80ebfcfd723c2e94d09b8a82b\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Seannycow\.android\build-cache\8cb4fc51aa54cebc480949c6cee33707f327c748\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="76a7a625df0e9027b53dbed6e9ba9a6031a42e39">
+        <dex dex="C:\Users\Seannycow\Documents\GitHub\SEP-MobileApp\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_31a26b4d4f91c9957e292f7c4223de74101efef2\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Seannycow\.android\build-cache\e51ab40f0d3e8353d72dda144ac9332d5dc08214\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="d095503f29a8dedc55b9326ed97a5902a1527ab9">
+        <dex dex="C:\Users\Seannycow\Documents\GitHub\SEP-MobileApp\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_54697f27f6b2ce783123b8b592516a563166f724\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Seannycow\.android\build-cache\0e1621a81f003736a36538a251f1427c39bafa3d\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="e72a518413b68aa111650f252ed49028d2f3c75f">
+        <dex dex="C:\Users\Seannycow\Documents\GitHub\SEP-MobileApp\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_46ee5f36b8410a09f535b7c3ec2c306ca2c6a77b\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Seannycow\.gradle\caches\modules-2\files-2.1\com.squareup.picasso\picasso\2.5.2\7446d06ec8d4f7ffcc53f1da37c95f200dcb9387\picasso-2.5.2.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="7446d06ec8d4f7ffcc53f1da37c95f200dcb9387">
+        <dex dex="C:\Users\Seannycow\Documents\GitHub\SEP-MobileApp\app\build\intermediates\transforms\dex\debug\folders\1000\10\picasso-2.5.2_157a02533fe2a46809903019a81c694cabb8ebe1\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Seannycow\.android\build-cache\6f6fab0db0b01acb2e22484bb9ec0cafa24526c5\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="b18c853774c25eeaeb3ecf6f171e26f06c4ba66b">
+        <dex dex="C:\Users\Seannycow\Documents\GitHub\SEP-MobileApp\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_3fc6c5d76a1dbe79dc17727ba55792059a757b7b\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Seannycow\.android\build-cache\e23a3de927f7083038bc8c2ce7e71e731d058f2d\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="56e96fa067ba358a6c60184e40947810dcd78f30">
+        <dex dex="C:\Users\Seannycow\Documents\GitHub\SEP-MobileApp\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_8b0fa2cfb682b6d92490166d299c00caab7d0ec4\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Seannycow\.android\build-cache\16068d587ed3bcb49d16ef1946db727be0563eb7\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="0c6b6b87687475583a7841926cfcadef96280483">
+        <dex dex="C:\Users\Seannycow\Documents\GitHub\SEP-MobileApp\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_55f63cfb504e88a893146b0a9406b184d665718d\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Seannycow\.android\build-cache\a63b9944a0293fddeefefb4af0118209f99fbbec\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="7b4dc2d9e39fb8ec5ddca9b3b3cb7c627690f3a6">
+        <dex dex="C:\Users\Seannycow\Documents\GitHub\SEP-MobileApp\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_96a51ae7cdff23d5cbc2a9a2781932da72179288\classes.dex" />
+    </item>
+
+</items>

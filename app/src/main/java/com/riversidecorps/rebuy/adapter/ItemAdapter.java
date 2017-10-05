@@ -50,11 +50,11 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
             price_pre = (TextView) view.findViewById(R.id.price_pre);
             item_price = (TextView) view.findViewById(R.id.item_price);
 
-            /*quantity_pre = (TextView) view.findViewById(R.id.quantity_pre);
+            quantity_pre = (TextView) view.findViewById(R.id.quantity_pre);
             item_quantity = (TextView) view.findViewById(R.id.item_quantity);
 
             seller_pre = (TextView) view.findViewById(R.id.seller_pre);
-            item_seller = (TextView) view.findViewById(R.id.item_seller);*/
+            item_seller = (TextView) view.findViewById(R.id.item_seller);
 
             description_pre = (TextView) view.findViewById(R.id.description_pre);
             item_description = (TextView) view.findViewById(R.id.item_description);
@@ -81,7 +81,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
     public void onBindViewHolder(final ViewHolder viewHolder, int position) {
         viewHolder.title_pre.setText(R.string.title_pre);
         viewHolder.price_pre.setText(R.string.price_pre);
-        viewHolder.quantity_pre.setText(R.string.quantity_pre);
+        viewHolder.quantity_pre.setText("Quantity:");
         viewHolder.seller_pre.setText("Seller:");
         viewHolder.description_pre.setText(R.string.description_pre);
         viewHolder.date_pre.setText("Date:");

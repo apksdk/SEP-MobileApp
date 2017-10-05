@@ -53,25 +53,25 @@ public class OfferAdapter extends RecyclerView.Adapter<OfferAdapter.ViewHolder> 
             super(view);
             this.view = view;
 
-            //title_pre = (TextView) view.findViewById(R.id.title_pre);
+            title_pre = (TextView) view.findViewById(R.id.title_pre);
             item_name = (TextView) view.findViewById(R.id.item_name);
 
-            //buyer_pre = (TextView) view.findViewById(R.id.buyer_pre);
-            //item_buyer = (TextView) view.findViewById(R.id.item_buyer);
+            buyer_pre = (TextView) view.findViewById(R.id.buyer_pre);
+            item_buyer = (TextView) view.findViewById(R.id.item_buyer);
 
-            //original_price_pre = (TextView) view.findViewById(R.id.original_price_pre);
-            //item_original_price = (TextView) view.findViewById(R.id.item_original_price);
+            original_price_pre = (TextView) view.findViewById(R.id.original_price_pre);
+            item_original_price = (TextView) view.findViewById(R.id.item_original_price);
 
-            //offer_price_pre = (TextView) view.findViewById(R.id.offer_price_pre);
-            //item_offer_price = (TextView) view.findViewById(R.id.item_offer_price);
+            offer_price_pre = (TextView) view.findViewById(R.id.offer_price_pre);
+            item_offer_price = (TextView) view.findViewById(R.id.item_offer_price);
 
-            /*quantity_pre = (TextView) view.findViewById(R.id.quantity_pre);
-            item_quantity = (TextView) view.findViewById(R.id.item_quantity);*/
+            quantity_pre = (TextView) view.findViewById(R.id.quantity_pre);
+            item_quantity = (TextView) view.findViewById(R.id.item_quantity);
 
-            //description_pre = (TextView) view.findViewById(R.id.description_pre);
+            description_pre = (TextView) view.findViewById(R.id.description_pre);
             item_description = (TextView) view.findViewById(R.id.item_description);
 
-            //date_pre = (TextView) view.findViewById(R.id.date_pre);
+            date_pre = (TextView) view.findViewById(R.id.date_pre);
             item_date = (TextView) view.findViewById(R.id.item_date);
 
         }

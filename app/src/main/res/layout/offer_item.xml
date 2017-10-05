@@ -10,17 +10,14 @@
     <RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="393dp"
         android:orientation="horizontal"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:paddingTop="5dp"
         android:paddingBottom="5dp">
 
-
-
         <TextView
-
             android:layout_height="wrap_content"
             android:textSize="18sp"
             android:textStyle="bold"
@@ -39,26 +36,54 @@
             android:layout_toRightOf="@id/title_pre"
             android:maxWidth="150dp"
             android:layout_alignParentBottom="true"/>
-
-
         <TextView
-            android:id="@+id/price_pre"
             android:layout_height="wrap_content"
-            android:layout_width="wrap_content"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:layout_toLeftOf="@+id/item_price"
-            android:textColor="@color/colorPrimary"
-            android:layout_alignParentTop="true"/>
-        <TextView
-            android:id="@+id/item_price"
+            android:id="@+id/buyer_pre"
             android:layout_width="wrap_content"
+            android:layout_gravity="left"
+            android:textColor="@color/colorPrimary"/>
+        <TextView
+            android:id="@+id/item_buyer"
             android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            android:paddingRight="16dp"
+            android:layout_width="wrap_content"
+            android:textColor="@android:color/black"
+            android:ellipsize="end"
             android:textSize="16sp"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true"/>
+            android:layout_gravity="left"/>
+        <TextView
+            android:id="@+id/original_price_pre"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:textColor="@android:color/black"
+            android:ellipsize="end"
+            android:textSize="16sp"
+            android:layout_gravity="left"/>
+        <TextView
+            android:id="@+id/item_original_price"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:textColor="@android:color/black"
+            android:ellipsize="end"
+            android:textSize="16sp"
+            android:layout_gravity="left"/>
+        <TextView
+            android:id="@+id/offer_price_pre"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:textColor="@android:color/black"
+            android:ellipsize="end"
+            android:textSize="16sp"
+            android:layout_gravity="left"/>
+        <TextView
+            android:id="@+id/item_offer_price"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:textColor="@android:color/black"
+            android:ellipsize="end"
+            android:textSize="16sp"
+            android:layout_gravity="left"/>
 
 
 
@@ -124,23 +149,17 @@
                     android:layout_gravity="right"
                     android:orientation="vertical"
                     android:layout_weight="1">
-                    <TextView
 
+                    <TextView
+                        android:id="@+id/price_pre"
                         android:layout_height="wrap_content"
+                        android:layout_width="wrap_content"
                         android:textSize="18sp"
                         android:textStyle="bold"
-                        android:id="@+id/seller_pre"
-                        android:layout_width="wrap_content"
-                        android:layout_gravity="left"
-                        android:textColor="@color/colorPrimary"/>
-                    <TextView
-                        android:id="@+id/item_seller"
-                        android:layout_height="wrap_content"
-                        android:layout_width="wrap_content"
-                        android:textColor="@android:color/black"
-                        android:ellipsize="end"
-                        android:textSize="16sp"
-                        android:layout_gravity="left"/>
+                        android:layout_toLeftOf="@+id/item_price"
+                        android:textColor="@color/colorPrimary"
+                        android:layout_alignParentTop="true"/>
+
                 </LinearLayout>
 
             </LinearLayout>

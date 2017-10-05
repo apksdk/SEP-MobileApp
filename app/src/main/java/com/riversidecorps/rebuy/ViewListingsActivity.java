@@ -66,7 +66,7 @@ public class ViewListingsActivity extends AppCompatActivity
             //User is logged in;
         }
 
-        mRecyclerView = findViewById(R.id.recycler_view);
+        mRecyclerView = findViewById(R.id.listing_recycler_view);
         mAdapter = new ItemAdapter(this, mItemList);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
@@ -77,7 +77,7 @@ public class ViewListingsActivity extends AppCompatActivity
         String userId = mUser.getUid();
 
         // Attach a listener to read the data at our posts reference
-        mdatabaseReference.child(LISTINGS).addValueEventListener (new ValueEventListener() {
+        mDatabase.getReference().child(LISTINGS).addValueEventListener (new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 mItemList.removeAll(mItemList);
@@ -85,7 +85,7 @@ public class ViewListingsActivity extends AppCompatActivity
 
                     String name = (String) messageSnapshot.child("itemName").getValue();
                     String description = (String) messageSnapshot.child("itemDescription").getValue();
-                    String price = (String) messageSnapshot.child("itemPrice").getValue().toString();
+                    String price = (String) messageSnapshot.child("itemPrice").getValue();
                     Long quantity = (Long) messageSnapshot.child("itemQuantity").getValue();
                     String sellerName = (String) messageSnapshot.child("itemSeller").getValue();
                     //String itemId =  messageSnapshot.getKey().toString();
@@ -183,17 +183,17 @@ public class ViewListingsActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_my_account) {
-            startActivity(new Intent(this, MyAccountActivity.class));
+            // Handle the camera action
         } else if (id == R.id.nav_message_inbox) {
-            startActivity(new Intent(this, MessageInboxActivity.class));
-        } else if (id == R.id.nav_offers) {
-            startActivity(new Intent(this, OffersActivity.class));
-        } else if (id == R.id.nav_search_listings) {
-            startActivity(new Intent(this, SearchListingsActivity.class));
+
         } else if (id == R.id.nav_create_listing) {
-            startActivity(new Intent(this, CreateListingActivity.class));
+
+        } else if (id == R.id.nav_search_listings) {
+
         } else if (id == R.id.nav_view_listings) {
-            //Do nothing since current activity is view listings.
+
+        }else if (id == R.id.nav_view_offers) {
+
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

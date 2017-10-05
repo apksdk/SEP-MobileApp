@@ -32,6 +32,9 @@ import com.riversidecorps.rebuy.models.Offer;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+
 import static android.content.ContentValues.TAG;
 import static com.riversidecorps.rebuy.R.id.itemImageIV;
 import static com.riversidecorps.rebuy.R.id.itemImagePreviewIV;
@@ -64,6 +67,7 @@ public class OffersActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        ButterKnife.bind(this);
 
         databaseReference = FirebaseDatabase.getInstance().getReference();
         myFirebaseAuth = FirebaseAuth.getInstance();
@@ -76,20 +80,20 @@ public class OffersActivity extends AppCompatActivity
         mitemQuantity = getIntent().getStringExtra("itemQuantity");
         itemId = getIntent().getStringExtra("itemId");
 
-        makeOfferBtn = (Button) findViewById(R.id.makeOfferBtn);
-        cancelBtn = (Button) findViewById(R.id.cancelBtn);
-        itemOfferPriceET = (EditText) findViewById(R.id.itemOfferPriceET);
-        makeOfferBtn.setOnClickListener(this);
-        cancelBtn.setOnClickListener(this);
+//        makeOfferBtn = (Button) findViewById(R.id.makeOfferBtn);
+//        cancelBtn = (Button) findViewById(R.id.cancelBtn);
+//        itemOfferPriceET = (EditText) findViewById(R.id.itemOfferPriceET);
+//        makeOfferBtn.setOnClickListener(this);
+//        cancelBtn.setOnClickListener(this);
 
-        itemNameTV = (TextView) findViewById(R.id.itemNameTV);
-        itemNameTV.setText(itemName);
-
-        itemOriginalPriceTV = (TextView) findViewById(R.id.itemOriginalPriceTV);
-        itemOriginalPriceTV.setText(itemPrice);
-
-        offerAuthorTV = (TextView) findViewById(R.id.offerAuthorTV);
-        offerAuthorTV.setText(uid);
+//        itemNameTV = (TextView) findViewById(R.id.itemNameTV);
+//        itemNameTV.setText(itemName);
+//
+//        itemOriginalPriceTV = (TextView) findViewById(R.id.itemOriginalPriceTV);
+//        itemOriginalPriceTV.setText(itemPrice);
+//
+//        offerAuthorTV = (TextView) findViewById(R.id.offerAuthorTV);
+//        offerAuthorTV.setText(uid);
 
         mimageView=findViewById(itemImagePreviewIV);
         String imagePath = "itemImageListings/" + itemId + ".png";
@@ -202,9 +206,13 @@ public class OffersActivity extends AppCompatActivity
             // Handle the camera action
         } else if (id == R.id.nav_message_inbox) {
 
-        } else if (id == R.id.nav_offers) {
+        } else if (id == R.id.nav_create_listing) {
 
         } else if (id == R.id.nav_search_listings) {
+
+        } else if (id == R.id.nav_view_listings) {
+
+        }else if (id == R.id.nav_view_offers) {
 
         }
 
@@ -223,12 +231,13 @@ public class OffersActivity extends AppCompatActivity
         }
     }
 
-    private void makeOffer() {
+    @OnClick(R.id.makeOfferBtn)
+    public void makeOffer() {
         String itemName =  itemNameTV.getText().toString().trim();
         /*I could catch any value of the itemQuantity in Single view listing page*/
-        //Integer itemQuantity = Integer.parseInt(getIntent().getStringExtra("itemQuantity").trim());
-        double orginalPrice = Double.parseDouble(itemOriginalPriceTV.getText().toString().trim());
-        double offerPrice = Double.parseDouble(itemOfferPriceET.getText().toString().trim());
+        Integer itemQuantity = 1;//Integer.parseInt(getIntent().getStringExtra("itemQuantity").trim());
+        String orginalPrice = itemOriginalPriceTV.getText().toString();
+        String offerPrice = itemOfferPriceET.getText().toString();
         String itemDes = getIntent().getStringExtra("itemDes").toString().trim();
         String buyerid = myFirebaseUser.getEmail();
         FirebaseUser myFirebaseUser = myFirebaseAuth.getCurrentUser();
@@ -237,7 +246,7 @@ public class OffersActivity extends AppCompatActivity
         Date newDate = new Date(date.getTime() + (604800000L * 2) + (24 * 60 * 60));
         SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd");
         String stringDate = dt.format(newDate);
-        Offer newOffer = new Offer(buyerid,itemName,orginalPrice,offerPrice,stringDate,itemDes);
+        Offer newOffer = new Offer(buyerid,itemName,itemQuantity, orginalPrice,offerPrice,stringDate,itemDes);
         databaseReference.child(DB_OFFER).push().setValue(newOffer);
         Toast.makeText(this,"Please wait for making offer ...",Toast.LENGTH_LONG).show();
 

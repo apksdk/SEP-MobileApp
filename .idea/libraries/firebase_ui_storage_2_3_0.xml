@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="firebase-ui-storage-2.3.0">
+    <CLASSES>
+      <root url="file://$USER_HOME$/.android/build-cache/437a882896056459b370c2af7a6c4309363b91d1/output/res" />
+      <root url="jar://$USER_HOME$/.android/build-cache/437a882896056459b370c2af7a6c4309363b91d1/output/jars/classes.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.firebaseui/firebase-ui-storage/2.3.0/e1842415e006e29826d32f23e5409b1cf330b464/firebase-ui-storage-2.3.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

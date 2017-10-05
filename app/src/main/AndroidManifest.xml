@@ -41,6 +41,10 @@
             android:label="@string/title_activity_offers"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:name=".ViewOffersActivity"
+            android:label="@string/title_activity_view_offers"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".MessageInboxActivity"
             android:label="@string/title_activity_message_inbox"
             android:theme="@style/AppTheme.NoActionBar" />

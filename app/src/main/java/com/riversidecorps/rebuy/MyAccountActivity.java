@@ -319,8 +319,8 @@ public class
             //Do nothing
         } else if (id == R.id.nav_message_inbox) {
             startActivity(new Intent(this, MessageInboxActivity.class));
-        } else if (id == R.id.nav_offers) {
-            startActivity(new Intent(this, OffersActivity.class));
+        } else if (id == R.id.nav_view_offers) {
+            startActivity(new Intent(this, ViewOffersActivity.class));
         } else if (id == R.id.nav_search_listings) {
             startActivity(new Intent(this, SearchListingsActivity.class));
         } else if (id == R.id.nav_create_listing) {

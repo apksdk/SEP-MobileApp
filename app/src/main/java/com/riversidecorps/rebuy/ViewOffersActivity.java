@@ -75,13 +75,14 @@ public class ViewOffersActivity extends AppCompatActivity
 
                     String buyer = (String) messageSnapshot.child("mItemBuyer").getValue();
                     String itemName = (String) messageSnapshot.child("mItemName").getValue();
-                    Double originalPrice = (Double) messageSnapshot.child("mItemOriginalPrice").getValue();
-                    Double offerPrice = (Double) messageSnapshot.child("mOfferPrice").getValue();
+                    Double originalPrice = (Double) messageSnapshot.child("itemOriginalPrice").getValue();
+                    Long offerPrice = (Long) messageSnapshot.child("offerPrice").getValue();
                     String description = (String) messageSnapshot.child("mItemDescription").getValue();
-                    //Long quantity = (Long) messageSnapshot.child("itemQuantity").getValue();
+                    Long quantity = (Long) messageSnapshot.child("itemQuantity").getValue();
                     //String itemId =  messageSnapshot.getKey().toString();
                     String offerDate = (String) messageSnapshot.child("mOfferDate").getValue();
-                    Offer newOffer = new Offer(buyer,itemName,originalPrice,offerPrice,description,offerDate);
+                    Offer newOffer = new Offer(buyer,itemName,Integer.parseInt(quantity.toString()),
+                            String.valueOf(originalPrice), String.valueOf(offerPrice),description, offerDate);
                     mOfferList.add(newOffer);
 
                 }
@@ -93,14 +94,13 @@ public class ViewOffersActivity extends AppCompatActivity
                 System.out.println("The read failed: " + databaseError.getCode());
             }
         });
-        mRecyclerView = findViewById(R.id.recycler_view);
+        mRecyclerView = findViewById(R.id.offer_recycler_view);
         mAdapter = new OfferAdapter(this, mOfferList);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
-
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -129,23 +129,23 @@ public class ViewOffersActivity extends AppCompatActivity
         };
 
 
-        swipeContainer = findViewById(R.id.swipeContainer);
-        // Setup refresh listener which triggers new data loading
-        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                swipeContainer.setRefreshing(true);
-                // Your code to refresh the list here.
-                // Make sure you call swipeContainer.setRefreshing(false)
-                // once the network request has completed successfully.
-                getResultsFromApi();
-            }
-        });
-        // Configure the refreshing colors
-        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
-                android.R.color.holo_green_light,
-                android.R.color.holo_orange_light,
-                android.R.color.holo_red_light);
+//        swipeContainer = findViewById(R.id.swipeContainer);
+//        // Setup refresh listener which triggers new data loading
+//        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+//            @Override
+//            public void onRefresh() {
+//                swipeContainer.setRefreshing(true);
+//                // Your code to refresh the list here.
+//                // Make sure you call swipeContainer.setRefreshing(false)
+//                // once the network request has completed successfully.
+//                getResultsFromApi();
+//            }
+//        });
+//        // Configure the refreshing colors
+//        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+//                android.R.color.holo_green_light,
+//                android.R.color.holo_orange_light,
+//                android.R.color.holo_red_light);
     }
 
     @Override
@@ -170,17 +170,17 @@ public class ViewOffersActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_my_account) {
-            startActivity(new Intent(this, MyAccountActivity.class));
+            // Handle the camera action
         } else if (id == R.id.nav_message_inbox) {
-            startActivity(new Intent(this, MessageInboxActivity.class));
-        } else if (id == R.id.nav_offers) {
-            //Do nothing since current activity is view listings.
-        } else if (id == R.id.nav_search_listings) {
-            startActivity(new Intent(this, SearchListingsActivity.class));
+
         } else if (id == R.id.nav_create_listing) {
-            startActivity(new Intent(this, CreateListingActivity.class));
+
+        } else if (id == R.id.nav_search_listings) {
+
         } else if (id == R.id.nav_view_listings) {
-            startActivity(new Intent(this, ViewListingsActivity.class));
+
+        }else if (id == R.id.nav_view_offers) {
+
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

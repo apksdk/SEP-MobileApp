@@ -190,15 +190,15 @@ public class SingleListingActivity extends AppCompatActivity
         if (id == R.id.nav_my_account) {
             // Handle the camera action
         } else if (id == R.id.nav_message_inbox) {
-            startActivity(new Intent(this, MessageInboxActivity.class));
-        } else if (id == R.id.nav_offers) {
-            startActivity(new Intent(this, OffersActivity.class));
-        } else if (id == R.id.nav_search_listings) {
-            startActivity(new Intent(this, SearchListingsActivity.class));
+
         } else if (id == R.id.nav_create_listing) {
-            startActivity(new Intent(this, CreateListingActivity.class));
+
+        } else if (id == R.id.nav_search_listings) {
+
         } else if (id == R.id.nav_view_listings) {
-            startActivity(new Intent(this, ViewListingsActivity.class));
+
+        }else if (id == R.id.nav_view_offers) {
+
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
