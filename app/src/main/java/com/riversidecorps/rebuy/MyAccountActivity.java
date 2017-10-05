@@ -234,7 +234,7 @@ MyAccountActivity extends AppCompatActivity
                     Uri imageUri = data.getData();
                     InputStream imageStream = getContentResolver().openInputStream(imageUri);
                     final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
-                    ImageView previewIV = new ImageView(this);
+                    final ImageView previewIV = new ImageView(this);
                     previewIV.setImageBitmap(selectedImage);
                     new AlertDialog.Builder(MyAccountActivity.this)
                             .setMessage("Would you like to change your picture to this?")
@@ -249,9 +249,9 @@ MyAccountActivity extends AppCompatActivity
                                     progressDialog.setCancelable(false);
                                     progressDialog.show();
                                     //Get the image from imageView
-                                    userAvatarIV.setDrawingCacheEnabled(true);
-                                    userAvatarIV.buildDrawingCache();
-                                    Bitmap avatarImage = userAvatarIV.getDrawingCache();
+                                    previewIV.setDrawingCacheEnabled(true);
+                                    previewIV.buildDrawingCache();
+                                    Bitmap avatarImage = previewIV.getDrawingCache();
                                     //Convert image to byte array
                                     ByteArrayOutputStream bAOS = new ByteArrayOutputStream();
                                     avatarImage.compress(Bitmap.CompressFormat.PNG, 100, bAOS);
