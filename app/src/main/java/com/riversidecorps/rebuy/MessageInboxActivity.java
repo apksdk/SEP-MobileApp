@@ -8,6 +8,9 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -15,7 +18,15 @@ import android.view.MenuItem;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.riversidecorps.rebuy.R;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.riversidecorps.rebuy.adapter.messageAdapter;
+import com.riversidecorps.rebuy.models.Message;
+
+import java.util.ArrayList;
 
 import static android.content.ContentValues.TAG;
 
@@ -25,10 +36,13 @@ public class MessageInboxActivity extends AppCompatActivity
     private FirebaseAuth myFirebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseUser myFirebaseUser;
-
+    private FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
+    private DatabaseReference mdatabaseReference;
+    private ArrayList<Message> mMessageList= new ArrayList<>();
     private static final String AUTH_IN = "onAuthStateChanged:signed_in:";
     private static final String AUTH_OUT = "onAuthStateChanged:signed_out";
-
+    private messageAdapter mAdapter;
+    private RecyclerView mRecyclerView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +52,7 @@ public class MessageInboxActivity extends AppCompatActivity
 
         myFirebaseAuth = FirebaseAuth.getInstance();
         myFirebaseUser = myFirebaseAuth.getCurrentUser();
+        mdatabaseReference = FirebaseDatabase.getInstance().getReference();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -63,6 +78,41 @@ public class MessageInboxActivity extends AppCompatActivity
                 // ...
             }
         };
+
+        mRecyclerView = findViewById(R.id.message_recycler_view);
+        mAdapter = new messageAdapter(this, mMessageList);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        mRecyclerView.setAdapter(mAdapter);
+        mAdapter.notifyDataSetChanged();
+
+        String userId = myFirebaseUser.getUid();
+
+        // Attach a listener to read the data at our posts reference
+        mdatabaseReference.child("users").child(userId).child("messages").addValueEventListener (new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                mMessageList.removeAll(mMessageList);
+                for (DataSnapshot messageSnapshot : snapshot.getChildren()) {
+
+                    String content = (String) messageSnapshot.child("content").getValue();
+                    String buyer = (String) messageSnapshot.child("buyer").getValue();
+                    String datetime = (String) messageSnapshot.child("datetime").getValue();
+                    String title = (String) messageSnapshot.child("title").getValue();
+                       Message message=new Message(content,buyer,datetime,title);
+                  mMessageList.add(message);
+                }
+                mAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("The read failed: " + databaseError.getCode());
+            }
+        });
+
+
     }
 
     //On start method
