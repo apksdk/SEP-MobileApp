@@ -82,6 +82,11 @@ public class ViewListingsActivity extends AppCompatActivity
             public void onDataChange(DataSnapshot snapshot) {
                 mItemList.removeAll(mItemList);
                 for (DataSnapshot messageSnapshot : snapshot.getChildren()) {
+                    //TO DO: Figure out why this filters out random listings that does not have itemDeleted flagged as true
+//                    Boolean isDeleted = (Boolean) messageSnapshot.child("itemDeleted").getValue();
+//                    if(isDeleted) {
+//                        break;
+//                    }
 
                     String name = (String) messageSnapshot.child("itemName").getValue();
                     String description = (String) messageSnapshot.child("itemDescription").getValue();

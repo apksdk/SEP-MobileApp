@@ -102,11 +102,10 @@ public class SingleListingActivity extends AppCompatActivity
         iNameTv.setText(itemName);
 
         TextView iPriceTv = (TextView) findViewById(itemPriceTV);
-        iPriceTv.setText(itemPrice + "   Quantity: " + itemQuantity.toString());
+        iPriceTv.setText("Price: $" + itemPrice + "   Quantity: " + itemQuantity.toString());
 
         TextView iDesTv = (TextView) findViewById(R.id.descriptionTV);
         iDesTv.setText(itemDes);
-
 
         offerBTN = (Button)findViewById(R.id.offerBTN);
         buyBTN = (Button)findViewById(R.id.buyBTN);
