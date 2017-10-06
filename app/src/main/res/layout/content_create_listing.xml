@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="16dp"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.riversidecorps.rebuy.CreateListingActivity"
+    tools:showIn="@layout/app_bar_create_listing">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/createListingLayout">
+
+            <ImageView
+                android:id="@+id/itemIV"
+                android:layout_width="128dp"
+                android:layout_height="128dp"
+                android:layout_centerHorizontal="true"
+                app:srcCompat="@drawable/ic_menu_camera" />
+
+            <Button
+                android:id="@+id/addImageBTN"
+                android:layout_width="48dp"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/itemIV"
+                android:layout_alignParentTop="true"
+                android:layout_toRightOf="@+id/itemIV"
+                android:text="+" />
+
+            <TextView
+                android:id="@+id/addImageHintTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/itemIV"
+                android:layout_centerHorizontal="true"
+                android:text="Tap to add an image" />
+
+            <TextView
+                android:id="@+id/itemNameTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/addImageHintTV"
+                android:text="Item Name:" />
+
+            <TextView
+                android:id="@+id/itemQuantityTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/itemNameET"
+                android:text="Item Quantity:" />
+
+            <TextView
+                android:id="@+id/itemPriceTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/itemQuantityET"
+                android:text="Price (per item)" />
+
+            <TextView
+                android:id="@+id/itemDescriptionTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/itemPriceET"
+                android:text="Item Description: " />
+
+            <EditText
+                android:id="@+id/itemQuantityET"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/itemQuantityTV"
+                android:ems="10"
+                android:hint="Enter the item quantity"
+                android:inputType="number"
+                android:textSize="14sp" />
+
+            <EditText
+                android:id="@+id/itemDescriptionET"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/itemDescriptionTV"
+                android:ems="10"
+                android:hint="Enter your item description here..."
+                android:inputType="textMultiLine"
+                android:textSize="14sp" />
+
+            <EditText
+                android:id="@+id/itemPriceET"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/itemPriceTV"
+                android:ems="10"
+                android:hint="Enter the item price"
+                android:inputType="numberDecimal"
+                android:textSize="14sp" />
+
+            <EditText
+                android:id="@+id/itemNameET"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/itemNameTV"
+                android:ems="10"
+                android:hint="Enter the item name"
+                android:textSize="14sp" />
+        </RelativeLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:id="@+id/linearLayout">
+
+        <Button
+            android:id="@+id/cancelListingBTN"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="cancelListingBtnHandler"
+            android:text="Cancel Listing" />
+
+        <Button
+            android:id="@+id/confirmListingBTN"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Confirm Listing" />
+    </LinearLayout>
+
+
+</RelativeLayout>

@@ -17,6 +17,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.riversidecorps.rebuy.R;
+
 
 import static android.content.ContentValues.TAG;
 
@@ -126,7 +128,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             loginUser();
         } else {
             //If register moves to register activity
-            LoginActivity.this.startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
+            startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
         }
     }
 
@@ -188,7 +190,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     //If they match the database move to main activity
                     if (task.isSuccessful()) {
-                        LoginActivity.this.startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                        startActivity(new Intent(LoginActivity.this, MyAccountActivity.class));
                     } else {
                         //Else inform user that login was unsuccessful
                         Toast.makeText(LoginActivity.this, FAILED_LOGIN, Toast.LENGTH_SHORT).show();

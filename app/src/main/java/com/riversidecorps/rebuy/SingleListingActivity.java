@@ -12,21 +12,40 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import static android.content.ContentValues.TAG;
+import static com.riversidecorps.rebuy.R.id.itemImageIV;
 
 public class SingleListingActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener{
 
-    private FirebaseAuth myFirebaseAuth;
+    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    private FirebaseUser mUser = mAuth.getCurrentUser();
     private FirebaseAuth.AuthStateListener mAuthListener;
-    private FirebaseUser myFirebaseUser;
+    private FirebaseStorage mStorage = FirebaseStorage.getInstance();
+
 
     private static final String AUTH_IN = "onAuthStateChanged:signed_in:";
     private static final String AUTH_OUT = "onAuthStateChanged:signed_out";
+    private Button offerBTN,buyBTN;
+
+    private String itemID;
+    private String itemName;
+    private String itemPrice;
+    private String itemDes;
+    private Integer itemQuantity;
+    private ImageView mitemImageIV;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,9 +54,42 @@ public class SingleListingActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        myFirebaseAuth = FirebaseAuth.getInstance();
-        myFirebaseUser = myFirebaseAuth.getCurrentUser();
+        mAuth = FirebaseAuth.getInstance();
+        mUser = mAuth.getCurrentUser();
 
+        itemID = getIntent().getStringExtra("itemId");
+        itemName = getIntent().getStringExtra("itemName");
+        itemPrice = getIntent().getStringExtra("itemPrice");
+        itemDes = getIntent().getStringExtra("itemDes");
+        itemQuantity = getIntent().getIntExtra("itemQuantity", 0);
+
+
+        mitemImageIV=findViewById(itemImageIV);
+        String imagePath = "itemImageListings/" + itemID + ".png";
+        //Upload image(s)
+        Log.i("imagePath",imagePath);
+
+        StorageReference itemImageRef = mStorage.getReference(imagePath);
+        Glide.with(this)
+                .using(new FirebaseImageLoader())
+                .load(itemImageRef)
+                .into(mitemImageIV);
+
+
+        TextView iNameTv = (TextView) findViewById(R.id.itemNameTV);
+        iNameTv.setText(itemName);
+
+        TextView iPriceTv = (TextView) findViewById(R.id.itemPriceTV);
+        iPriceTv.setText(itemPrice + "   Quantity: " + itemQuantity.toString());
+
+        TextView iDesTv = (TextView) findViewById(R.id.descriptionTV);
+        iDesTv.setText(itemDes);
+
+
+        offerBTN = (Button)findViewById(R.id.offerBTN);
+        buyBTN = (Button)findViewById(R.id.buyBTN);
+        offerBTN.setOnClickListener(this);
+        buyBTN.setOnClickListener(this);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -51,10 +103,12 @@ public class SingleListingActivity extends AppCompatActivity
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
+                //FirebaseUser user = myFirebaseAuth.getCurrentUser();
+                if (mUser != null) {
                     // User is signed in
-                    Log.d(TAG, AUTH_IN + user.getUid());
+                    TextView loginInfor = (TextView) findViewById(R.id.logininfor);
+                    loginInfor.setText("Welcome, " + mUser.getDisplayName() + "!");
+                    Log.d(TAG, AUTH_IN + mUser.getUid());
                 } else {
                     // User is signed out
                     Log.d(TAG, AUTH_OUT);
@@ -69,7 +123,7 @@ public class SingleListingActivity extends AppCompatActivity
     public void onStart() {
         super.onStart();
         //Sets a listener to catch when the user is signing in.
-        myFirebaseAuth.addAuthStateListener(mAuthListener);
+        mAuth.addAuthStateListener(mAuthListener);
     }
 
     //On stop method
@@ -78,7 +132,7 @@ public class SingleListingActivity extends AppCompatActivity
         super.onStop();
         //Sets listener to catch when the user is signing out.
         if (mAuthListener != null) {
-            myFirebaseAuth.removeAuthStateListener(mAuthListener);
+            mAuth.removeAuthStateListener(mAuthListener);
         }
     }
     /**
@@ -104,7 +158,7 @@ public class SingleListingActivity extends AppCompatActivity
             //If item is logout
             case R.id.action_logout:
                 //Sign out of the authenticator and return to login activity.
-                myFirebaseAuth.signOut();
+                mAuth.signOut();
                 this.startActivity(new Intent(this, LoginActivity.class));
                 return true;
 
@@ -137,14 +191,34 @@ public class SingleListingActivity extends AppCompatActivity
             // Handle the camera action
         } else if (id == R.id.nav_message_inbox) {
 
-        } else if (id == R.id.nav_offers) {
+        } else if (id == R.id.nav_create_listing) {
 
         } else if (id == R.id.nav_search_listings) {
 
-        }
+        } else if (id == R.id.nav_view_listings) {
 
+        }else if (id == R.id.nav_view_offers) {
+
+        }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onClick(View view) {
+        if(view == offerBTN ){
+            TextView iNameTv = (TextView) findViewById(R.id.itemNameTV);
+            iNameTv.setText(itemName);
+            TextView itemPriceTV =(TextView) findViewById(R.id.itemPriceTV);
+            itemPriceTV.setText(itemPrice);
+            Intent OfferActivity = new Intent (this, CreateOfferActivity.class);
+            OfferActivity.putExtra("itemName",iNameTv.getText().toString());
+            OfferActivity.putExtra("itemPrice",itemPriceTV.getText().toString());
+            OfferActivity.putExtra("itemQuantity",itemQuantity);
+            OfferActivity.putExtra("itemDes",getIntent().getStringExtra("itemDes"));
+            OfferActivity.putExtra("itemId", getIntent().getStringExtra("itemId"));
+            startActivity(OfferActivity);
+        }
     }
 }

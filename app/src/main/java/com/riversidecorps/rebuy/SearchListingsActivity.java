@@ -138,9 +138,13 @@ public class SearchListingsActivity extends AppCompatActivity
             // Handle the camera action
         } else if (id == R.id.nav_message_inbox) {
 
-        } else if (id == R.id.nav_offers) {
+        } else if (id == R.id.nav_create_listing) {
 
         } else if (id == R.id.nav_search_listings) {
+
+        } else if (id == R.id.nav_view_listings) {
+
+        }else if (id == R.id.nav_view_offers) {
 
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
