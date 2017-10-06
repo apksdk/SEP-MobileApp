@@ -89,3 +89,5 @@ public class Offer {
 
     public void setOfferDate(String offerDate) {
         mOfferDate = offerDate;
+    }
+}

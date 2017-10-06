@@ -273,37 +273,6 @@ public class ViewOffersActivity extends AppCompatActivity
     }
 
     @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-        if (id == R.id.nav_my_account) {
-            // Handle the camera action
-        } else if (id == R.id.nav_message_inbox) {
-
-        } else if (id == R.id.nav_offers) {
-
-        } else if (id == R.id.nav_search_listings) {
-
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
-
-    @Override
     public void onClick(View view) {
         if(view == makeOfferBtn){
             makeOffer();
@@ -316,18 +285,18 @@ public class ViewOffersActivity extends AppCompatActivity
     private void makeOffer() {
         String itemName =  itemNameTV.getText().toString().trim();
         /*I could catch any value of the itemQuantity in Single view listing page*/
-        //Integer itemQuantity = Integer.parseInt(getIntent().getStringExtra("itemQuantity").trim());
-        double orginalPrice = Double.parseDouble(itemOriginalPriceTV.getText().toString().trim());
-        double offerPrice = Double.parseDouble(itemOfferPriceET.getText().toString().trim());
+        Integer itemQuantity = 1; //Integer.parseInt(getIntent().getStringExtra("itemQuantity").trim());
+        String originalPrice = itemOriginalPriceTV.getText().toString();
+        String offerPrice = itemOfferPriceET.getText().toString();
         String itemDes = getIntent().getStringExtra("itemDes").toString().trim();
-        String buyerid = myFirebaseUser.getEmail();
+        String buyerId = myFirebaseUser.getEmail();
         FirebaseUser myFirebaseUser = myFirebaseAuth.getCurrentUser();
 
         Date date = new Date();
         Date newDate = new Date(date.getTime() + (604800000L * 2) + (24 * 60 * 60));
         SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd");
         String stringDate = dt.format(newDate);
-        Offer newOffer = new Offer(buyerid,itemName,orginalPrice,offerPrice,stringDate,itemDes);
+        Offer newOffer = new Offer(buyerId,itemName, itemQuantity, originalPrice,offerPrice,stringDate,itemDes);
         databaseReference.child(DB_OFFER).push().setValue(newOffer);
         Toast.makeText(this,"Please wait for making offer ...",Toast.LENGTH_LONG).show();
 
