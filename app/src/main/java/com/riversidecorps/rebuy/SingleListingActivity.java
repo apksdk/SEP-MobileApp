@@ -18,6 +18,18 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
+import static android.content.ContentValues.TAG;
+import static com.riversidecorps.rebuy.R.id.itemImageIV;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -50,6 +62,7 @@ public class SingleListingActivity extends AppCompatActivity
     private FirebaseUser mUser = mAuth.getCurrentUser();
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseStorage mStorage = FirebaseStorage.getInstance();
+
     private FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
     private DatabaseReference databaseReference;
     private ProgressDialog progressDialog;
@@ -64,16 +77,19 @@ public class SingleListingActivity extends AppCompatActivity
     private String itemDes;
     private Integer itemQuantity;
     private ImageView mitemImageIV;
+
     private String userID;
     private String userName;
     private TextView loginInfor;
     private String itemSellerID;
-    @Override
+
+@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_single_listing);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         progressDialog = new ProgressDialog(this);
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
@@ -82,6 +98,7 @@ public class SingleListingActivity extends AppCompatActivity
         itemPrice = getIntent().getStringExtra("itemPrice");
         itemDes = getIntent().getStringExtra("itemDes");
         itemQuantity = getIntent().getIntExtra("itemQuantity", 0);
+
         itemSellerID = getIntent().getStringExtra("itemSellerId");
 //        Log.i("mm",itemSellerID);
         userID = mUser.getUid();
@@ -97,7 +114,7 @@ public class SingleListingActivity extends AppCompatActivity
                 .load(itemImageRef)
                 .into(mitemImageIV);
 
-        databaseReference = FirebaseDatabase.getInstance().getReference();
+baseReference = FirebaseDatabase.getInstance().getReference();
         TextView iNameTv = (TextView) findViewById(R.id.itemNameTV);
         iNameTv.setText(itemName);
 
@@ -141,6 +158,9 @@ public class SingleListingActivity extends AppCompatActivity
                 //FirebaseUser user = myFirebaseAuth.getCurrentUser();
                 if (mUser != null) {
                     // User is signed in
+                    TextView loginInfor = (TextView) findViewById(R.id.logininfor);
+                    loginInfor.setText("Welcome, " + mUser.getDisplayName() + "!");
+
                     Log.d(TAG, AUTH_IN + mUser.getUid());
                 } else {
                     // User is signed out
@@ -223,15 +243,15 @@ public class SingleListingActivity extends AppCompatActivity
         if (id == R.id.nav_my_account) {
             // Handle the camera action
         } else if (id == R.id.nav_message_inbox) {
-            startActivity(new Intent(this, MessageInboxActivity.class));
-        } else if (id == R.id.nav_offers) {
-            startActivity(new Intent(this, ViewOffersActivity.class));
-        } else if (id == R.id.nav_search_listings) {
-            startActivity(new Intent(this, SearchListingsActivity.class));
+
         } else if (id == R.id.nav_create_listing) {
-            startActivity(new Intent(this, CreateListingActivity.class));
+
+        } else if (id == R.id.nav_search_listings) {
+
         } else if (id == R.id.nav_view_listings) {
-            startActivity(new Intent(this, ViewListingsActivity.class));
+
+        }else if (id == R.id.nav_view_offers) {
+        
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -244,14 +264,15 @@ public class SingleListingActivity extends AppCompatActivity
             iNameTv.setText(itemName);
             TextView itemPriceTV =(TextView) findViewById(R.id.itemPriceTV);
             itemPriceTV.setText(itemPrice);
-            Intent OfferActivity = new Intent (this, ViewOffersActivity.class);
+            Intent OfferActivity = new Intent (this, CreateOfferActivity.class);
             OfferActivity.putExtra("itemName",iNameTv.getText().toString());
             OfferActivity.putExtra("itemPrice",itemPriceTV.getText().toString());
             OfferActivity.putExtra("itemQuantity",itemQuantity);
             OfferActivity.putExtra("itemDes",getIntent().getStringExtra("itemDes"));
             OfferActivity.putExtra("itemId", getIntent().getStringExtra("itemId"));
-            startActivity(OfferActivity);
+            startActivity(CreateOfferActivity);
         }
+
         if(view == messageBTN){
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Message");

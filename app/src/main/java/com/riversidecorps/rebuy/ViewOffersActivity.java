@@ -6,6 +6,15 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -126,6 +135,64 @@ public class ViewOffersActivity extends AppCompatActivity
                 // ...
             }
         };
+
+//        swipeContainer = findViewById(R.id.swipeContainer);
+//        // Setup refresh listener which triggers new data loading
+//        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+//            @Override
+//            public void onRefresh() {
+//                swipeContainer.setRefreshing(true);
+//                // Your code to refresh the list here.
+//                // Make sure you call swipeContainer.setRefreshing(false)
+//                // once the network request has completed successfully.
+//                getResultsFromApi();
+//            }
+//        });
+//        // Configure the refreshing colors
+//        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
+//                android.R.color.holo_green_light,
+//                android.R.color.holo_orange_light,
+//                android.R.color.holo_red_light);
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+    }
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+        if (id == R.id.nav_my_account) {
+            // Handle the camera action
+        } else if (id == R.id.nav_message_inbox) {
+
+        } else if (id == R.id.nav_create_listing) {
+
+        } else if (id == R.id.nav_search_listings) {
+
+        } else if (id == R.id.nav_view_listings) {
+
+        }else if (id == R.id.nav_view_offers) {
+
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 
     //On start method
@@ -142,9 +209,11 @@ public class ViewOffersActivity extends AppCompatActivity
         super.onStop();
         //Sets listener to catch when the user is signing out.
         if (mAuthListener != null) {
+
             myFirebaseAuth.removeAuthStateListener(mAuthListener);
         }
     }
+
     /**
      * Creates the options menu on the action bar.
      * @param menu Menu at the top right of the screen
@@ -153,7 +222,7 @@ public class ViewOffersActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         //Inflates the menu menu_other which includes logout and quit functions.
-        getMenuInflater().inflate(R.menu.offers, menu);
+        getMenuInflater().inflate(R.menu.my_account, menu);
         return true;
     }
 
@@ -179,6 +248,28 @@ public class ViewOffersActivity extends AppCompatActivity
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void viewDetailedOffer(View v){
+        //Create alert dialog with the layout group_dialog
+        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(ViewOffersActivity.this);
+        final View mView = getLayoutInflater().inflate(R.layout.dialog_view_offer, null);
+
+        //Initialises elements
+        Button acceptOfferBtn = (Button) mView.findViewById(R.id.accept_offer_btn);
+
+        alertDialog.setView(mView);
+        final AlertDialog dialog = alertDialog.create();
+        dialog.show();
+        //Sets listener for the click of the create group button in alert dialog
+        acceptOfferBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                //Close dialog box
+                dialog.dismiss();
+            }
+        });
     }
 
     @Override

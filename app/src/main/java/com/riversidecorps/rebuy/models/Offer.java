@@ -7,95 +7,85 @@ import java.util.ArrayList;
  */
 
 public class Offer {
-    private String ItemBuyer;
-    private String ItemName;
-    private Integer ItemQuantity;
-    private Double ItemOriginalPrice;
-    private Double OfferPrice;
-    private String ItemDescription;
-    private ArrayList<String> ItemImages;
-    private Boolean ItemSoldout;
-    private String OfferDate;
+    private String mItemBuyer;
+    private String mItemName;
+    private Integer mItemQuantity;
+    private String mItemOriginalPrice;
+    private String mOfferPrice;
+    private String mItemDescription;
+    private ArrayList<String> mItemImages;
+    private String mOfferDate;
 
-        /* Instantiates a new Listing.*/
+        /* Instantiates a new Offer.*/
+
     public Offer() {
     }
 
     public Offer(String mItemName) {
-        this.ItemName = mItemName;
+        this.mItemName = mItemName;
     }
 
-    public Offer(String mItemBuyer,String mItemName,Double mItemOriginalPrice,Double mOfferPrice,String mOfferDate,String mItemDescription) {
-        this.ItemBuyer = mItemBuyer;
-        this.ItemName = mItemName;
-        this.ItemOriginalPrice = mItemOriginalPrice;
-        this.OfferPrice = mOfferPrice;
-        this.OfferDate = mOfferDate;
-        this.ItemDescription = mItemDescription;
-        this.ItemSoldout = false;
+    public Offer(String mItemBuyer,String mItemName, Integer mItemQuantity ,String mItemOriginalPrice,String mOfferPrice,String mOfferDate,String mItemDescription) {
+        this.mItemBuyer = mItemBuyer;
+        this.mItemName = mItemName;
+        this.mItemQuantity = mItemQuantity;
+        this.mItemOriginalPrice = mItemOriginalPrice;
+        this.mOfferPrice = mOfferPrice;
+        this.mOfferDate = mOfferDate;
+        this.mItemDescription = mItemDescription;
     }
 
     public String getItemBuyer() {
-        return ItemBuyer;
+        return mItemBuyer;
     }
 
     public void setItemBuyer(String itemBuyer) {
-        ItemBuyer = itemBuyer;
+        mItemBuyer = itemBuyer;
     }
 
     public String getItemName() {
-        return ItemName;
+        return mItemName;
     }
 
     public void setItemName(String itemName) {
-        ItemName = itemName;
+        mItemName = itemName;
     }
 
     public Integer getItemQuantity() {
-        return ItemQuantity;
+        return mItemQuantity;
     }
 
     public void setItemQuantity(Integer itemQuantity) {
-        ItemQuantity = itemQuantity;
+        mItemQuantity = itemQuantity;
     }
 
-    public Double getItemOriginalPrice() {
-        return ItemOriginalPrice;
+    public String getItemOriginalPrice() {
+        return mItemOriginalPrice;
     }
 
-    public void setItemOriginalPrice(Double itemOriginalPrice) {
-        ItemOriginalPrice = itemOriginalPrice;
+    public void setItemOriginalPrice(String itemOriginalPrice) {
+        mItemOriginalPrice = itemOriginalPrice;
     }
 
-    public Double getOfferPrice() {
-        return OfferPrice;
+    public String getOfferPrice() {
+        return mOfferPrice;
     }
 
-    public void setOfferPrice(Double offerPrice) {
-        OfferPrice = offerPrice;
+    public void setOfferPrice(String offerPrice) {
+        mOfferPrice = offerPrice;
     }
 
     public String getItemDescription() {
-        return ItemDescription;
+        return mItemDescription;
     }
 
     public void setItemDescription(String itemDescription) {
-        ItemDescription = itemDescription;
-    }
-
-    public Boolean getItemSoldout() {
-        return ItemSoldout;
-    }
-
-    public void setItemSoldout(Boolean itemSoldout) {
-        ItemSoldout = itemSoldout;
+        mItemDescription = itemDescription;
     }
 
     public String getOfferDate() {
-        return OfferDate;
+        return mOfferDate;
     }
 
     public void setOfferDate(String offerDate) {
-        OfferDate = offerDate;
-    }
-}
+        mOfferDate = offerDate;

@@ -66,7 +66,7 @@ public class ViewListingsActivity extends AppCompatActivity
             //User is logged in;
         }
 
-        mRecyclerView = findViewById(R.id.recycler_view);
+        mRecyclerView = findViewById(R.id.listing_recycler_view);
         mAdapter = new ItemAdapter(this, mItemList);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
@@ -77,11 +77,13 @@ public class ViewListingsActivity extends AppCompatActivity
         String userId = mUser.getUid();
 
         // Attach a listener to read the data at our posts reference
-        mdatabaseReference.child(LISTINGS).addValueEventListener (new ValueEventListener() {
+        mDatabase.getReference().child(LISTINGS).addValueEventListener (new ValueEventListener() {
+
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 mItemList.removeAll(mItemList);
                 for (DataSnapshot messageSnapshot : snapshot.getChildren()) {
+                
                     //TO DO: Figure out why this filters out random listings that does not have itemDeleted flagged as true
 //                    Boolean isDeleted = (Boolean) messageSnapshot.child("itemDeleted").getValue();
 //                    if(isDeleted) {
@@ -188,17 +190,18 @@ public class ViewListingsActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_my_account) {
-            startActivity(new Intent(this, MyAccountActivity.class));
+
+// Handle the camera action
         } else if (id == R.id.nav_message_inbox) {
-            startActivity(new Intent(this, MessageInboxActivity.class));
-        } else if (id == R.id.nav_offers) {
-            startActivity(new Intent(this, ViewOffersActivity.class));
-        } else if (id == R.id.nav_search_listings) {
-            startActivity(new Intent(this, SearchListingsActivity.class));
+
         } else if (id == R.id.nav_create_listing) {
-            startActivity(new Intent(this, CreateListingActivity.class));
+
+        } else if (id == R.id.nav_search_listings) {
+
         } else if (id == R.id.nav_view_listings) {
-            //Do nothing since current activity is view listings.
+
+        }else if (id == R.id.nav_view_offers) {
+
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

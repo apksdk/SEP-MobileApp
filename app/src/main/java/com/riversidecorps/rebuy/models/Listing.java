@@ -228,20 +228,22 @@ public class Listing {
      *
      * @return the item seller ID
      */
+    public String getItemSellerId() { return mItemSellerId; }
     public String getmItemSellerId() { return mItemSellerId; }
     /**
      * Sets item seller ID.
      *
      * @param mItemSellerId the m item seller id
      */
-    public void setmItemSellerId(String mItemSellerId) { this.mItemSellerId = mItemSellerId; }
+    public void setItemSellerId(String mItemSellerId) { this.mItemSellerId = mItemSellerId; }
 
     /**
      * Gets item item ID.
      *
      * @return the item ID
      */
-    public String getmItemId() {
+    public String getItemId() {
+
         return mItemId;
     }
 
@@ -250,7 +252,8 @@ public class Listing {
      *
      * @param mItemId the m item id
      */
-    public void setmItemId(String mItemId) {
+    public void setItemId(String mItemId) {
+
         this.mItemId = mItemId;
     }
 

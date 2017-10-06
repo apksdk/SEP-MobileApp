@@ -11,7 +11,9 @@
             android:icon="@drawable/ic_menu_message_inbox"
             android:title="View Message Inbox" />
         <item
-            android:id="@+id/nav_offers"
+            android:id="@+id/nav_view_offers"
+
+
             android:icon="@drawable/ic_menu_view_offers"
             android:title="View Offers" />
         <item

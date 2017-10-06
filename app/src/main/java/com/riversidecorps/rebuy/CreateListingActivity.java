@@ -88,9 +88,12 @@ public class CreateListingActivity extends AppCompatActivity
     private String userName;
     private ArrayList<String> imageList = new ArrayList<>();
     private int requestingIV;
-
+    
     @BindView(R.id.itemIV)
     ImageView itemIV;
+
+    @BindView(R.id.createListingLayout)
+    RelativeLayout createListingLayout;
 
     @BindView(R.id.item2IV)
     ImageView item2IV;
@@ -250,9 +253,13 @@ public class CreateListingActivity extends AppCompatActivity
             // Handle the camera action
         } else if (id == R.id.nav_message_inbox) {
 
-        } else if (id == R.id.nav_offers) {
+        } else if (id == R.id.nav_create_listing) {
 
         } else if (id == R.id.nav_search_listings) {
+
+        } else if (id == R.id.nav_view_listings) {
+
+        }else if (id == R.id.nav_view_offers) {
 
         }
 
@@ -262,6 +269,10 @@ public class CreateListingActivity extends AppCompatActivity
     }
 
     public void cancelListingBtnHandler(View view) {
+    
+        //Needs to check if there's changes, then ask if they want to confirm
+        finish();
+        
         for (int i = 0; i < createListingLayout.getChildCount(); i++) {
             if (createListingLayout.getChildAt(i) instanceof EditText) {
                 EditText currentET = (EditText) createListingLayout.getChildAt(i);
@@ -285,6 +296,11 @@ public class CreateListingActivity extends AppCompatActivity
 
     // TO DO: Get the current time if possible
     // TO DO: Multiple image upload support
+    
+    private void saveListing() {
+        //Check if all required fields are filled out
+        if (validateForm()) {
+        
     private int imageCount;
 
     private void saveListing() {
@@ -301,11 +317,58 @@ public class CreateListingActivity extends AppCompatActivity
             String description = itemDescriptionET.getText().toString().trim();
             final String sellerID = myFirebaseUser.getUid();
             //Get current date
+            Date date = new Date();
+            Date newDate = new Date(date.getTime() + (604800000L * 2) + (24 * 60 * 60));
+            SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd");
+            String stringDate = dt.format(newDate);
+            final String mUniqueId = UUID.randomUUID().toString();
             String stringDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
             //Create new listing
             final Listing newListing = new Listing(userName, name, quantity, price, description, stringDate);
             //Create new listing w/ minimal information - used for seller view overall listings
             final Listing newMinListing = new Listing(name, price, stringDate);
+            //Get the image from imageView
+            itemIV.setDrawingCacheEnabled(true);
+            itemIV.buildDrawingCache();
+            Bitmap itemImage = itemIV.getDrawingCache();
+            //Convert image to byte array
+            ByteArrayOutputStream bAOS = new ByteArrayOutputStream();
+            itemImage.compress(Bitmap.CompressFormat.PNG, 100, bAOS);
+            byte[] itemImageBytes = bAOS.toByteArray();
+            //Create image path for storage
+            String imagePath = "itemImageListings/" + mUniqueId + ".png";
+            //Upload image(s)
+            StorageReference itemImageRef = mStorage.getReference(imagePath);
+            UploadTask uploadTask = itemImageRef.putBytes(itemImageBytes);
+            uploadTask.addOnSuccessListener(CreateListingActivity.this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    //Add image URL to listing
+                    newListing.setItemImage(taskSnapshot.getDownloadUrl().toString());
+                    newListing.setItemId(mUniqueId);
+
+                    Log.i("TTT Itemid: ",newListing.getItemId());
+                    newMinListing.setItemImage(taskSnapshot.getDownloadUrl().toString());
+                    //Save listing on Firebase
+                    final String listingID = databaseReference.child(DB_LISTING).push().getKey();
+                    databaseReference.child(DB_LISTING).child(listingID).setValue(newListing).addOnSuccessListener(CreateListingActivity.this, new OnSuccessListener<Void>() {
+                        /**
+                         * Create a toast when listing has been stored to inform the user that their listing has been successfully created
+                         * @param aVoid void
+                         */
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            databaseReference.child("users").child(sellerID).child("Listings").child(listingID).setValue(newMinListing).addOnSuccessListener(CreateListingActivity.this, new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Toast.makeText(getBaseContext(), "Your listing has been successfully created!", Toast.LENGTH_LONG).show();
+                                    finish();
+                                }
+                            });
+                        }
+                    });
+                }
+            });
             for (int i = 0; i < itemImagesLayout.getChildCount(); i++) {
                 if (itemImagesLayout.getChildAt(i) instanceof ImageView && itemImagesLayout.getChildAt(i).getVisibility() != View.GONE) {
                     imageCount++;
@@ -395,6 +458,7 @@ public class CreateListingActivity extends AppCompatActivity
             saveListing();
         } else if (view == cancelListingBTN) {
             finish();
+
         } else if (view instanceof ImageView) {
             changeItemImage(view);
         }
@@ -429,12 +493,14 @@ public class CreateListingActivity extends AppCompatActivity
      * @param view ImageView
      */
     //TO DO: Maybe allow users to take images using their camera?
+    @OnClick(R.id.itemIV)
     public void changeItemImage(View view) {
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSION_REQUEST_READ_STORAGE);
         } else {
             Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             intent.setType("image/");
+            startActivityForResult(intent, REQUEST_GALLERY_IMAGE);
 
             for (int i = 0; i < itemImagesLayout.getChildCount(); i++) {
                 if (itemImagesLayout.getChildAt(i) == view) {
@@ -491,6 +557,7 @@ public class CreateListingActivity extends AppCompatActivity
                     //Convert image stream to bitmap
                     Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
                     //Set item image
+                    itemIV.setImageBitmap(selectedImage);
                     switch (requestingIV) {
                         case 0:
                             itemIV.setImageBitmap(selectedImage);

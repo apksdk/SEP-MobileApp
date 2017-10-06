@@ -6,11 +6,13 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.icu.text.NumberFormat;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.multidex.MultiDex;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
@@ -58,6 +60,8 @@ import static android.content.ContentValues.TAG;
 /**
  * The type My account activity.
  */
+public class 
+  MyAccountActivity extends AppCompatActivity
 public class
 MyAccountActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -88,9 +92,12 @@ MyAccountActivity extends AppCompatActivity
     // TO DO - CHECK OFFLINE & DISPLAY ERROR IF SO, LOAD IMAGES
     // ALSO MAYBE CREATE NEW SECTION FOR LISTING PREVIEWS IN FIREBASE TO AVOID LOADING OTHER INFOS
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+        protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_account);
+
+
+        MultiDex.install(this);
 
         ButterKnife.bind(this);
 
@@ -139,6 +146,20 @@ MyAccountActivity extends AppCompatActivity
 
         final String userID = mUser.getUid();
 
+        DatabaseReference userRef = mDatabase.getReference().child("users").child(userID).child("username");
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                userIDTV.setText(dataSnapshot.getValue(String.class));
+                usernameNavTV.setText(userIDTV.getText().toString());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
         userIDTV.setText(mUser.getDisplayName());
         usernameNavTV.setText(userIDTV.getText().toString());
 
@@ -159,6 +180,7 @@ MyAccountActivity extends AppCompatActivity
         currentListingsRV.addItemDecoration(dividerItemDecoration);
 
         DatabaseReference ref = mDatabase.getReference().child("users").child(userID).child("Listings");
+
         Query query = ref.orderByChild("itemDeleted").equalTo(false);
         FirebaseRecyclerAdapter<Listing, ListingHolder> mAdapter = new FirebaseRecyclerAdapter<Listing, ListingHolder>(
                 Listing.class,
@@ -233,6 +255,7 @@ MyAccountActivity extends AppCompatActivity
                 try {
                     Uri imageUri = data.getData();
                     InputStream imageStream = getContentResolver().openInputStream(imageUri);
+
                     final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
                     final ImageView previewIV = new ImageView(this);
                     previewIV.setImageBitmap(selectedImage);
@@ -324,7 +347,6 @@ MyAccountActivity extends AppCompatActivity
 
     /**
      * Sets a listener that triggers when an option from the taskbar menu is selected.
-     *
      * @param item Which item on the menu was selected.
      */
     @Override
@@ -367,7 +389,7 @@ MyAccountActivity extends AppCompatActivity
             //Do nothing
         } else if (id == R.id.nav_message_inbox) {
             startActivity(new Intent(this, MessageInboxActivity.class));
-        } else if (id == R.id.nav_offers) {
+        } else if (id == R.id.nav_view_offers) {
             startActivity(new Intent(this, ViewOffersActivity.class));
         } else if (id == R.id.nav_search_listings) {
             startActivity(new Intent(this, SearchListingsActivity.class));

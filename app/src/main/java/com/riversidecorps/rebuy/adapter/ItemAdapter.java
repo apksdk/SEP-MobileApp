@@ -6,6 +6,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
+import com.riversidecorps.rebuy.R;
+import com.riversidecorps.rebuy.models.Listing;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -35,12 +42,16 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
         TextView item_name;
         TextView price_pre;
         TextView item_price;
+        TextView seller_pre;
+        TextView item_seller;
         TextView description_pre;
         TextView item_description;
+        TextView quantity_pre;
+        TextView item_quantity;
         TextView date_pre;
         TextView item_date;
         private View view;
-        ImageView itemImage;
+
 
         public ViewHolder(final View view) {
             super(view);
@@ -50,6 +61,10 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
 
             price_pre = (TextView) view.findViewById(R.id.price_pre);
             item_price = (TextView) view.findViewById(R.id.item_price);
+
+            seller_pre = (TextView) view.findViewById(R.id.seller_pre);
+            item_seller = (TextView) view.findViewById(R.id.item_seller);
+          
             itemImage = (ImageView) view.findViewById(R.id.item_image);
             description_pre = (TextView) view.findViewById(R.id.description_pre);
             item_description = (TextView) view.findViewById(R.id.item_description);
@@ -74,33 +89,28 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(final ViewHolder viewHolder, int position) {
-        viewHolder.title_pre.setText(R.string.title_pre);
-        viewHolder.price_pre.setText(R.string.price_pre);
-//        viewHolder.seller_pre.setText(R.string.seller_pre);
-        viewHolder.description_pre.setText(R.string.description_pre);
-        viewHolder.date_pre.setText(R.string.date_pre);
 
         viewHolder.item_name.setText(itemLists.get(position).getItemName());
         viewHolder.item_price.setText(itemLists.get(position).getItemPrice());
-        viewHolder.item_description.setText(itemLists.get(position).getItemDescription());
+        //viewHolder.item_quantity.setText(itemLists.get(position).getItemQuantity().toString());
+        viewHolder.item_seller.setText(itemLists.get(position).getItemSeller());
+        //viewHolder.item_description.setText(itemLists.get(position).getItemDescription());
         String date = itemLists.get(position).getCreatedDate();
+//        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+//        String formatedDate = formatter.format(date);
         viewHolder.item_date.setText(date);
 
-        String itemId=itemLists.get(position).getmItemId();
-        String imagePath = "itemImageListings/" + itemId + ".png";
-        StorageReference itemImageRef = mStorage.getReference(imagePath);
-        Glide.with(context)
-                .using(new FirebaseImageLoader())
-                .load(itemImageRef)
-                .into(viewHolder.itemImage);
             viewHolder.view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context,com.riversidecorps.rebuy.SingleListingActivity.class );
+                Intent intent = new Intent(context,com.riversidecorps.rebuy.SingleListingActivity.class);
+
                 intent.putExtra("itemName", itemLists.get(viewHolder.getAdapterPosition()).getItemName());
                 intent.putExtra("itemPrice", itemLists.get(viewHolder.getAdapterPosition()).getItemPrice());
                 intent.putExtra("itemDes", itemLists.get(viewHolder.getAdapterPosition()).getItemDescription());
                 intent.putExtra("itemQuantity", itemLists.get(viewHolder.getAdapterPosition()).getItemQuantity());
+                intent.putExtra("itemUser", itemLists.get(viewHolder.getAdapterPosition()).getItemQuantity());
+                intent.putExtra("image", itemLists.get(viewHolder.getAdapterPosition()).getItemQuantity());
                 intent.putExtra("itemId", itemLists.get(viewHolder.getAdapterPosition()).getmItemId());
                 intent.putExtra("itemSellerId", itemLists.get(viewHolder.getAdapterPosition()).getmItemSellerId());
                 context.startActivity(intent);
