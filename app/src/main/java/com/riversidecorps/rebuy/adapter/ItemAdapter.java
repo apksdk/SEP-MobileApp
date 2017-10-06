@@ -50,14 +50,14 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
             price_pre = (TextView) view.findViewById(R.id.price_pre);
             item_price = (TextView) view.findViewById(R.id.item_price);
 
-            quantity_pre = (TextView) view.findViewById(R.id.quantity_pre);
-            item_quantity = (TextView) view.findViewById(R.id.item_quantity);
+            // quantity_pre = (TextView) view.findViewById(R.id.quantity_pre);
+            // item_quantity = (TextView) view.findViewById(R.id.item_quantity);
 
             seller_pre = (TextView) view.findViewById(R.id.seller_pre);
             item_seller = (TextView) view.findViewById(R.id.item_seller);
 
-            description_pre = (TextView) view.findViewById(R.id.description_pre);
-            item_description = (TextView) view.findViewById(R.id.item_description);
+            // description_pre = (TextView) view.findViewById(R.id.description_pre);
+            // item_description = (TextView) view.findViewById(R.id.item_description);
 
             date_pre = (TextView) view.findViewById(R.id.date_pre);
             item_date = (TextView) view.findViewById(R.id.item_date);
@@ -82,12 +82,12 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
 
         viewHolder.item_name.setText(itemLists.get(position).getItemName());
         viewHolder.item_price.setText(itemLists.get(position).getItemPrice());
-        viewHolder.item_quantity.setText(itemLists.get(position).getItemQuantity().toString());
+        // viewHolder.item_quantity.setText(itemLists.get(position).getItemQuantity().toString());
         viewHolder.item_seller.setText(itemLists.get(position).getItemSeller());
-        viewHolder.item_description.setText(itemLists.get(position).getItemDescription());
+        // viewHolder.item_description.setText(itemLists.get(position).getItemDescription());
         String date = itemLists.get(position).getCreatedDate();
-//        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-//        String formatedDate = formatter.format(date);
+        // SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        // String formatedDate = formatter.format(date);
         viewHolder.item_date.setText(date);
 
             viewHolder.view.setOnClickListener(new View.OnClickListener() {

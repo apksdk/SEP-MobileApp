@@ -115,14 +115,6 @@ public class OfferAdapter extends RecyclerView.Adapter<OfferAdapter.ViewHolder> 
             }
         });
 
-        /*
-        this.ItemBuyer = mItemBuyer;
-        this.ItemName = mItemName;
-        this.ItemOriginalPrice = mItemOriginalPrice;
-        this.OfferPrice = mOfferPrice;
-        this.OfferDate = mOfferDate;
-        this.ItemDescription = mItemDescription;
-        */
     }
 
     @Override

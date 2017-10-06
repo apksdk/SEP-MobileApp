@@ -238,14 +238,14 @@ public class CreateOfferActivity extends AppCompatActivity
         String originalPrice = itemOriginalPriceTV.getText().toString();
         String offerPrice = itemOfferPriceET.getText().toString();
         String itemDes = getIntent().getStringExtra("itemDes").toString().trim();
-        String buyerid = myFirebaseUser.getDisplayName();
+        String buyerId = myFirebaseUser.getDisplayName();
         FirebaseUser myFirebaseUser = myFirebaseAuth.getCurrentUser();
 
         Date date = new Date();
         Date newDate = new Date(date.getTime() + 604800000L * 2 + 24 * 60 * 60);
         SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd");
         String stringDate = dt.format(newDate);
-        Offer newOffer = new Offer(buyerid,itemName,itemQuantity, originalPrice,offerPrice,stringDate,itemDes);
+        Offer newOffer = new Offer(buyerId,itemName,itemQuantity, originalPrice,offerPrice,stringDate,itemDes);
         databaseReference.child(DB_OFFER).push().setValue(newOffer);
         Toast.makeText(this,"Please wait for making offer ...",Toast.LENGTH_LONG).show();
 
