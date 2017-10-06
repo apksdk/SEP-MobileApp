@@ -79,12 +79,6 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(final ViewHolder viewHolder, int position) {
-        viewHolder.title_pre.setText(R.string.title_pre);
-        viewHolder.price_pre.setText(R.string.price_pre);
-        viewHolder.quantity_pre.setText("Quantity:");
-        viewHolder.seller_pre.setText("Seller:");
-        viewHolder.description_pre.setText(R.string.description_pre);
-        viewHolder.date_pre.setText("Date:");
 
         viewHolder.item_name.setText(itemLists.get(position).getItemName());
         viewHolder.item_price.setText(itemLists.get(position).getItemPrice());
@@ -104,6 +98,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
                 intent.putExtra("itemPrice", itemLists.get(viewHolder.getAdapterPosition()).getItemPrice());
                 intent.putExtra("itemDes", itemLists.get(viewHolder.getAdapterPosition()).getItemDescription());
                 intent.putExtra("itemQuantity", itemLists.get(viewHolder.getAdapterPosition()).getItemQuantity());
+                intent.putExtra("itemUser", itemLists.get(viewHolder.getAdapterPosition()).getItemQuantity());
                 context.startActivity(intent);
 
             }

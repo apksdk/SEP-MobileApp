@@ -64,10 +64,12 @@
     <!-- Strings related to the item -->
     <string name="title_pre">Title: </string>
     <string name="price_pre">Price: </string>
-    <string name="quantity_pre">Quantity:</string>
-    <string name="seller_pre">Seller:</string>
-    <string name="description_pre">Description:</string>
-    <string name="date_pre">Date:</string>
-
+    <string name="original_price_pre">Your Price: </string>
+    <string name="offer_price_pre">Offer Price: </string>
+    <string name="quantity_pre">Quantity: </string>
+    <string name="seller_pre">Seller: </string>
+    <string name ="buyer_pre">Buyer: </string>
+    <string name="description_pre">Description: </string>
+    <string name="date_pre">Date: </string>
     <string name="item_id" >ITEM_ID</string>
 </resources>

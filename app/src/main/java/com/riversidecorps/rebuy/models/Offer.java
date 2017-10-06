@@ -33,7 +33,6 @@ public class Offer {
         this.mOfferPrice = mOfferPrice;
         this.mOfferDate = mOfferDate;
         this.mItemDescription = mItemDescription;
-        this.mItemSoldout = false;
     }
 
     public String getItemBuyer() {
@@ -82,14 +81,6 @@ public class Offer {
 
     public void setItemDescription(String itemDescription) {
         mItemDescription = itemDescription;
-    }
-
-    public Boolean getItemSoldout() {
-        return mItemSoldout;
-    }
-
-    public void setItemSoldout(Boolean itemSoldout) {
-        mItemSoldout = itemSoldout;
     }
 
     public String getOfferDate() {

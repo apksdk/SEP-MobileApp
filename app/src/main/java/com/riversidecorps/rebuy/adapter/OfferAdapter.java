@@ -90,23 +90,16 @@ public class OfferAdapter extends RecyclerView.Adapter<OfferAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(final ViewHolder viewHolder, int position) {
-        viewHolder.title_pre.setText("Title:");
-        viewHolder.buyer_pre.setText("Buyer:");
-        viewHolder.original_price_pre.setText("Original Price:");
-        viewHolder.offer_price_pre.setText("Offer Price:");
-        viewHolder.quantity_pre.setText("Quantity:");
-        viewHolder.description_pre.setText("Description:");
-        viewHolder.date_pre.setText("Date:");
 
         viewHolder.item_name.setText(offerLists.get(position).getItemName());
         viewHolder.item_buyer.setText(offerLists.get(position).getItemBuyer());
-        viewHolder.item_original_price.setText(offerLists.get(position).getItemOriginalPrice().toString());
-        viewHolder.item_offer_price.setText(offerLists.get(position).getOfferPrice().toString());
-        viewHolder.item_quantity.setText(offerLists.get(position).getItemQuantity().toString());
-        viewHolder.item_description.setText(offerLists.get(position).getItemDescription());
+        viewHolder.item_original_price.setText(offerLists.get(position).getItemOriginalPrice());
+        viewHolder.item_offer_price.setText(offerLists.get(position).getOfferPrice());
+        //viewHolder.item_quantity.setText(offerLists.get(position).getItemQuantity().toString());
+        //viewHolder.item_description.setText(offerLists.get(position).getItemDescription());
 
         String date = offerLists.get(position).getOfferDate();
-        viewHolder.item_date.setText(date);
+        //viewHolder.item_date.setText(date);
 
         viewHolder.view.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -116,8 +109,8 @@ public class OfferAdapter extends RecyclerView.Adapter<OfferAdapter.ViewHolder> 
                 intent.putExtra("itemBuyer", offerLists.get(viewHolder.getAdapterPosition()).getItemBuyer());
                 intent.putExtra("itemOriginalPrice", offerLists.get(viewHolder.getAdapterPosition()).getItemOriginalPrice());
                 intent.putExtra("itemOfferPrice", offerLists.get(viewHolder.getAdapterPosition()).getOfferPrice());
-                intent.putExtra("itemQuantity", offerLists.get(viewHolder.getAdapterPosition()).getItemQuantity());
-                intent.putExtra("itemDes", offerLists.get(viewHolder.getAdapterPosition()).getItemDescription());
+                //intent.putExtra("itemQuantity", offerLists.get(viewHolder.getAdapterPosition()).getItemQuantity());
+                //intent.putExtra("itemDes", offerLists.get(viewHolder.getAdapterPosition()).getItemDescription());
                 context.startActivity(intent);
             }
         });

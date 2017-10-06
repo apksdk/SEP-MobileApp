@@ -1,8 +1,8 @@
 <component name="libraryTable">
   <library name="palette-v7-26.0.1">
     <CLASSES>
-      <root url="jar://$USER_HOME$/.android/build-cache/0e1621a81f003736a36538a251f1427c39bafa3d/output/jars/classes.jar!/" />
-      <root url="file://$USER_HOME$/.android/build-cache/0e1621a81f003736a36538a251f1427c39bafa3d/output/res" />
+      <root url="file://$USER_HOME$/.android/build-cache/66cf38d7f92ece8d34e9c1e6ac4b9c4733be31cb/output/res" />
+      <root url="jar://$USER_HOME$/.android/build-cache/66cf38d7f92ece8d34e9c1e6ac4b9c4733be31cb/output/jars/classes.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES>

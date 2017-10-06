@@ -285,9 +285,9 @@ public class CreateListingActivity extends AppCompatActivity
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     //Add image URL to listing
                     newListing.setItemImage(taskSnapshot.getDownloadUrl().toString());
-                    newListing.setmItemId(mUniqueId);
+                    newListing.setItemId(mUniqueId);
 
-                    Log.i("TTT Itemid: ",newListing.getmItemId());
+                    Log.i("TTT Itemid: ",newListing.getItemId());
                     newMinListing.setItemImage(taskSnapshot.getDownloadUrl().toString());
                     //Save listing on Firebase
                     final String listingID = databaseReference.child(DB_LISTING).push().getKey();

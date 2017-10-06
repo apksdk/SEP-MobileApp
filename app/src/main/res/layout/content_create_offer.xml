@@ -6,8 +6,8 @@
     android:layout_height="match_parent"
     android:layout_margin="16dp"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.riversidecorps.rebuy.OffersActivity"
-    tools:showIn="@layout/app_bar_offers">
+    tools:context="com.riversidecorps.rebuy.CreateOfferActivity"
+    tools:showIn="@layout/app_bar_create_offer">
     <android.support.v7.widget.RecyclerView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

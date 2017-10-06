@@ -8,14 +8,21 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -73,16 +80,16 @@ public class ViewOffersActivity extends AppCompatActivity
                 mOfferList.removeAll(mOfferList);
                 for (DataSnapshot messageSnapshot : snapshot.getChildren()) {
 
-                    String buyer = (String) messageSnapshot.child("mItemBuyer").getValue();
-                    String itemName = (String) messageSnapshot.child("mItemName").getValue();
-                    Double originalPrice = (Double) messageSnapshot.child("itemOriginalPrice").getValue();
-                    Long offerPrice = (Long) messageSnapshot.child("offerPrice").getValue();
-                    String description = (String) messageSnapshot.child("mItemDescription").getValue();
+                    String buyer = (String) messageSnapshot.child("itemBuyer").getValue();
+                    String itemName = (String) messageSnapshot.child("itemName").getValue();
+                    String originalPrice = (String) messageSnapshot.child("itemOriginalPrice").getValue();
+                    String offerPrice = (String) messageSnapshot.child("offerPrice").getValue();
+                    String description = (String) messageSnapshot.child("itemDescription").getValue();
                     Long quantity = (Long) messageSnapshot.child("itemQuantity").getValue();
                     //String itemId =  messageSnapshot.getKey().toString();
                     String offerDate = (String) messageSnapshot.child("mOfferDate").getValue();
                     Offer newOffer = new Offer(buyer,itemName,Integer.parseInt(quantity.toString()),
-                            String.valueOf(originalPrice), String.valueOf(offerPrice),description, offerDate);
+                            originalPrice, offerPrice, description, offerDate);
                     mOfferList.add(newOffer);
 
                 }
@@ -242,6 +249,28 @@ public class ViewOffersActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
     private void getResultsFromApi() {
+    }
+
+    public void viewDetailedOffer(View v){
+        //Create alert dialog with the layout group_dialog
+        final AlertDialog.Builder alertDialog = new AlertDialog.Builder(ViewOffersActivity.this);
+        final View mView = getLayoutInflater().inflate(R.layout.dialog_view_offer, null);
+
+        //Initialises elements
+        Button acceptOfferBtn = (Button) mView.findViewById(R.id.accept_offer_btn);
+
+        alertDialog.setView(mView);
+        final AlertDialog dialog = alertDialog.create();
+        dialog.show();
+        //Sets listener for the click of the create group button in alert dialog
+        acceptOfferBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                //Close dialog box
+                dialog.dismiss();
+            }
+        });
     }
 
 }

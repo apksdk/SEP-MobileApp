@@ -37,7 +37,7 @@
             android:label="@string/title_activity_single_listing"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".OffersActivity"
+            android:name=".CreateOfferActivity"
             android:label="@string/title_activity_offers"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity

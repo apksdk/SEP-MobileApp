@@ -212,7 +212,7 @@ public class SingleListingActivity extends AppCompatActivity
             iNameTv.setText(itemName);
             TextView itemPriceTV =(TextView) findViewById(R.id.itemPriceTV);
             itemPriceTV.setText(itemPrice);
-            Intent OfferActivity = new Intent (this, OffersActivity.class);
+            Intent OfferActivity = new Intent (this, CreateOfferActivity.class);
             OfferActivity.putExtra("itemName",iNameTv.getText().toString());
             OfferActivity.putExtra("itemPrice",itemPriceTV.getText().toString());
             OfferActivity.putExtra("itemQuantity",itemQuantity);
