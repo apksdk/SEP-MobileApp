@@ -42,6 +42,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.text.NumberFormat;
 import java.util.Locale;
 
 import static android.content.ContentValues.TAG;
@@ -278,7 +279,11 @@ public class ViewOffersActivity extends AppCompatActivity
             if (offer.getOfferID().equals(currOffer)){
                 itemName.setText(offer.getItemName());
                 itemBuyer.setText(offer.getItemBuyer());
-                originalPrice.setText(offer.getItemOriginalPrice());
+                // number formatting - Seb - has to be added to others
+                NumberFormat formattedP1 = NumberFormat.getCurrencyInstance(Locale.US);
+                String currency = formattedP1.format(offer.getItemOriginalPrice());
+                originalPrice.setText(currency);
+                //
                 offerPrice.setText(offer.getOfferPrice());
                 offerQuantity.setText(offer.getOfferQuantity());
                 offerDescription.setText(offer.getOfferDescription());
@@ -294,7 +299,6 @@ public class ViewOffersActivity extends AppCompatActivity
         acceptOfferBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 //Close dialog box
                 dialog.dismiss();
             }
