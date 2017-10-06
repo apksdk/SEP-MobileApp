@@ -9,10 +9,12 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.riversidecorps.rebuy.R;
+import com.riversidecorps.rebuy.ViewListingsActivity;
 import com.riversidecorps.rebuy.models.Listing;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -65,7 +67,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
 
             seller_pre = (TextView) view.findViewById(R.id.seller_pre);
             item_seller = (TextView) view.findViewById(R.id.item_seller);
-          
+
             itemImage = (ImageView) view.findViewById(R.id.item_image);
             description_pre = (TextView) view.findViewById(R.id.description_pre);
             item_description = (TextView) view.findViewById(R.id.offer_description);
@@ -84,7 +86,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
     }
 
     @Override
-    public ViewHolder onCreateViewHolder (ViewGroup viewGroup, int i) {
+    public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         return new ViewHolder(LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.list_item, viewGroup, false));
     }
 
@@ -101,10 +103,10 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
 //        String formatedDate = formatter.format(date);
         viewHolder.item_date.setText(date);
 
-            viewHolder.view.setOnClickListener(new View.OnClickListener() {
+        viewHolder.view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context,com.riversidecorps.rebuy.SingleListingActivity.class);
+                Intent intent = new Intent(context, com.riversidecorps.rebuy.SingleListingActivity.class);
 
                 intent.putExtra("itemName", itemLists.get(viewHolder.getAdapterPosition()).getItemName());
                 intent.putExtra("itemPrice", itemLists.get(viewHolder.getAdapterPosition()).getItemPrice());

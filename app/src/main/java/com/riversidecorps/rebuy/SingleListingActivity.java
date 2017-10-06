@@ -30,34 +30,22 @@ import com.google.firebase.storage.StorageReference;
 
 import static android.content.ContentValues.TAG;
 import static com.riversidecorps.rebuy.R.id.itemImageIV;
+
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.riversidecorps.rebuy.models.Offer;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static android.content.ContentValues.TAG;
-import static com.riversidecorps.rebuy.R.id.itemImageIV;
-import static com.riversidecorps.rebuy.R.id.itemPriceTV;
-
 public class SingleListingActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener{
+        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
 
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private FirebaseUser mUser = mAuth.getCurrentUser();
@@ -70,7 +58,7 @@ public class SingleListingActivity extends AppCompatActivity
     private static final String DB_MESSAGES = "messages";
     private static final String AUTH_IN = "onAuthStateChanged:signed_in:";
     private static final String AUTH_OUT = "onAuthStateChanged:signed_out";
-    private Button offerBTN,buyBTN,messageBTN;
+    private Button offerBTN, buyBTN, messageBTN;
 
     private String itemID;
     private String itemName;
@@ -82,9 +70,13 @@ public class SingleListingActivity extends AppCompatActivity
     private String userID;
     private String userName;
     private TextView loginInfor;
-    private String itemSellerID;
+    private String mItemSellerID;
 
-@Override
+    private TextView mNameTv;
+    private TextView mPriceTv;
+    private TextView mQuantityTv;
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_single_listing);
@@ -100,11 +92,11 @@ public class SingleListingActivity extends AppCompatActivity
         itemDes = getIntent().getStringExtra("itemDes");
         itemQuantity = getIntent().getIntExtra("itemQuantity", 0);
 
-        itemSellerID = getIntent().getStringExtra("itemSellerId");
-//        Log.i("mm",itemSellerID);
+        mItemSellerID = getIntent().getStringExtra("itemSellerId");
+//        Log.i("mm",mItemSellerID);
         userID = mUser.getUid();
         loginInfor = findViewById(R.id.logininfor);
-        mitemImageIV=findViewById(itemImageIV);
+        mitemImageIV = findViewById(itemImageIV);
         String imagePath = "itemImageListings/" + itemID + ".png";
         //Upload image(s)
 //        Log.i("imagePath",imagePath);
@@ -115,19 +107,22 @@ public class SingleListingActivity extends AppCompatActivity
                 .load(itemImageRef)
                 .into(mitemImageIV);
 
-    databaseReference = FirebaseDatabase.getInstance().getReference();
-        TextView iNameTv = (TextView) findViewById(R.id.itemNameTV);
-        iNameTv.setText(itemName);
+        databaseReference = FirebaseDatabase.getInstance().getReference();
+        mNameTv = (TextView) findViewById(R.id.itemNameTV);
+        mNameTv.setText(itemName);
 
-        TextView iPriceTv = (TextView) findViewById(itemPriceTV);
-        iPriceTv.setText("Price: $" + itemPrice + "   Quantity: " + itemQuantity.toString());
+        mPriceTv = (TextView) findViewById(R.id.itemPriceTV);
+        mPriceTv.setText(itemPrice);
+
+        mQuantityTv = (TextView) findViewById(R.id.itemQuantityTV);
+        mQuantityTv.setText(itemQuantity.toString());
 
         TextView iDesTv = (TextView) findViewById(R.id.descriptionTV);
         iDesTv.setText(itemDes);
 
-        offerBTN = (Button)findViewById(R.id.offerBTN);
-        buyBTN = (Button)findViewById(R.id.buyBTN);
-        messageBTN=findViewById(R.id.messageBTN);
+        offerBTN = (Button) findViewById(R.id.offerBTN);
+        buyBTN = (Button) findViewById(R.id.buyBTN);
+        messageBTN = findViewById(R.id.messageBTN);
         offerBTN.setOnClickListener(this);
         buyBTN.setOnClickListener(this);
         messageBTN.setOnClickListener(this);
@@ -144,9 +139,10 @@ public class SingleListingActivity extends AppCompatActivity
         userRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                userName=dataSnapshot.getValue(String.class);
+                userName = dataSnapshot.getValue(String.class);
                 loginInfor.setText("Welcome, " + userName + "!");
             }
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
             }
@@ -189,8 +185,10 @@ public class SingleListingActivity extends AppCompatActivity
             mAuth.removeAuthStateListener(mAuthListener);
         }
     }
+
     /**
      * Creates the options menu on the action bar.
+     *
      * @param menu Menu at the top right of the screen
      * @return true
      */
@@ -203,12 +201,13 @@ public class SingleListingActivity extends AppCompatActivity
 
     /**
      * Sets a listener that triggers when an option from the taskbar menu is selected.
+     *
      * @param item Which item on the menu was selected.
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         //Finds which item was selected
-        switch(item.getItemId()){
+        switch (item.getItemId()) {
             //If item is logout
             case R.id.action_logout:
                 //Sign out of the authenticator and return to login activity.
@@ -251,30 +250,29 @@ public class SingleListingActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_view_listings) {
 
-        }else if (id == R.id.nav_view_offers) {
-        
+        } else if (id == R.id.nav_view_offers) {
+
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
     @Override
     public void onClick(View view) {
-        if(view == offerBTN ){
-            TextView iNameTv = (TextView) findViewById(R.id.itemNameTV);
-            iNameTv.setText(itemName);
-            TextView itemPriceTV =(TextView) findViewById(R.id.itemPriceTV);
-            itemPriceTV.setText(itemPrice);
-            Intent OfferActivity = new Intent (this, CreateOfferActivity.class);
-            OfferActivity.putExtra("itemName",iNameTv.getText().toString());
-            OfferActivity.putExtra("itemPrice",itemPriceTV.getText().toString());
-            OfferActivity.putExtra("itemQuantity",itemQuantity);
-            OfferActivity.putExtra("itemDes",getIntent().getStringExtra("itemDes"));
+        if (view == offerBTN) {
+            
+            Intent OfferActivity = new Intent(this, CreateOfferActivity.class);
+            OfferActivity.putExtra("itemName", mNameTv.getText().toString());
+            OfferActivity.putExtra("itemPrice", mPriceTv.getText().toString());
+            OfferActivity.putExtra("itemQuantity", mQuantityTv.getText().toString());
+            OfferActivity.putExtra("itemDes", getIntent().getStringExtra("itemDes"));
             OfferActivity.putExtra("itemId", getIntent().getStringExtra("itemId"));
+            OfferActivity.putExtra("listingImage", getIntent().getStringExtra("itemId"));
             startActivity(OfferActivity);
         }
 
-        if(view == messageBTN){
+        if (view == messageBTN) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Message");
             builder.setIcon(R.drawable.ic_message_dialog);
@@ -289,11 +287,11 @@ public class SingleListingActivity extends AppCompatActivity
                     progressDialog.show();
                     String datetime = new SimpleDateFormat("yyyy-MM-dd hh:mm a").format(new Date());
                     String message = input.getText().toString();
-                    final String messageID = databaseReference.child("users").child(itemSellerID).child("messages").push().getKey();
-                    databaseReference.child("users").child(itemSellerID).child("messages").child(messageID).child("content").setValue(message);
-                    databaseReference.child("users").child(itemSellerID).child("messages").child(messageID).child("title").setValue(itemName);
-                    databaseReference.child("users").child(itemSellerID).child("messages").child(messageID).child("buyer").setValue(userName);
-                    databaseReference.child("users").child(itemSellerID).child("messages").child(messageID).child("datetime").setValue(datetime).addOnSuccessListener(SingleListingActivity.this, new OnSuccessListener<Void>() {
+                    final String messageID = databaseReference.child("users").child(mItemSellerID).child("DB_MESSAGES").push().getKey();
+                    databaseReference.child("users").child(mItemSellerID).child("messages").child(messageID).child("content").setValue(message);
+                    databaseReference.child("users").child(mItemSellerID).child("messages").child(messageID).child("title").setValue(itemName);
+                    databaseReference.child("users").child(mItemSellerID).child("messages").child(messageID).child("buyer").setValue(userName);
+                    databaseReference.child("users").child(mItemSellerID).child("messages").child(messageID).child("datetime").setValue(datetime).addOnSuccessListener(SingleListingActivity.this, new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
                             Toast.makeText(getBaseContext(), "Your message has been sent to the seller!", Toast.LENGTH_LONG).show();

@@ -7,9 +7,10 @@ import java.util.ArrayList;
  */
 
 public class Offer {
+    private String mOfferID;
     private String mItemBuyer;
     private String mItemName;
-    private Integer mOfferQuantity;
+    private String mOfferQuantity;
     private String mItemOriginalPrice;
     private String mOfferPrice;
     private String mOfferDescription;
@@ -25,7 +26,7 @@ public class Offer {
         this.mItemName = mItemName;
     }
 
-    public Offer(String mItemBuyer, String mItemName, Integer mOfferQuantity, String mItemOriginalPrice, String mOfferPrice, String mOfferDate, String mOfferDescription) {
+    public Offer(String mItemBuyer, String mItemName, String mOfferQuantity, String mItemOriginalPrice, String mOfferPrice, String mOfferDate, String mOfferDescription) {
         this.mItemBuyer = mItemBuyer;
         this.mItemName = mItemName;
         this.mOfferQuantity = mOfferQuantity;
@@ -51,11 +52,11 @@ public class Offer {
         mItemName = itemName;
     }
 
-    public Integer getOfferQuantity() {
+    public String getOfferQuantity() {
         return mOfferQuantity;
     }
 
-    public void setOfferQuantity(Integer offerQuantity) {
+    public void setOfferQuantity(String offerQuantity) {
         mOfferQuantity = offerQuantity;
     }
 
@@ -89,5 +90,13 @@ public class Offer {
 
     public void setOfferDate(String offerDate) {
         mOfferDate = offerDate;
+    }
+
+    public void setOfferID(String mOfferID) {
+        this.mOfferID = mOfferID;
+    }
+
+    public String getOfferID() {
+        return mOfferID;
     }
 }
