@@ -65,14 +65,14 @@ public class OfferAdapter extends RecyclerView.Adapter<OfferAdapter.ViewHolder> 
             offer_price_pre = (TextView) view.findViewById(R.id.offer_price_pre);
             item_offer_price = (TextView) view.findViewById(R.id.item_offer_price);
 
-            quantity_pre = (TextView) view.findViewById(R.id.quantity_pre);
-            item_quantity = (TextView) view.findViewById(R.id.item_quantity);
+            //quantity_pre = (TextView) view.findViewById(R.id.quantity_pre);
+            //item_quantity = (TextView) view.findViewById(R.id.item_quantity);
 
-            description_pre = (TextView) view.findViewById(R.id.description_pre);
-            item_description = (TextView) view.findViewById(R.id.item_description);
+            //description_pre = (TextView) view.findViewById(R.id.description_pre);
+            //item_description = (TextView) view.findViewById(R.id.item_description);
 
-            date_pre = (TextView) view.findViewById(R.id.date_pre);
-            item_date = (TextView) view.findViewById(R.id.item_date);
+            //date_pre = (TextView) view.findViewById(R.id.date_pre);
+            //item_date = (TextView) view.findViewById(R.id.item_date);
 
         }
     }

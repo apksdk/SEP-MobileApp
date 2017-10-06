@@ -87,8 +87,8 @@ public class ViewOffersActivity extends AppCompatActivity
                     String description = (String) messageSnapshot.child("itemDescription").getValue();
                     Long quantity = (Long) messageSnapshot.child("itemQuantity").getValue();
                     //String itemId =  messageSnapshot.getKey().toString();
-                    String offerDate = (String) messageSnapshot.child("mOfferDate").getValue();
-                    Offer newOffer = new Offer(buyer,itemName,Integer.parseInt(quantity.toString()),
+                    String offerDate = (String) messageSnapshot.child("offerDate").getValue();
+                    Offer newOffer = new Offer(buyer,itemName ,Integer.parseInt(quantity.toString()) ,
                             originalPrice, offerPrice, description, offerDate);
                     mOfferList.add(newOffer);
 

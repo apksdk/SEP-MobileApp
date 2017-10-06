@@ -3,21 +3,30 @@
 
     <item
         is-multidex="true"
-        jar="D:\GitHub\SEP-MobileApp\app\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="26.0.1"
-        sha1="80c5a8fba901f424dcded21be29ca27afeaa78c6">
-        <dex dex="D:\GitHub\SEP-MobileApp\app\build\intermediates\transforms\dex\debug\folders\1000\10000\instant-run-bootstrap_03fae6edf2bf7138e73c21f1dec4e1bc7ee8fe32\classes.dex" />
-    </item>
-    <item
-        is-multidex="true"
         jar="D:\GitHub\SEP-MobileApp\app\build\intermediates\incremental-runtime-classes\debug\instant-run.jar"
         jumboMode="true"
         optimize="true"
         revision="26.0.1"
         sha1="3be78ebc2706b2e1fe2f12d5726887a92d6c183b">
         <dex dex="D:\GitHub\SEP-MobileApp\app\build\intermediates\transforms\dex\debug\folders\1000\10000\instant-run_aaf4b444e6c950beddb82e767a8eeaf81807c319\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="D:\GitHub\SEP-MobileApp\app\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="fb015e86c51ede2707ebfdda1584679c17aa7798">
+        <dex dex="D:\GitHub\SEP-MobileApp\app\build\intermediates\transforms\dex\debug\folders\1000\10000\instant-run-bootstrap_03fae6edf2bf7138e73c21f1dec4e1bc7ee8fe32\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\Sean\.android\build-cache\c73b96710b2076784fd6f1157d8e9c55a78207d6\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.1"
+        sha1="78ea232052df889856dcb7b7b542707c89bb3bfb">
+        <dex dex="D:\GitHub\SEP-MobileApp\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_0cf894d454200214fda28fe7c72f4ae46b5ba7b1\classes.dex" />
     </item>
     <item
         is-multidex="true"
