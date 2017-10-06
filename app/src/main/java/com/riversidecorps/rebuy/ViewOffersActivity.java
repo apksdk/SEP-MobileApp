@@ -39,6 +39,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.text.NumberFormat;
 import java.util.Locale;
 
 import static android.content.ContentValues.TAG;
@@ -274,7 +275,11 @@ public class ViewOffersActivity extends AppCompatActivity
             if (offer.getItemName().equals(currOffer)){
                 itemName.setText(offer.getItemName());
                 itemBuyer.setText(offer.getItemBuyer());
-                originalPrice.setText(offer.getItemOriginalPrice());
+                // number formatting - Seb - has to be added to others
+                NumberFormat formattedP1 = NumberFormat.getCurrencyInstance(Locale.US);
+                String currency = formattedP1.format(offer.getItemOriginalPrice());
+                originalPrice.setText(currency);
+                //
                 offerPrice.setText(offer.getOfferPrice());
                 offerQuantity.setText(offer.getOfferQuantity().toString());
                 offerDescription.setText(offer.getOfferDescription());
@@ -286,12 +291,18 @@ public class ViewOffersActivity extends AppCompatActivity
         final AlertDialog dialog = alertDialog.create();
         dialog.show();
         //Sets listener for the click of the create group button in alert dialog
+        rejectOfferBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Close dialog box
+                dialog.dismiss();
+            }
+        });
+        //Sets listener for the click of the create group button in alert dialog
         acceptOfferBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                //Close dialog box
-                dialog.dismiss();
             }
         });
     }
