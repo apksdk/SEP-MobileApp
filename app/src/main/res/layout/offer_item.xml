@@ -93,10 +93,9 @@
             android:text="@string/error_text"
             android:textColor="@android:color/black"
             android:textSize="12sp"
-            android:layout_alignBaseline="@+id/original_price_pre"
-            android:layout_alignBottom="@+id/original_price_pre"
-            android:layout_toRightOf="@+id/original_price_pre"
-            android:layout_toEndOf="@+id/original_price_pre" />
+            android:layout_above="@+id/offer_price_pre"
+            android:layout_toRightOf="@+id/offer_price_pre"
+            android:layout_toEndOf="@+id/offer_price_pre" />
 
 
         <TextView
@@ -113,7 +112,7 @@
             android:paddingRight="5dp" />
 
         <TextView
-            android:id="@+id/item_offer_price"
+            android:id="@+id/offer_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
@@ -121,6 +120,19 @@
             android:text="@string/error_text"
             android:textColor="@android:color/black"
             android:textSize="12sp"
+            android:layout_alignParentBottom="true"
+            android:layout_toRightOf="@+id/offer_price_pre"
+            android:layout_toEndOf="@+id/offer_price_pre" />
+
+        <TextView
+            android:id="@+id/offer_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:ellipsize="end"
+            android:text="@string/error_text"
+            android:textColor="@android:color/black"
+            android:textSize="0sp"
             android:layout_alignParentBottom="true"
             android:layout_toRightOf="@+id/offer_price_pre"
             android:layout_toEndOf="@+id/offer_price_pre" />

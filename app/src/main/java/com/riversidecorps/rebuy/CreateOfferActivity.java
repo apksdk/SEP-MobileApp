@@ -1,5 +1,6 @@
 package com.riversidecorps.rebuy;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -7,6 +8,7 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -29,14 +31,17 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.riversidecorps.rebuy.models.Offer;
 
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static android.content.ContentValues.TAG;
 import static com.riversidecorps.rebuy.R.id.itemImagePreviewIV;
+import static com.riversidecorps.rebuy.R.id.itemQuantityTV;
 
 public class CreateOfferActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener {
@@ -50,13 +55,18 @@ public class CreateOfferActivity extends AppCompatActivity
     private static final String DB_OFFER = "Offers";
     private static final String AUTH_IN = "onAuthStateChanged:signed_in:";
     private static final String AUTH_OUT = "onAuthStateChanged:signed_out";
-    private String itemName,itemPrice,mitemQuantity, uid;
+    private String mItemName;
+    private String mItemPrice;
+    private Integer mItemQuantity;
+    private String userEmail;
     private TextView itemNameTV;
     private TextView itemOriginalPriceTV;
+    private TextView itemQuanitityTV;
     private TextView offerAuthorTV;
     private Button makeOfferBtn;
     private Button cancelBtn;
-    private EditText itemOfferPriceET;
+    private EditText offerPriceET;
+    private EditText offerQuantityET;
     private String itemId;
     private ImageView mimageView;
     @Override
@@ -73,26 +83,30 @@ public class CreateOfferActivity extends AppCompatActivity
         myFirebaseUser = myFirebaseAuth.getCurrentUser();
 
 
-        uid = myFirebaseUser.getEmail();
-        itemName = getIntent().getStringExtra("itemName");
-        itemPrice = getIntent().getStringExtra("itemPrice");
-        mitemQuantity = getIntent().getStringExtra("itemQuantity");
+        userEmail = myFirebaseUser.getEmail();
+        mItemName = getIntent().getStringExtra("itemName");
+        mItemPrice = getIntent().getStringExtra("itemPrice");
+        mItemQuantity = Integer.parseInt(getIntent().getStringExtra("itemQuantity"));
         itemId = getIntent().getStringExtra("itemId");
 
         makeOfferBtn = (Button) findViewById(R.id.makeOfferBtn);
         cancelBtn = (Button) findViewById(R.id.cancelBtn);
-        itemOfferPriceET = (EditText) findViewById(R.id.itemOfferPriceET);
+        offerPriceET = (EditText) findViewById(R.id.itemOfferPriceET);
+        offerQuantityET = (EditText) findViewById(R.id.offerQuantityET);
         makeOfferBtn.setOnClickListener(this);
         cancelBtn.setOnClickListener(this);
 
         itemNameTV = (TextView) findViewById(R.id.itemNameTV);
-        itemNameTV.setText(itemName);
+        itemNameTV.setText(mItemName);
 
         itemOriginalPriceTV = (TextView) findViewById(R.id.itemOriginalPriceTV);
-        itemOriginalPriceTV.setText(itemPrice);
+        itemOriginalPriceTV.setText(mItemPrice);
+
+        itemQuanitityTV = (TextView) findViewById(R.id.itemQuantityTV);
+        itemQuanitityTV.setText(mItemQuantity.toString());
 
         offerAuthorTV = (TextView) findViewById(R.id.offerAuthorTV);
-        offerAuthorTV.setText(uid);
+        offerAuthorTV.setText(userEmail);
 
         mimageView = findViewById(itemImagePreviewIV);
         String imagePath = "itemImageListings/" + itemId + ".png";
@@ -224,7 +238,6 @@ public class CreateOfferActivity extends AppCompatActivity
     public void onClick(View view) {
         if(view == makeOfferBtn){
             makeOffer();
-            startActivity(new Intent(CreateOfferActivity.this, MyAccountActivity.class));
         } else if(view == cancelBtn){
             startActivity(new Intent(CreateOfferActivity.this, MyAccountActivity.class));
         }
@@ -232,22 +245,38 @@ public class CreateOfferActivity extends AppCompatActivity
 
     @OnClick(R.id.makeOfferBtn)
     public void makeOffer() {
-        String itemName =  itemNameTV.getText().toString().trim();
+        Integer offerQuantity = Integer.parseInt(offerQuantityET.getText().toString());
+        if(offerQuantity > mItemQuantity){
+            new AlertDialog.Builder(CreateOfferActivity.this)
+                    .setTitle("Not Enough Items")
+                    .setMessage("You have requested to buy more items than the seller is selling.")
+                    .setIcon(R.drawable.ic_dialog_warning)
+                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                             dialogInterface.dismiss();
+                        }
+                    }).show();
+        } else {
+            String itemName =  itemNameTV.getText().toString().trim();
         /*I could catch any value of the itemQuantity in Single view listing page*/
-        Integer itemQuantity = 1;//Integer.parseInt(getIntent().getStringExtra("itemQuantity").trim());
-        String originalPrice = itemOriginalPriceTV.getText().toString();
-        String offerPrice = itemOfferPriceET.getText().toString();
-        String itemDes = getIntent().getStringExtra("itemDes").toString().trim();
-        String buyerId = myFirebaseUser.getDisplayName();
-        FirebaseUser myFirebaseUser = myFirebaseAuth.getCurrentUser();
+            String originalPrice = itemOriginalPriceTV.getText().toString();
+            NumberFormat formattedP1 = NumberFormat.getCurrencyInstance(Locale.US);
+            String offerPrice = formattedP1.format(Double.parseDouble(offerPriceET.getText().toString()));
+            String itemDes = getIntent().getStringExtra("itemDes");
+            String buyerId = myFirebaseUser.getDisplayName();
 
-        Date date = new Date();
-        Date newDate = new Date(date.getTime() + 604800000L * 2 + 24 * 60 * 60);
-        SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd");
-        String stringDate = dt.format(newDate);
-        Offer newOffer = new Offer(buyerId,itemName,itemQuantity, originalPrice,offerPrice,stringDate,itemDes);
-        databaseReference.child(DB_OFFER).push().setValue(newOffer);
-        Toast.makeText(this,"Please wait for making offer ...",Toast.LENGTH_LONG).show();
+            FirebaseUser myFirebaseUser = myFirebaseAuth.getCurrentUser();
+            Date date = new Date();
+            Date newDate = new Date(date.getTime() + 604800000L * 2 + 24 * 60 * 60);
+            SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd");
+            String stringDate = dt.format(newDate);
+
+            Offer newOffer = new Offer(buyerId,itemName,offerQuantity.toString(), originalPrice,offerPrice,stringDate,itemDes);
+            databaseReference.child(DB_OFFER).push().setValue(newOffer);
+            Toast.makeText(this,"Please wait for making offer ...",Toast.LENGTH_LONG).show();
+            startActivity(new Intent(CreateOfferActivity.this, MyAccountActivity.class));
+        }
 
     }
 }

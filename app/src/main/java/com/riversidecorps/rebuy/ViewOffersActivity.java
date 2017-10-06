@@ -1,6 +1,8 @@
 package com.riversidecorps.rebuy;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -35,6 +37,7 @@ import com.riversidecorps.rebuy.adapter.OfferAdapter;
 import com.riversidecorps.rebuy.models.Offer;
 
 import java.text.DateFormat;
+import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -81,18 +84,19 @@ public class ViewOffersActivity extends AppCompatActivity
                 mOfferList.removeAll(mOfferList);
                 for (DataSnapshot messageSnapshot : snapshot.getChildren()) {
 
+                    String mOfferID = (String) messageSnapshot.getKey();
                     String buyer = (String) messageSnapshot.child("itemBuyer").getValue();
                     String itemName = (String) messageSnapshot.child("itemName").getValue();
                     String originalPrice = (String) messageSnapshot.child("itemOriginalPrice").getValue();
                     String offerPrice = (String) messageSnapshot.child("offerPrice").getValue();
-                    String description = (String) messageSnapshot.child("itemDescription").getValue();
-                    Long quantity = (Long) messageSnapshot.child("itemQuantity").getValue();
+                    String offerDescription = (String) messageSnapshot.child("offerDescription").getValue();
+                    String quantity = (String) messageSnapshot.child("offerQuantity").getValue();
                     //String itemId =  messageSnapshot.getKey().toString();
                     String offerDate = (String) messageSnapshot.child("offerDate").getValue();
-                    Offer newOffer = new Offer(buyer,itemName ,Integer.parseInt(quantity.toString()) ,
-                            originalPrice, offerPrice, description, offerDate);
+                    Offer newOffer = new Offer(buyer,itemName , quantity,
+                            originalPrice, offerPrice, offerDate, offerDescription);
+                    newOffer.setOfferID(mOfferID);
                     mOfferList.add(newOffer);
-
                 }
                 mAdapter.notifyDataSetChanged();
             }
@@ -268,11 +272,11 @@ public class ViewOffersActivity extends AppCompatActivity
         TextView offerDescription = (TextView) mView.findViewById(R.id.offer_description);
         TextView offerDate = (TextView) mView.findViewById(R.id.offer_date);
 
-        TextView rVItemName = (TextView) v.findViewById(R.id.item_name);
+        TextView itemIDRV = (TextView) v.findViewById(R.id.offer_id);
 
-        String currOffer = rVItemName.getText().toString();
+        String currOffer = itemIDRV.getText().toString();
         for (Offer offer : mOfferList) {
-            if (offer.getItemName().equals(currOffer)){
+            if (offer.getOfferID().equals(currOffer)){
                 itemName.setText(offer.getItemName());
                 itemBuyer.setText(offer.getItemBuyer());
                 // number formatting - Seb - has to be added to others
@@ -281,7 +285,7 @@ public class ViewOffersActivity extends AppCompatActivity
                 originalPrice.setText(currency);
                 //
                 offerPrice.setText(offer.getOfferPrice());
-                offerQuantity.setText(offer.getOfferQuantity().toString());
+                offerQuantity.setText(offer.getOfferQuantity());
                 offerDescription.setText(offer.getOfferDescription());
                 offerDate.setText(offer.getOfferDate());
             }
@@ -289,20 +293,24 @@ public class ViewOffersActivity extends AppCompatActivity
 
         alertDialog.setView(mView);
         final AlertDialog dialog = alertDialog.create();
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.show();
-        //Sets listener for the click of the create group button in alert dialog
-        rejectOfferBtn.setOnClickListener(new View.OnClickListener() {
+        //Sets listener for the click of the accept offer button in alert dialog
+        acceptOfferBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //Close dialog box
                 dialog.dismiss();
             }
         });
-        //Sets listener for the click of the create group button in alert dialog
-        acceptOfferBtn.setOnClickListener(new View.OnClickListener() {
+
+        //Sets listener for the click of the reject offer button in alert dialog
+        rejectOfferBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
+                //Close dialog box
+                dialog.dismiss();
             }
         });
     }
