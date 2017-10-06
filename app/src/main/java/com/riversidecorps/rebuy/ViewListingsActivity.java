@@ -78,14 +78,21 @@ public class ViewListingsActivity extends AppCompatActivity
 
         // Attach a listener to read the data at our posts reference
         mDatabase.getReference().child(LISTINGS).addValueEventListener (new ValueEventListener() {
+
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 mItemList.removeAll(mItemList);
                 for (DataSnapshot messageSnapshot : snapshot.getChildren()) {
+                
+                    //TO DO: Figure out why this filters out random listings that does not have itemDeleted flagged as true
+//                    Boolean isDeleted = (Boolean) messageSnapshot.child("itemDeleted").getValue();
+//                    if(isDeleted) {
+//                        break;
+//                    }
 
                     String name = (String) messageSnapshot.child("itemName").getValue();
                     String description = (String) messageSnapshot.child("itemDescription").getValue();
-                    String price = (String) messageSnapshot.child("itemPrice").getValue();
+                    String price = (String) messageSnapshot.child("itemPrice").getValue().toString();
                     Long quantity = (Long) messageSnapshot.child("itemQuantity").getValue();
                     String sellerName = (String) messageSnapshot.child("itemSeller").getValue();
                     //String itemId =  messageSnapshot.getKey().toString();
@@ -183,7 +190,8 @@ public class ViewListingsActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_my_account) {
-            // Handle the camera action
+
+// Handle the camera action
         } else if (id == R.id.nav_message_inbox) {
 
         } else if (id == R.id.nav_create_listing) {

@@ -14,10 +14,10 @@ public class Offer {
     private String mOfferPrice;
     private String mItemDescription;
     private ArrayList<String> mItemImages;
-    private Boolean mItemSoldout;
     private String mOfferDate;
 
         /* Instantiates a new Offer.*/
+
     public Offer() {
     }
 

@@ -229,6 +229,7 @@ public class Listing {
      * @return the item seller ID
      */
     public String getItemSellerId() { return mItemSellerId; }
+    public String getmItemSellerId() { return mItemSellerId; }
     /**
      * Sets item seller ID.
      *
@@ -242,6 +243,7 @@ public class Listing {
      * @return the item ID
      */
     public String getItemId() {
+
         return mItemId;
     }
 
@@ -251,6 +253,7 @@ public class Listing {
      * @param mItemId the m item id
      */
     public void setItemId(String mItemId) {
+
         this.mItemId = mItemId;
     }
 
