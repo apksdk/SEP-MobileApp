@@ -17,6 +17,7 @@ public class Offer {
     private String mOfferDate;
 
         /* Instantiates a new Offer.*/
+
     public Offer() {
     }
 
@@ -88,5 +89,3 @@ public class Offer {
 
     public void setOfferDate(String offerDate) {
         mOfferDate = offerDate;
-    }
-}

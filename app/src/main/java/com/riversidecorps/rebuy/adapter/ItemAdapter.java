@@ -13,6 +13,16 @@ import com.riversidecorps.rebuy.models.Listing;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.riversidecorps.rebuy.R;
+import com.riversidecorps.rebuy.models.Listing;
+
 import java.util.List;
 
 
@@ -24,6 +34,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
 
     private Context context;
     private List<Listing> itemLists;
+    private FirebaseStorage mStorage = FirebaseStorage.getInstance();
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -41,6 +52,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
         TextView item_date;
         private View view;
 
+
         public ViewHolder(final View view) {
             super(view);
             this.view = view;
@@ -52,6 +64,10 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
 
             seller_pre = (TextView) view.findViewById(R.id.seller_pre);
             item_seller = (TextView) view.findViewById(R.id.item_seller);
+          
+            itemImage = (ImageView) view.findViewById(R.id.item_image);
+            description_pre = (TextView) view.findViewById(R.id.description_pre);
+            item_description = (TextView) view.findViewById(R.id.item_description);
 
             date_pre = (TextView) view.findViewById(R.id.date_pre);
             item_date = (TextView) view.findViewById(R.id.item_date);
@@ -88,12 +104,15 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context,com.riversidecorps.rebuy.SingleListingActivity.class);
+
                 intent.putExtra("itemName", itemLists.get(viewHolder.getAdapterPosition()).getItemName());
                 intent.putExtra("itemPrice", itemLists.get(viewHolder.getAdapterPosition()).getItemPrice());
                 intent.putExtra("itemDes", itemLists.get(viewHolder.getAdapterPosition()).getItemDescription());
                 intent.putExtra("itemQuantity", itemLists.get(viewHolder.getAdapterPosition()).getItemQuantity());
                 intent.putExtra("itemUser", itemLists.get(viewHolder.getAdapterPosition()).getItemQuantity());
                 intent.putExtra("image", itemLists.get(viewHolder.getAdapterPosition()).getItemQuantity());
+                intent.putExtra("itemId", itemLists.get(viewHolder.getAdapterPosition()).getmItemId());
+                intent.putExtra("itemSellerId", itemLists.get(viewHolder.getAdapterPosition()).getmItemSellerId());
                 context.startActivity(intent);
 
             }

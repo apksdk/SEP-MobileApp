@@ -31,11 +31,9 @@ import static android.content.ContentValues.TAG;
  */
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener{
     //Constants
-    private static final String LOGGING_IN_MESSAGE = "Logging in...";
     private static final String EXIT_KEY = "EXIT";
     private static final String AUTH_IN = "onAuthStateChanged:signed_in:";
     private static final String AUTH_OUT = "onAuthStateChanged:signed_out";
-    private static final String FAILED_LOGIN = "Could not login, please try again";
 
     //Firebase variables
     private FirebaseAuth mAuth;
@@ -181,7 +179,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             focusView.requestFocus();
         } else {
             //Else show a progress dialog informing the user they are being logged in
-            progressDialog.setMessage(LOGGING_IN_MESSAGE);
+            progressDialog.setMessage(getString(R.string.creating_listing_message));
             progressDialog.show();
 
             //Run log in process through firebase with email and password
@@ -193,7 +191,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         startActivity(new Intent(LoginActivity.this, MyAccountActivity.class));
                     } else {
                         //Else inform user that login was unsuccessful
-                        Toast.makeText(LoginActivity.this, FAILED_LOGIN, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this, getString(R.string.failed_login), Toast.LENGTH_SHORT).show();
                     }
                     //Close the progress dialog
                     progressDialog.dismiss();
