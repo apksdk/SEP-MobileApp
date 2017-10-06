@@ -75,12 +75,6 @@
     <string name="description_pre">Description: </string>
     <string name="date_pre">Date: </string>
     <string name="item_id" >ITEM_ID</string>
-    <string name="quantity_pre">Quantity:</string>
-    <string name="seller_pre">Seller:</string>
-    <string name="description_pre">Description:</string>
-    <string name="date_pre">Date:</string>
-
-    <string name="item_id">ITEM_ID</string>
 
     <!-- Strings for progress dialogs -->
     <string name="login_message">Logging in…</string>

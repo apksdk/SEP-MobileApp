@@ -9,10 +9,10 @@ import java.util.ArrayList;
 public class Offer {
     private String mItemBuyer;
     private String mItemName;
-    private Integer mItemQuantity;
+    private Integer mOfferQuantity;
     private String mItemOriginalPrice;
     private String mOfferPrice;
-    private String mItemDescription;
+    private String mOfferDescription;
     private ArrayList<String> mItemImages;
     private String mOfferDate;
 
@@ -25,14 +25,14 @@ public class Offer {
         this.mItemName = mItemName;
     }
 
-    public Offer(String mItemBuyer,String mItemName, Integer mItemQuantity ,String mItemOriginalPrice,String mOfferPrice,String mOfferDate,String mItemDescription) {
+    public Offer(String mItemBuyer, String mItemName, Integer mOfferQuantity, String mItemOriginalPrice, String mOfferPrice, String mOfferDate, String mOfferDescription) {
         this.mItemBuyer = mItemBuyer;
         this.mItemName = mItemName;
-        this.mItemQuantity = mItemQuantity;
+        this.mOfferQuantity = mOfferQuantity;
         this.mItemOriginalPrice = mItemOriginalPrice;
         this.mOfferPrice = mOfferPrice;
         this.mOfferDate = mOfferDate;
-        this.mItemDescription = mItemDescription;
+        this.mOfferDescription = mOfferDescription;
     }
 
     public String getItemBuyer() {
@@ -51,12 +51,12 @@ public class Offer {
         mItemName = itemName;
     }
 
-    public Integer getItemQuantity() {
-        return mItemQuantity;
+    public Integer getOfferQuantity() {
+        return mOfferQuantity;
     }
 
-    public void setItemQuantity(Integer itemQuantity) {
-        mItemQuantity = itemQuantity;
+    public void setOfferQuantity(Integer offerQuantity) {
+        mOfferQuantity = offerQuantity;
     }
 
     public String getItemOriginalPrice() {
@@ -75,12 +75,12 @@ public class Offer {
         mOfferPrice = offerPrice;
     }
 
-    public String getItemDescription() {
-        return mItemDescription;
+    public String getOfferDescription() {
+        return mOfferDescription;
     }
 
-    public void setItemDescription(String itemDescription) {
-        mItemDescription = itemDescription;
+    public void setOfferDescription(String offerDescription) {
+        mOfferDescription = offerDescription;
     }
 
     public String getOfferDate() {
@@ -89,3 +89,5 @@ public class Offer {
 
     public void setOfferDate(String offerDate) {
         mOfferDate = offerDate;
+    }
+}

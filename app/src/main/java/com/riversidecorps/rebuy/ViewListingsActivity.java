@@ -103,8 +103,8 @@ public class ViewListingsActivity extends AppCompatActivity
                     try {
                         Date date = format.parse(itemDate);
                         Listing newListing = new Listing(sellerName,name,Integer.parseInt(quantity.toString()),price,description,itemDate);
-                        newListing.setmItemId(itemId);
-                        newListing.setmItemSellerId(itemSellerId);
+                        newListing.setItemId(itemId);
+                        newListing.setItemSellerId(itemSellerId);
                         mItemList.add(newListing);
                     } catch (ParseException e) {
                         e.printStackTrace();

@@ -100,29 +100,6 @@ public class OfferAdapter extends RecyclerView.Adapter<OfferAdapter.ViewHolder> 
 
         String date = offerLists.get(position).getOfferDate();
         //viewHolder.item_date.setText(date);
-
-        viewHolder.view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(context,com.riversidecorps.rebuy.ViewOffersActivity.class );
-                intent.putExtra("itemName", offerLists.get(viewHolder.getAdapterPosition()).getItemName());
-                intent.putExtra("itemBuyer", offerLists.get(viewHolder.getAdapterPosition()).getItemBuyer());
-                intent.putExtra("itemOriginalPrice", offerLists.get(viewHolder.getAdapterPosition()).getItemOriginalPrice());
-                intent.putExtra("itemOfferPrice", offerLists.get(viewHolder.getAdapterPosition()).getOfferPrice());
-                //intent.putExtra("itemQuantity", offerLists.get(viewHolder.getAdapterPosition()).getItemQuantity());
-                //intent.putExtra("itemDes", offerLists.get(viewHolder.getAdapterPosition()).getItemDescription());
-                context.startActivity(intent);
-            }
-        });
-
-        /*
-        this.ItemBuyer = mItemBuyer;
-        this.ItemName = mItemName;
-        this.ItemOriginalPrice = mItemOriginalPrice;
-        this.OfferPrice = mOfferPrice;
-        this.OfferDate = mOfferDate;
-        this.ItemDescription = mItemDescription;
-        */
     }
 
     @Override

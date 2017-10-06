@@ -50,6 +50,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
         TextView item_quantity;
         TextView date_pre;
         TextView item_date;
+        ImageView itemImage;
         private View view;
 
 
@@ -67,7 +68,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
           
             itemImage = (ImageView) view.findViewById(R.id.item_image);
             description_pre = (TextView) view.findViewById(R.id.description_pre);
-            item_description = (TextView) view.findViewById(R.id.item_description);
+            item_description = (TextView) view.findViewById(R.id.offer_description);
 
             date_pre = (TextView) view.findViewById(R.id.date_pre);
             item_date = (TextView) view.findViewById(R.id.item_date);
@@ -111,7 +112,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
                 intent.putExtra("itemQuantity", itemLists.get(viewHolder.getAdapterPosition()).getItemQuantity());
                 intent.putExtra("itemUser", itemLists.get(viewHolder.getAdapterPosition()).getItemQuantity());
                 intent.putExtra("image", itemLists.get(viewHolder.getAdapterPosition()).getItemQuantity());
-                intent.putExtra("itemId", itemLists.get(viewHolder.getAdapterPosition()).getmItemId());
+                //intent.putExtra("itemId", itemLists.get(viewHolder.getAdapterPosition()).getmItemId());
                 intent.putExtra("itemSellerId", itemLists.get(viewHolder.getAdapterPosition()).getmItemSellerId());
                 context.startActivity(intent);
 
