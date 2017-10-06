@@ -258,6 +258,29 @@ public class ViewOffersActivity extends AppCompatActivity
 
         //Initialises elements
         Button acceptOfferBtn = (Button) mView.findViewById(R.id.accept_offer_btn);
+        Button rejectOfferBtn = (Button) mView.findViewById(R.id.reject_offer_btn);
+        TextView itemName = (TextView) mView.findViewById(R.id.item_name);
+        TextView itemBuyer = (TextView) mView.findViewById(R.id.item_buyer);
+        TextView originalPrice = (TextView) mView.findViewById(R.id.item_original_price);
+        TextView offerPrice = (TextView) mView.findViewById(R.id.item_offer_price);
+        TextView offerQuantity = (TextView) mView.findViewById(R.id.offer_quantity);
+        TextView offerDescription = (TextView) mView.findViewById(R.id.offer_description);
+        TextView offerDate = (TextView) mView.findViewById(R.id.offer_date);
+
+        TextView rVItemName = (TextView) v.findViewById(R.id.item_name);
+
+        String currOffer = rVItemName.getText().toString();
+        for (Offer offer : mOfferList) {
+            if (offer.getItemName().equals(currOffer)){
+                itemName.setText(offer.getItemName());
+                itemBuyer.setText(offer.getItemBuyer());
+                originalPrice.setText(offer.getItemOriginalPrice());
+                offerPrice.setText(offer.getOfferPrice());
+                offerQuantity.setText(offer.getOfferQuantity().toString());
+                offerDescription.setText(offer.getOfferDescription());
+                offerDate.setText(offer.getOfferDate());
+            }
+        }
 
         alertDialog.setView(mView);
         final AlertDialog dialog = alertDialog.create();

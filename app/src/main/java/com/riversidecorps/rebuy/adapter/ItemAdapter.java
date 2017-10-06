@@ -68,7 +68,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
           
             itemImage = (ImageView) view.findViewById(R.id.item_image);
             description_pre = (TextView) view.findViewById(R.id.description_pre);
-            item_description = (TextView) view.findViewById(R.id.item_description);
+            item_description = (TextView) view.findViewById(R.id.offer_description);
 
             date_pre = (TextView) view.findViewById(R.id.date_pre);
             item_date = (TextView) view.findViewById(R.id.item_date);

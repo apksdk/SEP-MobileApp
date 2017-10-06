@@ -89,7 +89,7 @@
         android:textColor="@android:color/black" />
 
     <TextView
-        android:id="@+id/item_quantity"
+        android:id="@+id/offer_quantity"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:textColor="@android:color/black"
@@ -108,7 +108,7 @@
         android:textColor="@android:color/black" />
 
     <TextView
-        android:id="@+id/item_description"
+        android:id="@+id/offer_description"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:textColor="@android:color/black"
@@ -127,7 +127,7 @@
         android:textColor="@android:color/black"/>
 
     <TextView
-        android:id="@+id/item_date"
+        android:id="@+id/offer_date"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:textColor="@android:color/black"
