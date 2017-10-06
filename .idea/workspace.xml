@@ -6,25 +6,12 @@
     </shared>
   </component>
   <component name="AndroidLogFilters">
-    <option name="TOOL_WINDOW_LOG_LEVEL" value="verbose" />
+    <option name="TOOL_WINDOW_LOG_LEVEL" value="error" />
     <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="No Filters" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="17a5003c-de40-4cd7-833d-7b8b1e657ea3" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/3.3/taskArtifacts/fileHashes.bin" afterPath="$PROJECT_DIR$/.gradle/3.3/taskArtifacts/fileHashes.bin" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/3.3/taskArtifacts/fileSnapshots.bin" afterPath="$PROJECT_DIR$/.gradle/3.3/taskArtifacts/fileSnapshots.bin" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/3.3/taskArtifacts/taskArtifacts.bin" afterPath="$PROJECT_DIR$/.gradle/3.3/taskArtifacts/taskArtifacts.bin" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/3.3/taskArtifacts/taskArtifacts.lock" afterPath="$PROJECT_DIR$/.gradle/3.3/taskArtifacts/taskArtifacts.lock" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/riversidecorps/rebuy/CreateListingActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/riversidecorps/rebuy/CreateListingActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/riversidecorps/rebuy/MyAccountActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/riversidecorps/rebuy/MyAccountActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/riversidecorps/rebuy/SingleListingActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/riversidecorps/rebuy/SingleListingActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/riversidecorps/rebuy/ViewListingsActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/riversidecorps/rebuy/ViewListingsActivity.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/riversidecorps/rebuy/ViewOffersActivity.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/riversidecorps/rebuy/ViewOffersActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/riversidecorps/rebuy/adapter/ItemAdapter.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/riversidecorps/rebuy/adapter/ItemAdapter.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/com/riversidecorps/rebuy/models/Offer.java" afterPath="$PROJECT_DIR$/app/src/main/java/com/riversidecorps/rebuy/models/Offer.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/layout/content_create_listing.xml" afterPath="$PROJECT_DIR$/app/src/main/res/layout/content_create_listing.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterPath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" />
     </list>
     <ignored path="SEP-MobileApp.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -56,12 +43,21 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="450">
-      <file leaf-file-name="ViewOffersActivity.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="ViewOffersActivity.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/riversidecorps/rebuy/ViewOffersActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="272">
-              <caret line="58" column="57" selection-start-line="58" selection-start-column="57" selection-end-line="58" selection-end-column="57" />
-              <folding />
+            <state relative-caret-position="1237">
+              <caret line="275" column="1" selection-start-line="275" selection-start-column="1" selection-end-line="275" selection-end-column="1" />
+              <folding>
+                <element signature="e#5343#5374#0" expanded="true" />
+                <element signature="e#5376#5408#0" expanded="true" />
+                <element signature="e#5657#6173#0" expanded="true" />
+                <element signature="e#6172#6173#0" expanded="true" />
+                <element signature="e#7128#7129#0" expanded="true" />
+                <element signature="e#7161#7162#0" expanded="true" />
+                <element signature="e#10583#10769#0" expanded="true" />
+                <element signature="e#10768#10769#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -111,7 +107,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="CreateListingActivity.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="CreateListingActivity.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/com/riversidecorps/rebuy/CreateListingActivity.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="199">
@@ -2464,11 +2460,11 @@
         <option value="$PROJECT_DIR$/app/src/main/java/com/riversidecorps/rebuy/MyAccountActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/riversidecorps/rebuy/SingleListingActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/riversidecorps/rebuy/ViewListingsActivity.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/com/riversidecorps/rebuy/ViewOffersActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/riversidecorps/rebuy/models/Offer.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/riversidecorps/rebuy/adapter/ItemAdapter.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/content_create_listing.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/com/riversidecorps/rebuy/CreateListingActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/com/riversidecorps/rebuy/ViewOffersActivity.java" />
       </list>
     </option>
   </component>
@@ -3035,7 +3031,7 @@
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.67496884" sideWeight="0.50216216" order="8" side_tool="true" content_ui="tabs" />
-      <window_info id="Android Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.37639198" sideWeight="0.49783784" order="12" side_tool="false" content_ui="tabs" />
+      <window_info id="Android Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.37639198" sideWeight="0.49783784" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32953313" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32876712" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -3323,14 +3319,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/riversidecorps/rebuy/ViewOffersActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="58" column="57" selection-start-line="58" selection-start-column="57" selection-end-line="58" selection-end-column="57" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/com/riversidecorps/rebuy/models/Offer.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="255">
@@ -3430,6 +3418,23 @@
             <element signature="e#15051#15052#0" expanded="true" />
             <element signature="e#15117#15118#0" expanded="true" />
             <element signature="e#15185#15186#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/com/riversidecorps/rebuy/ViewOffersActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1237">
+          <caret line="275" column="1" selection-start-line="275" selection-start-column="1" selection-end-line="275" selection-end-column="1" />
+          <folding>
+            <element signature="e#5343#5374#0" expanded="true" />
+            <element signature="e#5376#5408#0" expanded="true" />
+            <element signature="e#5657#6173#0" expanded="true" />
+            <element signature="e#6172#6173#0" expanded="true" />
+            <element signature="e#7128#7129#0" expanded="true" />
+            <element signature="e#7161#7162#0" expanded="true" />
+            <element signature="e#10583#10769#0" expanded="true" />
+            <element signature="e#10768#10769#0" expanded="true" />
           </folding>
         </state>
       </provider>

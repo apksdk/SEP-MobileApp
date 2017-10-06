@@ -15,102 +15,102 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
+import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
+import com.google.firebase.database.ValueEventListener;
+import com.riversidecorps.rebuy.adapter.OfferAdapter;
 import com.riversidecorps.rebuy.models.Offer;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 
 import static android.content.ContentValues.TAG;
-import static com.riversidecorps.rebuy.R.id.itemImagePreviewIV;
 
 public class ViewOffersActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener {
-
-    private FirebaseAuth myFirebaseAuth;
+        implements NavigationView.OnNavigationItemSelectedListener {
+    private RecyclerView mRecyclerView;
+    private OfferAdapter mAdapter;
+    private ArrayList<Offer> mOfferList = new ArrayList<>();
+    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    private FirebaseUser mUser = mAuth.getCurrentUser();
     private FirebaseAuth.AuthStateListener mAuthListener;
-    private FirebaseUser myFirebaseUser;
-    private DatabaseReference databaseReference;
-    private FirebaseStorage mStorage = FirebaseStorage.getInstance();
-
-    private static final String DB_OFFER = "Offers";
+    private DatabaseReference mdatabaseReference;
+    private FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
+    private SwipeRefreshLayout swipeContainer;
     private static final String AUTH_IN = "onAuthStateChanged:signed_in:";
     private static final String AUTH_OUT = "onAuthStateChanged:signed_out";
-    private String itemName,itemPrice,mitemQuantity, uid;
-    private TextView itemNameTV;
-    private TextView itemOriginalPriceTV;
-    private TextView offerAuthorTV;
-    private Button makeOfferBtn;
-    private Button cancelBtn;
-    private EditText itemOfferPriceET;
-    private String itemId;
-    private ImageView mimageView;
+    private static final String DB_OFFER = "Offers";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_offers);
+        mAuth = FirebaseAuth.getInstance();
+        mUser = mAuth.getCurrentUser();
+        mdatabaseReference = FirebaseDatabase.getInstance().getReference();
+        if (mUser == null) {
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+        } else {
+            //User is logged in;
+        }
+
+        String userId = mUser.getUid();
+
+        // Attach a listener to read the data at our posts reference
+        mdatabaseReference.child(DB_OFFER).addValueEventListener (new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                mOfferList.removeAll(mOfferList);
+                for (DataSnapshot messageSnapshot : snapshot.getChildren()) {
+
+                    String buyer = (String) messageSnapshot.child("itemBuyer").getValue();
+                    String itemName = (String) messageSnapshot.child("itemName").getValue();
+                    String originalPrice = (String) messageSnapshot.child("itemOriginalPrice").getValue();
+                    String offerPrice = (String) messageSnapshot.child("offerPrice").getValue();
+                    String description = (String) messageSnapshot.child("itemDescription").getValue();
+                    Long quantity = (Long) messageSnapshot.child("itemQuantity").getValue();
+                    //String itemId =  messageSnapshot.getKey().toString();
+                    String offerDate = (String) messageSnapshot.child("offerDate").getValue();
+                    Offer newOffer = new Offer(buyer,itemName ,Integer.parseInt(quantity.toString()) ,
+                            originalPrice, offerPrice, description, offerDate);
+                    mOfferList.add(newOffer);
+
+                }
+                mAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("The read failed: " + databaseError.getCode());
+            }
+        });
+        mRecyclerView = findViewById(R.id.offer_recycler_view);
+        mAdapter = new OfferAdapter(this, mOfferList);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        mRecyclerView.setAdapter(mAdapter);
+        mAdapter.notifyDataSetChanged();
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-
-        databaseReference = FirebaseDatabase.getInstance().getReference();
-        myFirebaseAuth = FirebaseAuth.getInstance();
-        myFirebaseUser = myFirebaseAuth.getCurrentUser();
-
-
-        uid = myFirebaseUser.getEmail();
-        itemName = getIntent().getStringExtra("itemName");
-        itemPrice = getIntent().getStringExtra("itemPrice");
-        mitemQuantity = getIntent().getStringExtra("itemQuantity");
-        itemId = getIntent().getStringExtra("itemId");
-
-        makeOfferBtn = (Button) findViewById(R.id.makeOfferBtn);
-        cancelBtn = (Button) findViewById(R.id.cancelBtn);
-        itemOfferPriceET = (EditText) findViewById(R.id.itemOfferPriceET);
-        makeOfferBtn.setOnClickListener(this);
-        cancelBtn.setOnClickListener(this);
-
-        itemNameTV = (TextView) findViewById(R.id.itemNameTV);
-        itemNameTV.setText(itemName);
-
-        itemOriginalPriceTV = (TextView) findViewById(R.id.itemOriginalPriceTV);
-        itemOriginalPriceTV.setText(itemPrice);
-
-        offerAuthorTV = (TextView) findViewById(R.id.offerAuthorTV);
-        offerAuthorTV.setText(uid);
-
-        mimageView=findViewById(itemImagePreviewIV);
-        String imagePath = "itemImageListings/" + itemId + ".png";
-        //Upload image(s)
-        Log.i("imagePath",imagePath);
-
-        StorageReference itemImageRef = mStorage.getReference(imagePath);
-        Glide.with(this)
-                .using(new FirebaseImageLoader())
-                .load(itemImageRef)
-                .into(mimageView);
-
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -120,7 +120,6 @@ public class ViewOffersActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        //Set listener that triggers when a user signs out
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -135,6 +134,7 @@ public class ViewOffersActivity extends AppCompatActivity
                 // ...
             }
         };
+
 
 //        swipeContainer = findViewById(R.id.swipeContainer);
 //        // Setup refresh listener which triggers new data loading
@@ -194,13 +194,12 @@ public class ViewOffersActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
     //On start method
     @Override
     public void onStart() {
         super.onStart();
         //Sets a listener to catch when the user is signing in.
-        myFirebaseAuth.addAuthStateListener(mAuthListener);
+        mAuth.addAuthStateListener(mAuthListener);
     }
 
     //On stop method
@@ -209,10 +208,10 @@ public class ViewOffersActivity extends AppCompatActivity
         super.onStop();
         //Sets listener to catch when the user is signing out.
         if (mAuthListener != null) {
-
-            myFirebaseAuth.removeAuthStateListener(mAuthListener);
+            mAuth.removeAuthStateListener(mAuthListener);
         }
     }
+
 
     /**
      * Creates the options menu on the action bar.
@@ -237,7 +236,7 @@ public class ViewOffersActivity extends AppCompatActivity
             //If item is logout
             case R.id.action_logout:
                 //Sign out of the authenticator and return to login activity.
-                myFirebaseAuth.signOut();
+                mAuth.signOut();
                 this.startActivity(new Intent(this, LoginActivity.class));
                 return true;
 
@@ -248,6 +247,8 @@ public class ViewOffersActivity extends AppCompatActivity
         }
 
         return super.onOptionsItemSelected(item);
+    }
+    private void getResultsFromApi() {
     }
 
     public void viewDetailedOffer(View v){
@@ -272,33 +273,4 @@ public class ViewOffersActivity extends AppCompatActivity
         });
     }
 
-    @Override
-    public void onClick(View view) {
-        if(view == makeOfferBtn){
-            makeOffer();
-            ViewOffersActivity.this.startActivity(new Intent(ViewOffersActivity.this, MyAccountActivity.class));
-        } else if(view == cancelBtn){
-            ViewOffersActivity.this.startActivity(new Intent(ViewOffersActivity.this, MyAccountActivity.class));
-        }
-    }
-
-    private void makeOffer() {
-        String itemName =  itemNameTV.getText().toString().trim();
-        /*I could catch any value of the itemQuantity in Single view listing page*/
-        Integer itemQuantity = 1; //Integer.parseInt(getIntent().getStringExtra("itemQuantity").trim());
-        String originalPrice = itemOriginalPriceTV.getText().toString();
-        String offerPrice = itemOfferPriceET.getText().toString();
-        String itemDes = getIntent().getStringExtra("itemDes").toString().trim();
-        String buyerId = myFirebaseUser.getEmail();
-        FirebaseUser myFirebaseUser = myFirebaseAuth.getCurrentUser();
-
-        Date date = new Date();
-        Date newDate = new Date(date.getTime() + (604800000L * 2) + (24 * 60 * 60));
-        SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd");
-        String stringDate = dt.format(newDate);
-        Offer newOffer = new Offer(buyerId,itemName, itemQuantity, originalPrice,offerPrice,stringDate,itemDes);
-        databaseReference.child(DB_OFFER).push().setValue(newOffer);
-        Toast.makeText(this,"Please wait for making offer ...",Toast.LENGTH_LONG).show();
-
-    }
 }
