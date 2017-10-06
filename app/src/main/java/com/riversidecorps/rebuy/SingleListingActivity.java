@@ -47,6 +47,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.riversidecorps.rebuy.models.Offer;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -114,7 +115,7 @@ public class SingleListingActivity extends AppCompatActivity
                 .load(itemImageRef)
                 .into(mitemImageIV);
 
-baseReference = FirebaseDatabase.getInstance().getReference();
+    databaseReference = FirebaseDatabase.getInstance().getReference();
         TextView iNameTv = (TextView) findViewById(R.id.itemNameTV);
         iNameTv.setText(itemName);
 
@@ -270,7 +271,7 @@ baseReference = FirebaseDatabase.getInstance().getReference();
             OfferActivity.putExtra("itemQuantity",itemQuantity);
             OfferActivity.putExtra("itemDes",getIntent().getStringExtra("itemDes"));
             OfferActivity.putExtra("itemId", getIntent().getStringExtra("itemId"));
-            startActivity(CreateOfferActivity);
+            startActivity(OfferActivity);
         }
 
         if(view == messageBTN){
