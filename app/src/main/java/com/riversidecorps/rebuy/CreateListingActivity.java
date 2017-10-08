@@ -47,6 +47,7 @@ import com.riversidecorps.rebuy.models.Listing;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -262,10 +263,12 @@ public class CreateListingActivity extends AppCompatActivity
     }
 
     public void cancelListingBtnHandler(View view) {
+        Boolean isEdited = false;
         for (int i = 0; i < createListingLayout.getChildCount(); i++) {
             if (createListingLayout.getChildAt(i) instanceof EditText) {
                 EditText currentET = (EditText) createListingLayout.getChildAt(i);
                 if (!currentET.getText().toString().isEmpty()) {
+                    isEdited = true;
                     new AlertDialog.Builder(CreateListingActivity.this)
                             .setTitle("Exit Confirmation")
                             .setMessage("Are you sure you want to exit without saving your changes?")
@@ -276,10 +279,21 @@ public class CreateListingActivity extends AppCompatActivity
                                     finish();
                                 }
                             })
-                            .setNegativeButton("No", null)
+                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.dismiss();
+                                }
+                            })
                             .show();
+                } else {
+                    isEdited = false;
                 }
             }
+
+        }
+        if (!isEdited) {
+            finish();
         }
     }
 
@@ -297,7 +311,8 @@ public class CreateListingActivity extends AppCompatActivity
             // Retrieve all relevant data for the listing
             String name = itemNameET.getText().toString().trim();
             Integer quantity = Integer.parseInt(itemQantityET.getText().toString().trim());
-            String price = itemPriceET.getText().toString().trim();
+            NumberFormat formattedP1 = NumberFormat.getCurrencyInstance(Locale.US);
+            String price = formattedP1.format(Double.parseDouble(itemPriceET.getText().toString()));
             String description = itemDescriptionET.getText().toString().trim();
             final String sellerID = myFirebaseUser.getUid();
             //Get current date

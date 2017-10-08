@@ -90,6 +90,10 @@ public class ViewListingsActivity extends AppCompatActivity
 //                        break;
 //                    }
 
+                    Boolean isDeleted = (Boolean) messageSnapshot.child("itemDeleted").getValue();
+                    if(isDeleted) {
+                        continue;
+                    }
                     String name = (String) messageSnapshot.child("itemName").getValue();
                     String description = (String) messageSnapshot.child("itemDescription").getValue();
                     String price = (String) messageSnapshot.child("itemPrice").getValue().toString();
