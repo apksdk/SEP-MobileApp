@@ -18,31 +18,31 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.bumptech.glide.Glide;
-import com.firebase.ui.storage.images.FirebaseImageLoader;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-
-import static android.content.ContentValues.TAG;
-import static com.riversidecorps.rebuy.R.id.itemImageIV;
-
-import android.widget.EditText;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+import static android.content.ContentValues.TAG;
+import static com.riversidecorps.rebuy.R.id.itemImageIV;
 
 public class SingleListingActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
@@ -51,8 +51,8 @@ public class SingleListingActivity extends AppCompatActivity
     private FirebaseUser mUser = mAuth.getCurrentUser();
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseStorage mStorage = FirebaseStorage.getInstance();
-
     private FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
+
     private DatabaseReference databaseReference;
     private ProgressDialog progressDialog;
     private static final String DB_MESSAGES = "messages";
@@ -65,47 +65,65 @@ public class SingleListingActivity extends AppCompatActivity
     private String itemPrice;
     private String itemDes;
     private Integer itemQuantity;
-    private ImageView mitemImageIV;
-
     private String userID;
     private String userName;
-    private TextView loginInfor;
     private String mItemSellerID;
+    private ArrayList<String> itemImages = new ArrayList<>();
 
+    private TextView loginInfor;
+    private ImageView mitemImageIV;
     private TextView mNameTv;
     private TextView mPriceTv;
     private TextView mQuantityTv;
 
+    @BindView(R.id.itemPreview1IV)
+    ImageView itemPreview1IV;
+    @BindView(R.id.itemPreview2IV)
+    ImageView itemPreview2IV;
+    @BindView(R.id.itemPreview3IV)
+    ImageView itemPreview3IV;
+
     @Override
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_single_listing);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        ButterKnife.bind(this);
+
+        Intent intent = getIntent();
+
         progressDialog = new ProgressDialog(this);
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
-        itemID = getIntent().getStringExtra("itemId");
-        itemName = getIntent().getStringExtra("itemName");
-        itemPrice = getIntent().getStringExtra("itemPrice");
-        itemDes = getIntent().getStringExtra("itemDes");
-        itemQuantity = getIntent().getIntExtra("itemQuantity", 0);
+        itemID = intent.getStringExtra("itemId");
+        itemName = intent.getStringExtra("itemName");
+        itemPrice = intent.getStringExtra("itemPrice");
+        itemDes = intent.getStringExtra("itemDes");
+        itemQuantity = intent.getIntExtra("itemQuantity", 0);
+        itemImages = intent.getStringArrayListExtra("itemImages");
+
 
         mItemSellerID = getIntent().getStringExtra("itemSellerId");
-//        Log.i("mm",mItemSellerID);
         userID = mUser.getUid();
         loginInfor = findViewById(R.id.logininfor);
         mitemImageIV = findViewById(itemImageIV);
-        String imagePath = "itemImageListings/" + itemID + ".png";
-        //Upload image(s)
-//        Log.i("imagePath",imagePath);
-
-        StorageReference itemImageRef = mStorage.getReference(imagePath);
         Glide.with(this)
-                .using(new FirebaseImageLoader())
-                .load(itemImageRef)
+                .load(itemImages.get(0))
                 .into(mitemImageIV);
+
+        for(int i = 0; i < itemImages.size(); i++) {
+            int pos = i;
+            pos++;
+            int currentIVID = getResources().getIdentifier("itemPreview" + pos + "IV", "id", getPackageName());
+            ImageView currentIV = (ImageView) findViewById(currentIVID);
+            currentIV.setVisibility(View.VISIBLE);
+            Glide.with(this)
+                    .load(itemImages.get(i))
+                    .into(currentIV);
+        }
 
         databaseReference = FirebaseDatabase.getInstance().getReference();
         mNameTv = (TextView) findViewById(R.id.itemNameTV);
@@ -155,9 +173,6 @@ public class SingleListingActivity extends AppCompatActivity
                 //FirebaseUser user = myFirebaseAuth.getCurrentUser();
                 if (mUser != null) {
                     // User is signed in
-                    TextView loginInfor = (TextView) findViewById(R.id.logininfor);
-                    loginInfor.setText("Welcome, " + mUser.getDisplayName() + "!");
-
                     Log.d(TAG, AUTH_IN + mUser.getUid());
                 } else {
                     // User is signed out
@@ -261,14 +276,14 @@ public class SingleListingActivity extends AppCompatActivity
     @Override
     public void onClick(View view) {
         if (view == offerBTN) {
-            
+
             Intent OfferActivity = new Intent(this, CreateOfferActivity.class);
-            OfferActivity.putExtra("itemName", mNameTv.getText().toString());
-            OfferActivity.putExtra("itemPrice", mPriceTv.getText().toString());
-            OfferActivity.putExtra("itemQuantity", mQuantityTv.getText().toString());
-            OfferActivity.putExtra("itemDes", getIntent().getStringExtra("itemDes"));
-            OfferActivity.putExtra("itemId", getIntent().getStringExtra("itemId"));
-            OfferActivity.putExtra("listingImage", getIntent().getStringExtra("itemId"));
+            OfferActivity.putExtra("itemName", itemName);
+            OfferActivity.putExtra("itemPrice", itemPrice);
+            OfferActivity.putExtra("itemQuantity", itemQuantity);
+            OfferActivity.putExtra("itemDes", itemDes);
+            OfferActivity.putExtra("itemId", itemID);
+            OfferActivity.putExtra("listingImage", itemImages.get(0));
             startActivity(OfferActivity);
         }
 
@@ -287,7 +302,7 @@ public class SingleListingActivity extends AppCompatActivity
                     progressDialog.show();
                     String datetime = new SimpleDateFormat("yyyy-MM-dd hh:mm a").format(new Date());
                     String message = input.getText().toString();
-                    final String messageID = databaseReference.child("users").child(mItemSellerID).child("DB_MESSAGES").push().getKey();
+                    final String messageID = databaseReference.child("users").child(mItemSellerID).child(DB_MESSAGES).push().getKey();
                     databaseReference.child("users").child(mItemSellerID).child("messages").child(messageID).child("content").setValue(message);
                     databaseReference.child("users").child(mItemSellerID).child("messages").child(messageID).child("title").setValue(itemName);
                     databaseReference.child("users").child(mItemSellerID).child("messages").child(messageID).child("buyer").setValue(userName);
