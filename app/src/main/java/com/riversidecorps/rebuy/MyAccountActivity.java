@@ -195,7 +195,7 @@ MyAccountActivity extends AppCompatActivity
              * mModelClass given to the constructor of this class. The third argument is the item's position
              * in the list.
              * <p>
-             * Your implementation should populate the view using the data contained in the model.
+             * It populates the view using the data contained in the model.
              *
              * @param viewHolder The view to populate
              * @param model      The object containing the data used to populate the view
