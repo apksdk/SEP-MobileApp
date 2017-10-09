@@ -2,3 +2,10 @@
 *.bin
 *.rawproto
 *.bin
+*.properties
+*.lock
+*.xml
+*.xml
+*.iml
+*.xml
+*.xml
