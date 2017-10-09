@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.riversidecorps.rebuy.R;
+import com.riversidecorps.rebuy.SingleListingActivity;
 import com.riversidecorps.rebuy.ViewListingsActivity;
 import com.riversidecorps.rebuy.models.Listing;
 
@@ -106,7 +107,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
         viewHolder.view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context, com.riversidecorps.rebuy.SingleListingActivity.class);
+                Intent intent = new Intent(context, SingleListingActivity.class);
 
                 intent.putExtra("itemName", itemLists.get(viewHolder.getAdapterPosition()).getItemName());
                 intent.putExtra("itemPrice", itemLists.get(viewHolder.getAdapterPosition()).getItemPrice());
@@ -115,7 +116,8 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
                 intent.putExtra("itemUser", itemLists.get(viewHolder.getAdapterPosition()).getItemQuantity());
                 intent.putExtra("image", itemLists.get(viewHolder.getAdapterPosition()).getItemQuantity());
                 //intent.putExtra("itemId", itemLists.get(viewHolder.getAdapterPosition()).getmItemId());
-                intent.putExtra("itemSellerId", itemLists.get(viewHolder.getAdapterPosition()).getmItemSellerId());
+                intent.putExtra("itemSellerId", itemLists.get(viewHolder.getAdapterPosition()).getItemSellerId());
+                intent.putExtra("itemImages", itemLists.get(viewHolder.getAdapterPosition()).getItemImages());
                 context.startActivity(intent);
 
             }

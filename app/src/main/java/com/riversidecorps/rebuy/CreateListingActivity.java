@@ -311,8 +311,8 @@ public class CreateListingActivity extends AppCompatActivity
             // Retrieve all relevant data for the listing
             String name = itemNameET.getText().toString().trim();
             Integer quantity = Integer.parseInt(itemQantityET.getText().toString().trim());
-            NumberFormat formattedP1 = NumberFormat.getCurrencyInstance(Locale.US);
-            String price = formattedP1.format(Double.parseDouble(itemPriceET.getText().toString()));
+            NumberFormat numFormat = NumberFormat.getCurrencyInstance(Locale.US);
+            String price = numFormat.format(Double.parseDouble(itemPriceET.getText().toString()));
             String description = itemDescriptionET.getText().toString().trim();
             final String sellerID = myFirebaseUser.getUid();
             //Get current date

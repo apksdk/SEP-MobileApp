@@ -229,7 +229,6 @@ public class Listing {
      * @return the item seller ID
      */
     public String getItemSellerId() { return mItemSellerId; }
-    public String getmItemSellerId() { return mItemSellerId; }
     /**
      * Sets item seller ID.
      *
