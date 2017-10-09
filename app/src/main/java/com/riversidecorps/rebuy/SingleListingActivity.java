@@ -49,7 +49,7 @@ public class SingleListingActivity extends AppCompatActivity
 
     private DatabaseReference mDatabaseReference;
 
-    private ProgressDialog mProgressDialog = new ProgressDialog(this);
+    private ProgressDialog mProgressDialog;
     private static final String DB_MESSAGES = "messages";
 
     private String mItemID;
@@ -91,16 +91,17 @@ public class SingleListingActivity extends AppCompatActivity
         toggle.syncState();
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        mProgressDialog = new ProgressDialog(this);
         //Bind butterknife
         ButterKnife.bind(this);
         //Get info passed from previous activity
         Intent intent = getIntent();
         mItemID = intent.getStringExtra("itemId");
-        mItemName = intent.getStringExtra("mItemName");
-        mItemPrice = intent.getStringExtra("mItemPrice");
-        mItemDes = intent.getStringExtra("mItemDes");
-        mItemQuantity = intent.getIntExtra("mItemQuantity", 0);
-        mItemImages = intent.getStringArrayListExtra("mItemImages");
+        mItemName = intent.getStringExtra("itemName");
+        mItemPrice = intent.getStringExtra("itemPrice");
+        mItemDes = intent.getStringExtra("itemDes");
+        mItemQuantity = intent.getIntExtra("itemQuantity", 0);
+        mItemImages = intent.getStringArrayListExtra("itemImages");
         mItemSellerID = getIntent().getStringExtra("itemSellerId");
         // Get database Reference
         mDatabaseReference = mDatabase.getReference();
