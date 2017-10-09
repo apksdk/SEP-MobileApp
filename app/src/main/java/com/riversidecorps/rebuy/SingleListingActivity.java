@@ -58,6 +58,7 @@ public class SingleListingActivity extends AppCompatActivity
     private String mItemDes;
     private Integer mItemQuantity;
     private String mItemSellerID;
+    private String muserId;
     private ArrayList<String> mItemImages = new ArrayList<>();
 
     private ImageView mItemImageIV;
@@ -105,7 +106,7 @@ public class SingleListingActivity extends AppCompatActivity
         mItemSellerID = getIntent().getStringExtra("itemSellerId");
         // Get database Reference
         mDatabaseReference = mDatabase.getReference();
-
+        muserId=mUser.getUid();
         //Set up UI
         mNameTv = findViewById(R.id.itemNameTV);
         mNameTv.setText(mItemName);
@@ -284,7 +285,9 @@ public class SingleListingActivity extends AppCompatActivity
                         //Get a message id from Firebase Database
                         final String messageID = mDatabaseReference.child("users").child(mItemSellerID).child(DB_MESSAGES).push().getKey();
                         //Create a new message
-                        Message message = new Message(userMessage, mUser.getDisplayName(), datetime, mItemName);
+
+
+                        Message message = new Message(userMessage, mUser.getDisplayName(), datetime, mItemName,messageID,muserId);
                         //Save the message
                         mDatabaseReference.child("users").child(mItemSellerID).child(DB_MESSAGES).child(messageID).setValue(message).addOnSuccessListener(SingleListingActivity.this, new OnSuccessListener<Void>() {
                             @Override
