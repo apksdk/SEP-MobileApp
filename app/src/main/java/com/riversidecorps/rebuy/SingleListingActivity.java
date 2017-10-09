@@ -70,7 +70,6 @@ public class SingleListingActivity extends AppCompatActivity
     private String mItemSellerID;
     private ArrayList<String> itemImages = new ArrayList<>();
 
-    private TextView loginInfor;
     private ImageView mitemImageIV;
     private TextView mNameTv;
     private TextView mPriceTv;
@@ -108,7 +107,6 @@ public class SingleListingActivity extends AppCompatActivity
 
         mItemSellerID = getIntent().getStringExtra("itemSellerId");
         userID = mUser.getUid();
-        loginInfor = findViewById(R.id.logininfor);
         mitemImageIV = findViewById(itemImageIV);
         Glide.with(this)
                 .load(itemImages.get(0))
@@ -157,8 +155,6 @@ public class SingleListingActivity extends AppCompatActivity
         userRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                userName = dataSnapshot.getValue(String.class);
-                loginInfor.setText("Welcome, " + userName + "!");
             }
 
             @Override

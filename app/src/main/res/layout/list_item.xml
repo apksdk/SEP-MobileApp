@@ -7,6 +7,7 @@
     android:orientation="vertical"
     tools:ignore="ContentDescription"
     >
+
     <RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="wrap_content"
@@ -16,6 +17,14 @@
         android:paddingRight="10dp"
         android:paddingTop="5dp"
         android:paddingBottom="5dp">
+
+        <TextView
+            android:id="@+id/logininfor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentTop="true"
+            android:text="" />
 
         <TextView
             android:id="@+id/title_pre"

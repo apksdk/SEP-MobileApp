@@ -17,6 +17,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -43,6 +44,9 @@ public class ViewListingsActivity extends AppCompatActivity
     private DatabaseReference mdatabaseReference;
     private FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
     private SwipeRefreshLayout swipeContainer;
+    private String userID;
+    private String userName;
+    private TextView loginName;
     private static final String AUTH_IN = "onAuthStateChanged:signed_in:";
     private static final String AUTH_OUT = "onAuthStateChanged:signed_out";
     private static final String LISTINGS = "Listings";
@@ -70,13 +74,20 @@ public class ViewListingsActivity extends AppCompatActivity
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
 
+        userID = mUser.getUid();
+        loginName = findViewById(R.id.longininfor);
         String userId = mUser.getUid();
+
+        // Attach listener to display welcome bar personalised for user's name
+        DatabaseReference userRef = mDatabase.getReference().child("users").child(userID).child("username");
 
         // Attach a listener to read the data at our posts reference
         mDatabase.getReference().child(LISTINGS).addValueEventListener(new ValueEventListener() {
 
             @Override
             public void onDataChange(DataSnapshot snapshot) {
+                userName = snapshot.getValue(String.class);
+                loginName.setText("Welcome, " + userName + "!");
                 mItemList.removeAll(mItemList);
                 for (DataSnapshot messageSnapshot : snapshot.getChildren()) {
                     Boolean isDeleted = (Boolean) messageSnapshot.child("itemDeleted").getValue();
