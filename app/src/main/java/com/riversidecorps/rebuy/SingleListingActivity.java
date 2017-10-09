@@ -305,7 +305,9 @@ public class SingleListingActivity extends AppCompatActivity
                     final String messageID = databaseReference.child("users").child(mItemSellerID).child(DB_MESSAGES).push().getKey();
                     databaseReference.child("users").child(mItemSellerID).child("messages").child(messageID).child("content").setValue(message);
                     databaseReference.child("users").child(mItemSellerID).child("messages").child(messageID).child("title").setValue(itemName);
-                    databaseReference.child("users").child(mItemSellerID).child("messages").child(messageID).child("buyer").setValue(userName);
+                    databaseReference.child("users").child(mItemSellerID).child("messages").child(messageID).child("sender").setValue(userName);
+                    databaseReference.child("users").child(mItemSellerID).child("messages").child(messageID).child("sender_id").setValue(userID);
+                    databaseReference.child("users").child(mItemSellerID).child("messages").child(messageID).child("message_id").setValue(messageID);
                     databaseReference.child("users").child(mItemSellerID).child("messages").child(messageID).child("datetime").setValue(datetime).addOnSuccessListener(SingleListingActivity.this, new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {

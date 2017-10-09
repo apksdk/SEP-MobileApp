@@ -42,7 +42,7 @@ public class MessageInboxActivity extends AppCompatActivity
     private ArrayList<Message> mMessageList= new ArrayList<>();
     private static final String AUTH_IN = "onAuthStateChanged:signed_in:";
     private static final String AUTH_OUT = "onAuthStateChanged:signed_out";
-    private messageAdapter mAdapter;
+    private com.riversidecorps.rebuy.adapter.messageAdapter mAdapter;
     private RecyclerView mRecyclerView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,43 +85,11 @@ public class MessageInboxActivity extends AppCompatActivity
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-       /* mAdapter = new messageAdapter(this, mMessageList);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        mRecyclerView.setAdapter(mAdapter);*/
-//        mAdapter.notifyDataSetChanged();
-
-      //  String userId = myFirebaseUser.getUid();
-
-        // Attach a listener to read the data at our posts reference
-       /* mdatabaseReference.child("users").child(userId).child("messages").addValueEventListener (new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                mMessageList.removeAll(mMessageList);
-                for (DataSnapshot messageSnapshot : snapshot.getChildren()) {
-
-                    String content = (String) messageSnapshot.child("content").getValue();
-                    String buyer = (String) messageSnapshot.child("buyer").getValue();
-                    String datetime = (String) messageSnapshot.child("datetime").getValue();
-                    String title = (String) messageSnapshot.child("title").getValue();
-                       Message message=new Message(content,buyer,datetime,title);
-                  mMessageList.add(message);
-                }
-                mAdapter.notifyDataSetChanged();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                System.out.println("The read failed: " + databaseError.getCode());
-            }
-        });*/
-
 
     }
     private void init() {
-        final MyAdapter myAdapter = new MyAdapter(mMessageList, this);
-        myAdapter.setOnClickListener(new MyAdapter.OnClickListener() {
+        final messageAdapter messageAdapter = new messageAdapter(mMessageList, this);
+        messageAdapter.setOnClickListener(new messageAdapter.OnClickListener() {
             @Override
             public void onMenuClick(int position, boolean top) {
                 //   data.set(position, top ? "取消置顶" : "置顶");
@@ -132,12 +100,12 @@ public class MessageInboxActivity extends AppCompatActivity
                 Toast.makeText(MessageInboxActivity.this, "click pos = " + position, Toast.LENGTH_SHORT).show();
             }
         });
-        mRecyclerView.setAdapter(myAdapter);
+        mRecyclerView.setAdapter(messageAdapter);
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-                myAdapter.setScrollingMenu(null);
+                messageAdapter.setScrollingMenu(null);
             }
         });
 
@@ -150,14 +118,16 @@ public class MessageInboxActivity extends AppCompatActivity
                 for (DataSnapshot messageSnapshot : snapshot.getChildren()) {
 
                     String content = (String) messageSnapshot.child("content").getValue();
-                    String buyer = (String) messageSnapshot.child("buyer").getValue();
+                    String sender = (String) messageSnapshot.child("sender").getValue();
                     String datetime = (String) messageSnapshot.child("datetime").getValue();
                     String title = (String) messageSnapshot.child("title").getValue();
-                    Message message=new Message(content,buyer,datetime,title);
+                    String message_id = (String) messageSnapshot.child("message_id").getValue();
+                    String sender_id = (String) messageSnapshot.child("sender_id").getValue();
+                    Message message=new Message(content,sender,datetime,title, message_id,sender_id);
                     mMessageList.add(message);
-                    Log.i("lll",content+buyer);
+
                 }
-                myAdapter.notifyDataSetChanged();
+                messageAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -165,21 +135,6 @@ public class MessageInboxActivity extends AppCompatActivity
                 System.out.println("The read failed: " + databaseError.getCode());
             }
         });
-            //         Log.i("lll",mMessageList.toString());
-
-     //   final List<Message> data = new ArrayList<>();
-
-
-     /*   for (int i = 0; i < 20; i++) {
-            Message me=new Message("content","buyer","datetime","title");
-            data.add(me);
-
-
-
-
-
-        }*/
-
     }
     //On start method
     @Override

@@ -1,14 +1,10 @@
 package com.riversidecorps.rebuy;
-
-/**
- * Created by tom on 2017/10/8.
- */
 import android.content.Context;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
 
 /**
- * created by yhao on 2017/8/18.
+ * created by yijun on 2017/10/8.
  */
 
 

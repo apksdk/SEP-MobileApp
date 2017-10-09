@@ -8,12 +8,14 @@ import android.view.View;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 
+import com.riversidecorps.rebuy.adapter.messageAdapter;
+
 
 public class SlidingMenu extends HorizontalScrollView {
 
 
-    //菜单占屏幕宽度比
-    private static final float radio = 0.3f;
+    //swipe bar ratio
+    private static final float radio = 0.43f;
     private final int mScreenWidth;
     private final int mMenuWidth;
 
@@ -30,7 +32,7 @@ public class SlidingMenu extends HorizontalScrollView {
     }
 
     /**
-     * 关闭菜单
+     * close menu
      */
 
     public void closeMenu() {
@@ -39,7 +41,7 @@ public class SlidingMenu extends HorizontalScrollView {
     }
 
     /**
-     * 菜单是否打开
+     * check whether menu is open
      */
     public boolean isOpen() {
         return isOpen;
@@ -47,9 +49,9 @@ public class SlidingMenu extends HorizontalScrollView {
 
 
     /**
-     * 获取 adapter
+     * get adapter
      */
-    private MyAdapter getAdapter() {
+    private messageAdapter getAdapter() {
         View view = this;
         while (true) {
             view = (View) view.getParent();
@@ -57,11 +59,11 @@ public class SlidingMenu extends HorizontalScrollView {
                 break;
             }
         }
-        return (MyAdapter) ((RecyclerView) view).getAdapter();
+        return (messageAdapter) ((RecyclerView) view).getAdapter();
     }
 
     /**
-     * 当打开菜单时记录此 view ，方便下次关闭
+     * record this view when open menu ，ez to close next time
      */
     private void onOpenMenu() {
         getAdapter().holdOpenMenu(this);
@@ -69,7 +71,7 @@ public class SlidingMenu extends HorizontalScrollView {
     }
 
     /**
-     * 当触摸此 item 时，关闭上一次打开的 item
+     * when touch one item，close last item
      */
     private void closeOpenMenu() {
         if (!isOpen) {
@@ -78,14 +80,14 @@ public class SlidingMenu extends HorizontalScrollView {
     }
 
     /**
-     * 获取正在滑动的 item
+     * get sliding item
      */
     public SlidingMenu getScrollingMenu() {
         return getAdapter().getScrollingMenu();
     }
 
     /**
-     * 设置本 item 为正在滑动 item
+     * set this item to be the sliding item
      */
     public void setScrollingMenu(SlidingMenu scrollingMenu) {
         getAdapter().setScrollingMenu(scrollingMenu);
@@ -137,13 +139,13 @@ public class SlidingMenu extends HorizontalScrollView {
     long downTime = 0;
 
 
-    interface CustomOnClickListener {
+    public interface CustomOnClickListener {
         void onClick();
     }
 
     private CustomOnClickListener mCustomOnClickListener;
 
-    void setCustomOnClickListener(CustomOnClickListener listener) {
+    public void setCustomOnClickListener(CustomOnClickListener listener) {
         this.mCustomOnClickListener = listener;
     }
 
