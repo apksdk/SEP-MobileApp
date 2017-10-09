@@ -15,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -41,7 +42,7 @@ public class MessageInboxActivity extends AppCompatActivity
     private ArrayList<Message> mMessageList= new ArrayList<>();
     private static final String AUTH_IN = "onAuthStateChanged:signed_in:";
     private static final String AUTH_OUT = "onAuthStateChanged:signed_out";
-    private messageAdapter mAdapter;
+    private com.riversidecorps.rebuy.adapter.messageAdapter mAdapter;
     private RecyclerView mRecyclerView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,16 +81,36 @@ public class MessageInboxActivity extends AppCompatActivity
         };
 
         mRecyclerView = findViewById(R.id.message_recycler_view);
-        mAdapter = new messageAdapter(this, mMessageList);
+        init();
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        mRecyclerView.setAdapter(mAdapter);
-        mAdapter.notifyDataSetChanged();
+
+    }
+    private void init() {
+        final messageAdapter messageAdapter = new messageAdapter(mMessageList, this);
+        messageAdapter.setOnClickListener(new messageAdapter.OnClickListener() {
+            @Override
+            public void onMenuClick(int position, boolean top) {
+                //   data.set(position, top ? "取消置顶" : "置顶");
+            }
+
+            @Override
+            public void onContentClick(int position) {
+                Toast.makeText(MessageInboxActivity.this, "click pos = " + position, Toast.LENGTH_SHORT).show();
+            }
+        });
+        mRecyclerView.setAdapter(messageAdapter);
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                messageAdapter.setScrollingMenu(null);
+            }
+        });
+
 
         String userId = myFirebaseUser.getUid();
-
-        // Attach a listener to read the data at our posts reference
         mdatabaseReference.child("users").child(userId).child("messages").addValueEventListener (new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
@@ -97,13 +118,16 @@ public class MessageInboxActivity extends AppCompatActivity
                 for (DataSnapshot messageSnapshot : snapshot.getChildren()) {
 
                     String content = (String) messageSnapshot.child("content").getValue();
-                    String buyer = (String) messageSnapshot.child("buyer").getValue();
+                    String sender = (String) messageSnapshot.child("sender").getValue();
                     String datetime = (String) messageSnapshot.child("datetime").getValue();
                     String title = (String) messageSnapshot.child("title").getValue();
-                       Message message=new Message(content,buyer,datetime,title);
-                  mMessageList.add(message);
+                    String message_id = (String) messageSnapshot.child("message_id").getValue();
+                    String sender_id = (String) messageSnapshot.child("sender_id").getValue();
+                    Message message=new Message(content,sender,datetime,title, message_id,sender_id);
+                    mMessageList.add(message);
+
                 }
-                mAdapter.notifyDataSetChanged();
+                messageAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -111,10 +135,7 @@ public class MessageInboxActivity extends AppCompatActivity
                 System.out.println("The read failed: " + databaseError.getCode());
             }
         });
-
-
     }
-
     //On start method
     @Override
     public void onStart() {
@@ -185,17 +206,17 @@ public class MessageInboxActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_my_account) {
-            // Handle the camera action
+            startActivity(new Intent(this, MyAccountActivity.class));
         } else if (id == R.id.nav_message_inbox) {
-
-        } else if (id == R.id.nav_create_listing) {
-
+            //Do Nothing
+        } else if (id == R.id.nav_view_offers) {
+            startActivity(new Intent(this, ViewOffersActivity.class));
         } else if (id == R.id.nav_search_listings) {
-
+            startActivity(new Intent(this, SearchListingsActivity.class));
+        } else if (id == R.id.nav_create_listing) {
+            startActivity(new Intent(this, CreateListingActivity.class));
         } else if (id == R.id.nav_view_listings) {
-
-        }else if (id == R.id.nav_view_offers) {
-
+            startActivity(new Intent(this, ViewListingsActivity.class));
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

@@ -248,15 +248,18 @@ public class CreateListingActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_my_account) {
-            // Handle the camera action
+            startActivity(new Intent(this, MyAccountActivity.class));
         } else if (id == R.id.nav_message_inbox) {
-
+            startActivity(new Intent(this, MessageInboxActivity.class));
         } else if (id == R.id.nav_view_offers) {
-
+            startActivity(new Intent(this, ViewOffersActivity.class));
         } else if (id == R.id.nav_search_listings) {
-
+            startActivity(new Intent(this, SearchListingsActivity.class));
+        } else if (id == R.id.nav_create_listing) {
+            //Do Nothing
+        } else if (id == R.id.nav_view_listings) {
+            startActivity(new Intent(this, ViewListingsActivity.class));
         }
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -426,15 +429,6 @@ public class CreateListingActivity extends AppCompatActivity
             item3IV.setVisibility(View.VISIBLE);
             mItemIVCount++;
             addImageBTN.setVisibility(View.GONE);
-//            Log.d("XID", String.valueOf(itemIV.getId()));
-//            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) itemIV.getLayoutParams();
-//            ImageView previousIV = (ImageView) itemImagesLayout.getChildAt(itemIVCount);
-//            ImageView newImageIV = new ImageView(CreateListingActivity.this);
-//            newImageIV.setId(R.id.newItemIV);
-//            newImageIV.setImageResource(R.drawable.common_google_signin_btn_text_dark_focused);
-//            params.addRule(RelativeLayout.RIGHT_OF, previousIV.getId());
-//            Log.d("XID", String.valueOf(previousIV.getId()));
-//            itemImagesLayout.addView(newImageIV, params);
         }
     }
 

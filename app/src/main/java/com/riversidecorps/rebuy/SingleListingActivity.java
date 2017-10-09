@@ -3,8 +3,8 @@ package com.riversidecorps.rebuy;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -13,7 +13,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,12 +26,9 @@ import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
+import com.riversidecorps.rebuy.models.Message;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -40,8 +36,8 @@ import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
-import static android.content.ContentValues.TAG;
 import static com.riversidecorps.rebuy.R.id.itemImageIV;
 
 public class SingleListingActivity extends AppCompatActivity
@@ -49,31 +45,30 @@ public class SingleListingActivity extends AppCompatActivity
 
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private FirebaseUser mUser = mAuth.getCurrentUser();
-    private FirebaseAuth.AuthStateListener mAuthListener;
-    private FirebaseStorage mStorage = FirebaseStorage.getInstance();
     private FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
 
-    private DatabaseReference databaseReference;
-    private ProgressDialog progressDialog;
+    private DatabaseReference mDatabaseReference;
+
+    private ProgressDialog mProgressDialog;
     private static final String DB_MESSAGES = "messages";
-    private static final String AUTH_IN = "onAuthStateChanged:signed_in:";
-    private static final String AUTH_OUT = "onAuthStateChanged:signed_out";
-    private Button offerBTN, buyBTN, messageBTN;
 
-    private String itemID;
-    private String itemName;
-    private String itemPrice;
-    private String itemDes;
-    private Integer itemQuantity;
-    private String userID;
-    private String userName;
+    private String mItemID;
+    private String mItemName;
+    private String mItemPrice;
+    private String mItemDes;
+    private Integer mItemQuantity;
     private String mItemSellerID;
-    private ArrayList<String> itemImages = new ArrayList<>();
+    private String muserId;
+    private ArrayList<String> mItemImages = new ArrayList<>();
 
-    private ImageView mitemImageIV;
+    private ImageView mItemImageIV;
     private TextView mNameTv;
     private TextView mPriceTv;
     private TextView mQuantityTv;
+    private TextView mDescriptionTV;
+    private Button mOfferBTN;
+    private Button mBuyBTN;
+    private Button mMessageBTN;
 
     @BindView(R.id.itemPreview1IV)
     ImageView itemPreview1IV;
@@ -87,113 +82,68 @@ public class SingleListingActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_single_listing);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        //Initial Setup
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        ButterKnife.bind(this);
-
-        Intent intent = getIntent();
-
-        progressDialog = new ProgressDialog(this);
-        mAuth = FirebaseAuth.getInstance();
-        mUser = mAuth.getCurrentUser();
-        itemID = intent.getStringExtra("itemId");
-        itemName = intent.getStringExtra("itemName");
-        itemPrice = intent.getStringExtra("itemPrice");
-        itemDes = intent.getStringExtra("itemDes");
-        itemQuantity = intent.getIntExtra("itemQuantity", 0);
-        itemImages = intent.getStringArrayListExtra("itemImages");
-
-
-        mItemSellerID = getIntent().getStringExtra("itemSellerId");
-        userID = mUser.getUid();
-        mitemImageIV = findViewById(itemImageIV);
-        Glide.with(this)
-                .load(itemImages.get(0))
-                .into(mitemImageIV);
-
-        for(int i = 0; i < itemImages.size(); i++) {
-            int pos = i;
-            pos++;
-            int currentIVID = getResources().getIdentifier("itemPreview" + pos + "IV", "id", getPackageName());
-            ImageView currentIV = (ImageView) findViewById(currentIVID);
-            currentIV.setVisibility(View.VISIBLE);
-            Glide.with(this)
-                    .load(itemImages.get(i))
-                    .into(currentIV);
-        }
-
-        databaseReference = FirebaseDatabase.getInstance().getReference();
-        mNameTv = (TextView) findViewById(R.id.itemNameTV);
-        mNameTv.setText(itemName);
-
-        mPriceTv = (TextView) findViewById(R.id.itemPriceTV);
-        mPriceTv.setText(itemPrice);
-
-        mQuantityTv = (TextView) findViewById(R.id.itemQuantityTV);
-        mQuantityTv.setText(itemQuantity.toString());
-
-        TextView iDesTv = (TextView) findViewById(R.id.descriptionTV);
-        iDesTv.setText(itemDes);
-
-        offerBTN = (Button) findViewById(R.id.offerBTN);
-        buyBTN = (Button) findViewById(R.id.buyBTN);
-        messageBTN = findViewById(R.id.messageBTN);
-        offerBTN.setOnClickListener(this);
-        buyBTN.setOnClickListener(this);
-        messageBTN.setOnClickListener(this);
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        mProgressDialog = new ProgressDialog(this);
+        //Bind butterknife
+        ButterKnife.bind(this);
+        //Get info passed from previous activity
+        Intent intent = getIntent();
+        mItemID = intent.getStringExtra("itemId");
+        mItemName = intent.getStringExtra("itemName");
+        mItemPrice = intent.getStringExtra("itemPrice");
+        mItemDes = intent.getStringExtra("itemDes");
+        mItemQuantity = intent.getIntExtra("itemQuantity", 0);
+        mItemImages = intent.getStringArrayListExtra("itemImages");
+        mItemSellerID = getIntent().getStringExtra("itemSellerId");
+        // Get database Reference
+        mDatabaseReference = mDatabase.getReference();
+        muserId=mUser.getUid();
+        //Set up UI
+        mNameTv = findViewById(R.id.itemNameTV);
+        mNameTv.setText(mItemName);
 
-        DatabaseReference userRef = mDatabase.getReference().child("users").child(userID).child("username");
-        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-            }
+        mPriceTv = findViewById(R.id.itemPriceTV);
+        mPriceTv.setText(mItemPrice);
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });
+        mQuantityTv = findViewById(R.id.itemQuantityTV);
+        mQuantityTv.setText(String.valueOf(mItemQuantity));
 
-        //Set listener that triggers when a user signs out
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                //FirebaseUser user = myFirebaseAuth.getCurrentUser();
-                if (mUser != null) {
-                    // User is signed in
-                    Log.d(TAG, AUTH_IN + mUser.getUid());
-                } else {
-                    // User is signed out
-                    Log.d(TAG, AUTH_OUT);
-                }
-                // ...
-            }
-        };
-    }
+        mDescriptionTV = findViewById(R.id.descriptionTV);
+        mDescriptionTV.setText(mItemDes);
 
-    //On start method
-    @Override
-    public void onStart() {
-        super.onStart();
-        //Sets a listener to catch when the user is signing in.
-        mAuth.addAuthStateListener(mAuthListener);
-    }
+        mOfferBTN = findViewById(R.id.offerBTN);
+        mBuyBTN = findViewById(R.id.buyBTN);
+        mMessageBTN = findViewById(R.id.messageBTN);
+        mOfferBTN.setOnClickListener(this);
+        mBuyBTN.setOnClickListener(this);
+        mMessageBTN.setOnClickListener(this);
 
-    //On stop method
-    @Override
-    public void onStop() {
-        super.onStop();
-        //Sets listener to catch when the user is signing out.
-        if (mAuthListener != null) {
-            mAuth.removeAuthStateListener(mAuthListener);
+        mItemImageIV = findViewById(itemImageIV);
+        //Load an image
+        Glide.with(this)
+                .load(mItemImages.get(0))
+                .into(mItemImageIV);
+        //Set images for each preview IV & makes them visible
+        for (int i = 0; i < mItemImages.size(); i++) {
+            int pos = i;
+            pos++;
+            int currentIVID = getResources().getIdentifier("itemPreview" + pos + "IV", "id", getPackageName());
+            ImageView currentIV = findViewById(currentIVID);
+            //Make the ImageView visible
+            currentIV.setVisibility(View.VISIBLE);
+            //Load the image from the array list according to the loop's current position
+            Glide.with(this)
+                    .load(mItemImages.get(i))
+                    .into(currentIV);
         }
     }
 
@@ -223,21 +173,24 @@ public class SingleListingActivity extends AppCompatActivity
             case R.id.action_logout:
                 //Sign out of the authenticator and return to login activity.
                 mAuth.signOut();
-                this.startActivity(new Intent(this, LoginActivity.class));
+                startActivity(new Intent(this, LoginActivity.class));
+                finish();
                 return true;
 
             //If item is reset password
             case R.id.action_reset_password:
-                this.startActivity(new Intent(this, ResetPasswordActivity.class));
+                startActivity(new Intent(this, ResetPasswordActivity.class));
                 return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Closes the Nav Drawer if it's open, otherwise close activity
+     */
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -245,75 +198,116 @@ public class SingleListingActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * Gets which item on the nav menu has been selected, then open it.
+     *
+     * @param item The selected item
+     */
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
+        //Get clicked id of the menu item
         int id = item.getItemId();
 
         if (id == R.id.nav_my_account) {
-            // Handle the camera action
+            //Do nothing
+            startActivity(new Intent(this, MyAccountActivity.class));
         } else if (id == R.id.nav_message_inbox) {
-
-        } else if (id == R.id.nav_create_listing) {
-
-        } else if (id == R.id.nav_search_listings) {
-
-        } else if (id == R.id.nav_view_listings) {
-
+            startActivity(new Intent(this, MessageInboxActivity.class));
         } else if (id == R.id.nav_view_offers) {
-
+            startActivity(new Intent(this, ViewOffersActivity.class));
+        } else if (id == R.id.nav_search_listings) {
+            startActivity(new Intent(this, SearchListingsActivity.class));
+        } else if (id == R.id.nav_create_listing) {
+            startActivity(new Intent(this, CreateListingActivity.class));
+        } else if (id == R.id.nav_view_listings) {
+            finish();
         }
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+        //Close drawer
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
+    /**
+     * Checks which view has been selected & runs its respective functions
+     *
+     * @param view The clicked view
+     */
     @Override
     public void onClick(View view) {
-        if (view == offerBTN) {
-
+        //Check if user selected the offer button
+        if (view == mOfferBTN) {
+            //Create a new intent
             Intent OfferActivity = new Intent(this, CreateOfferActivity.class);
-            OfferActivity.putExtra("itemName", itemName);
-            OfferActivity.putExtra("itemPrice", itemPrice);
-            OfferActivity.putExtra("itemQuantity", itemQuantity);
-            OfferActivity.putExtra("itemDes", itemDes);
-            OfferActivity.putExtra("itemId", itemID);
-            OfferActivity.putExtra("listingImage", itemImages.get(0));
+            //Add all relevant data for the offer activity
+            OfferActivity.putExtra("mItemName", mItemName);
+            OfferActivity.putExtra("mItemPrice", mItemPrice);
+            OfferActivity.putExtra("mItemQuantity", mItemQuantity);
+            OfferActivity.putExtra("mItemDes", mItemDes);
+            OfferActivity.putExtra("itemId", mItemID);
+            OfferActivity.putExtra("listingImage", mItemImages.get(0));
+            //Start activity
             startActivity(OfferActivity);
         }
-
-        if (view == messageBTN) {
+        //Check if user selected the message button
+        if (view == mMessageBTN) {
+            //Create a new dialog & do initial setup
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Message");
             builder.setIcon(R.drawable.ic_message_dialog);
-
-            final EditText input = new EditText(this);
-            input.setInputType(InputType.TYPE_CLASS_TEXT);
-            builder.setView(input);
-            builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            builder.setCancelable(false);
+            final EditText messageInput = new EditText(this);
+            messageInput.setInputType(InputType.TYPE_CLASS_TEXT);
+            builder.setView(messageInput);
+            builder.setPositiveButton("Send Message", new DialogInterface.OnClickListener() {
+                /**
+                 * Sends the message by saving it on Firebase Database
+                 *
+                 * @param dialog The dialog interface
+                 * @param which Which dialog
+                 */
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    progressDialog.setMessage(getString(R.string.creating_listing_message));
-                    progressDialog.show();
-                    String datetime = new SimpleDateFormat("yyyy-MM-dd hh:mm a").format(new Date());
-                    String message = input.getText().toString();
-                    final String messageID = databaseReference.child("users").child(mItemSellerID).child(DB_MESSAGES).push().getKey();
-                    databaseReference.child("users").child(mItemSellerID).child("messages").child(messageID).child("content").setValue(message);
-                    databaseReference.child("users").child(mItemSellerID).child("messages").child(messageID).child("title").setValue(itemName);
-                    databaseReference.child("users").child(mItemSellerID).child("messages").child(messageID).child("buyer").setValue(userName);
-                    databaseReference.child("users").child(mItemSellerID).child("messages").child(messageID).child("datetime").setValue(datetime).addOnSuccessListener(SingleListingActivity.this, new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            Toast.makeText(getBaseContext(), "Your message has been sent to the seller!", Toast.LENGTH_LONG).show();
-                            //Close the progress dialog
-                            progressDialog.dismiss();
-                            finish();
-                        }
-                    });
+                    //Check if there's an input
+                    if (messageInput.getText().toString().isEmpty()) {
+                        //Display error message
+                        Toast.makeText(SingleListingActivity.this, "Please enter a message before sending.", Toast.LENGTH_SHORT).show();
+                    } else {
+                        //Set & Display a loading dialog
+                        mProgressDialog.setMessage("Sending Message...");
+                        mProgressDialog.show();
+                        //Get current time
+                        String datetime = new SimpleDateFormat("yyyy-MM-dd hh:mm a").format(new Date());
+                        //Get the user's message
+                        String userMessage = messageInput.getText().toString();
+                        //Get a message id from Firebase Database
+                        final String messageID = mDatabaseReference.child("users").child(mItemSellerID).child(DB_MESSAGES).push().getKey();
+                        //Create a new message
+
+
+                        Message message = new Message(userMessage, mUser.getDisplayName(), datetime, mItemName,messageID,muserId);
+                        //Save the message
+                        mDatabaseReference.child("users").child(mItemSellerID).child(DB_MESSAGES).child(messageID).setValue(message).addOnSuccessListener(SingleListingActivity.this, new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Toast.makeText(getBaseContext(), "Your message has been sent to the seller!", Toast.LENGTH_LONG).show();
+                                //Close the progress dialog
+                                mProgressDialog.dismiss();
+                                finish();
+                            }
+                        });
+                    }
                 }
             });
             builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                /**
+                 * Closes the dialog
+                 *
+                 * @param dialog The dialog
+                 * @param which Which dialog
+                 */
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     dialog.cancel();
@@ -321,6 +315,21 @@ public class SingleListingActivity extends AppCompatActivity
             });
             builder.show();
         }
+    }
 
+    /**
+     * Gets the selected preview image and sets it as the main image
+     *
+     * @param view The selected Preview ImageView
+     */
+    @OnClick({R.id.itemPreview1IV, R.id.itemPreview2IV, R.id.itemPreview3IV})
+    public void imageSwitchHandler(View view) {
+        //Enable caching
+        view.setDrawingCacheEnabled(true);
+        view.buildDrawingCache();
+        //Get the bitmap of the selected view
+        Bitmap selectedImage = view.getDrawingCache();
+        //Set the IV to the bitmap
+        mItemImageIV.setImageBitmap(selectedImage);
     }
 }

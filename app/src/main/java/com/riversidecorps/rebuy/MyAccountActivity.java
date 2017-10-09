@@ -1,16 +1,18 @@
 package com.riversidecorps.rebuy;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.icu.text.NumberFormat;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.NavigationView;
 import android.support.multidex.MultiDex;
 import android.support.v4.app.ActivityCompat;
@@ -25,14 +27,23 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -68,16 +79,13 @@ public class
 MyAccountActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private static final int PERMISSION_REQUEST_READ_STORAGE = 1;
-    private static final int REQUEST_GALLERY_IMAGE = 2;
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private FirebaseUser mUser = mAuth.getCurrentUser();
-    private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
     private FirebaseStorage mStorage = FirebaseStorage.getInstance();
 
-    private static final String AUTH_IN = "onAuthStateChanged:signed_in:";
-    private static final String AUTH_OUT = "onAuthStateChanged:signed_out";
+    private static final int PERMISSION_REQUEST_READ_STORAGE = 1;
+    private static final int REQUEST_GALLERY_IMAGE = 2;
 
     @BindView(R.id.userAvatarIV)
     ImageView userAvatarIV;
@@ -91,58 +99,36 @@ MyAccountActivity extends AppCompatActivity
     @BindView(R.id.currentListingsRV)
     RecyclerView currentListingsRV;
 
-    // TO DO - CHECK OFFLINE & DISPLAY ERROR IF SO, LOAD IMAGES
-    // ALSO MAYBE CREATE NEW SECTION FOR LISTING PREVIEWS IN FIREBASE TO AVOID LOADING OTHER INFOS
     @Override
-        protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_account);
-
-
         MultiDex.install(this);
-
         ButterKnife.bind(this);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         final View navView = navigationView.getHeaderView(0);
-        final TextView usernameNavTV = (TextView) navView.findViewById(R.id.userNavIDTV);
-        TextView emailNavTV = (TextView) navView.findViewById(R.id.userNavEmailTV);
+        final TextView usernameNavTV = navView.findViewById(R.id.userNavIDTV);
+        TextView emailNavTV = navView.findViewById(R.id.userNavEmailTV);
+        final ImageView avatarNavIV = navView.findViewById(R.id.userNavAvatarIV);
 
         //Prevents being required to login every time
         if (mUser == null) {
             startActivity(new Intent(MyAccountActivity.this, LoginActivity.class));
             finish();
             return;
-        } else {
-            //User is logged in;
         }
-
-        //Set listener that triggers when a user signs out
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
-                    // User is signed in
-                    Log.d(TAG, AUTH_IN + user.getUid());
-                } else {
-                    // User is signed out
-                    Log.d(TAG, AUTH_OUT);
-                }
-                // ...
-            }
-        };
 
         userAvatarIV.setClickable(true);
 
@@ -174,6 +160,10 @@ MyAccountActivity extends AppCompatActivity
 
         //Set up nav menu
         emailNavTV.setText(mUser.getEmail());
+        Glide.with(this)
+                .load(mUser.getPhotoUrl())
+                .placeholder(R.mipmap.ic_launcher)
+                .into(avatarNavIV);
 
         //Set up recyclerview
         currentListingsRV.setLayoutManager(new LinearLayoutManager(this));
@@ -195,7 +185,7 @@ MyAccountActivity extends AppCompatActivity
              * mModelClass given to the constructor of this class. The third argument is the item's position
              * in the list.
              * <p>
-             * Your implementation should populate the view using the data contained in the model.
+             * It populates the view using the data contained in the model.
              *
              * @param viewHolder The view to populate
              * @param model      The object containing the data used to populate the view
@@ -253,14 +243,21 @@ MyAccountActivity extends AppCompatActivity
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == REQUEST_GALLERY_IMAGE) {
-            if (resultCode == RESULT_OK) {
+            if (resultCode == Activity.RESULT_OK) {
                 try {
                     Uri imageUri = data.getData();
                     InputStream imageStream = getContentResolver().openInputStream(imageUri);
 
                     final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
                     final ImageView previewIV = new ImageView(this);
+                    final RelativeLayout relativeLayout = new RelativeLayout(this);
+                    RelativeLayout.LayoutParams ivParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    ivParams.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
+                    previewIV.setLayoutParams(ivParams);
+                    previewIV.setScaleType(ImageView.ScaleType.CENTER_CROP);
                     previewIV.setImageBitmap(selectedImage);
+
+                    relativeLayout.addView(previewIV);
                     new AlertDialog.Builder(MyAccountActivity.this)
                             .setMessage("Would you like to change your picture to this?")
                             .setTitle("Change User Image Confirmation")
@@ -293,7 +290,7 @@ MyAccountActivity extends AppCompatActivity
                                             mUser.updateProfile(profileChangeRequest).addOnCompleteListener(new OnCompleteListener<Void>() {
                                                 @Override
                                                 public void onComplete(@NonNull Task<Void> task) {
-                                                    if(task.isSuccessful()) {
+                                                    if (task.isSuccessful()) {
                                                         Toast.makeText(MyAccountActivity.this, "You have successfully saved your avatar.", Toast.LENGTH_SHORT).show();
                                                         userAvatarIV.setImageBitmap(selectedImage);
                                                     } else {
@@ -307,30 +304,12 @@ MyAccountActivity extends AppCompatActivity
                                 }
                             })
                             .setNegativeButton("No", null)
-                            .setView(previewIV)
+                            .setView(relativeLayout)
                             .show();
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
             }
-        }
-    }
-
-    //On start method
-    @Override
-    public void onStart() {
-        super.onStart();
-        //Sets a listener to catch when the user is signing in.
-        mAuth.addAuthStateListener(mAuthListener);
-    }
-
-    //On stop method
-    @Override
-    public void onStop() {
-        super.onStop();
-        //Sets listener to catch when the user is signing out.
-        if (mAuthListener != null) {
-            mAuth.removeAuthStateListener(mAuthListener);
         }
     }
 
@@ -349,6 +328,7 @@ MyAccountActivity extends AppCompatActivity
 
     /**
      * Sets a listener that triggers when an option from the taskbar menu is selected.
+     *
      * @param item Which item on the menu was selected.
      */
     @Override
@@ -359,13 +339,11 @@ MyAccountActivity extends AppCompatActivity
             case R.id.action_logout:
                 //Sign out of the authenticator and return to login activity.
                 mAuth.signOut();
-                this.startActivity(new Intent(this, LoginActivity.class));
-                return true;
-
+                startActivity(new Intent(this, LoginActivity.class));
+                finish();
             //If item is reset password
             case R.id.action_reset_password:
-                this.startActivity(new Intent(this, ResetPasswordActivity.class));
-                return true;
+                startActivity(new Intent(this, ResetPasswordActivity.class));
         }
 
         return super.onOptionsItemSelected(item);
@@ -373,7 +351,7 @@ MyAccountActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -401,7 +379,7 @@ MyAccountActivity extends AppCompatActivity
             startActivity(new Intent(this, ViewListingsActivity.class));
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
