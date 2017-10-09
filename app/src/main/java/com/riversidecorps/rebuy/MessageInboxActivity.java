@@ -185,17 +185,17 @@ public class MessageInboxActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_my_account) {
-            // Handle the camera action
+            startActivity(new Intent(this, MyAccountActivity.class));
         } else if (id == R.id.nav_message_inbox) {
-
-        } else if (id == R.id.nav_create_listing) {
-
+            //Do Nothing
+        } else if (id == R.id.nav_view_offers) {
+            startActivity(new Intent(this, ViewOffersActivity.class));
         } else if (id == R.id.nav_search_listings) {
-
+            startActivity(new Intent(this, SearchListingsActivity.class));
+        } else if (id == R.id.nav_create_listing) {
+            startActivity(new Intent(this, CreateListingActivity.class));
         } else if (id == R.id.nav_view_listings) {
-
-        }else if (id == R.id.nav_view_offers) {
-
+            startActivity(new Intent(this, ViewListingsActivity.class));
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
