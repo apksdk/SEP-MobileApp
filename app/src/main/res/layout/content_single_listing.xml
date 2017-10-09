@@ -142,24 +142,30 @@
 
         <Button
             android:id="@+id/offerBTN"
+            style="@style/Widget.AppCompat.Button.Colored"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="Offer Seller" />
+            android:text="Offer Seller"
+            android:theme="@style/ButtonColor" />
 
         <Button
             android:id="@+id/buyBTN"
+            style="@style/Widget.AppCompat.Button.Colored"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="Buy It Now" />
+            android:text="Buy It Now"
+            android:theme="@style/ButtonColor" />
 
         <Button
             android:id="@+id/messageBTN"
+            style="@style/Widget.AppCompat.Button.Colored"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="Message Seller" />
+            android:text="Message Seller"
+            android:theme="@style/ButtonColor" />
     </LinearLayout>
 
 

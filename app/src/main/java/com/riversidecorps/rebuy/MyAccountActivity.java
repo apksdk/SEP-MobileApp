@@ -7,12 +7,10 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.NavigationView;
 import android.support.multidex.MultiDex;
 import android.support.v4.app.ActivityCompat;
@@ -27,23 +25,16 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -68,8 +59,6 @@ import java.io.InputStream;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static android.content.ContentValues.TAG;
 
 /**
  * The type My account activity.
@@ -99,6 +88,8 @@ MyAccountActivity extends AppCompatActivity
     @BindView(R.id.currentListingsRV)
     RecyclerView currentListingsRV;
 
+    private ImageView mUserNavAvatarIV;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -121,7 +112,7 @@ MyAccountActivity extends AppCompatActivity
         final View navView = navigationView.getHeaderView(0);
         final TextView usernameNavTV = navView.findViewById(R.id.userNavIDTV);
         TextView emailNavTV = navView.findViewById(R.id.userNavEmailTV);
-        final ImageView avatarNavIV = navView.findViewById(R.id.userNavAvatarIV);
+        mUserNavAvatarIV = navView.findViewById(R.id.userNavAvatarIV);
 
         //Prevents being required to login every time
         if (mUser == null) {
@@ -133,20 +124,6 @@ MyAccountActivity extends AppCompatActivity
         userAvatarIV.setClickable(true);
 
         final String userID = mUser.getUid();
-
-        DatabaseReference userRef = mDatabase.getReference().child("users").child(userID).child("username");
-        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                userIDTV.setText(dataSnapshot.getValue(String.class));
-                usernameNavTV.setText(userIDTV.getText().toString());
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
 
         userIDTV.setText(mUser.getDisplayName());
         usernameNavTV.setText(userIDTV.getText().toString());
@@ -163,7 +140,7 @@ MyAccountActivity extends AppCompatActivity
         Glide.with(this)
                 .load(mUser.getPhotoUrl())
                 .placeholder(R.mipmap.ic_launcher)
-                .into(avatarNavIV);
+                .into(mUserNavAvatarIV);
 
         //Set up recyclerview
         currentListingsRV.setLayoutManager(new LinearLayoutManager(this));
@@ -293,6 +270,8 @@ MyAccountActivity extends AppCompatActivity
                                                     if (task.isSuccessful()) {
                                                         Toast.makeText(MyAccountActivity.this, "You have successfully saved your avatar.", Toast.LENGTH_SHORT).show();
                                                         userAvatarIV.setImageBitmap(selectedImage);
+                                                        mUserNavAvatarIV.setImageBitmap(selectedImage);
+
                                                     } else {
                                                         Toast.makeText(MyAccountActivity.this, "There was an error while saving your avatar. Please try again.", Toast.LENGTH_SHORT).show();
                                                     }
@@ -341,7 +320,7 @@ MyAccountActivity extends AppCompatActivity
                 mAuth.signOut();
                 startActivity(new Intent(this, LoginActivity.class));
                 finish();
-            //If item is reset password
+                //If item is reset password
             case R.id.action_reset_password:
                 startActivity(new Intent(this, ResetPasswordActivity.class));
         }
