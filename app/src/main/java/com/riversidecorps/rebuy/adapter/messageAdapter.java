@@ -35,10 +35,10 @@ public class ViewHolder extends RecyclerView.ViewHolder {
         public ViewHolder(final View view) {
                 super(view);
                 this.view = view;
-                content = (TextView) view.findViewById(R.id.messagePreviewTV);
+              /*  content = (TextView) view.findViewById(R.id.messagePreviewTV);
                 buyer=view.findViewById(R.id.messageAuthorTV);
                 title=view.findViewById(R.id.messageTitleTV);
-                datetime=view.findViewById(R.id.messageDateTV);
+                datetime=view.findViewById(R.id.messageDateTV);*/
 
         }
 }

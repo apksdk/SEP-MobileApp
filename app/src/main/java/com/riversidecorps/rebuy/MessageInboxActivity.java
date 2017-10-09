@@ -15,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -80,17 +81,21 @@ public class MessageInboxActivity extends AppCompatActivity
         };
 
         mRecyclerView = findViewById(R.id.message_recycler_view);
-        mAdapter = new messageAdapter(this, mMessageList);
+        init();
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        mRecyclerView.setAdapter(mAdapter);
-        mAdapter.notifyDataSetChanged();
+       /* mAdapter = new messageAdapter(this, mMessageList);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        mRecyclerView.setAdapter(mAdapter);*/
+//        mAdapter.notifyDataSetChanged();
 
-        String userId = myFirebaseUser.getUid();
+      //  String userId = myFirebaseUser.getUid();
 
         // Attach a listener to read the data at our posts reference
-        mdatabaseReference.child("users").child(userId).child("messages").addValueEventListener (new ValueEventListener() {
+       /* mdatabaseReference.child("users").child(userId).child("messages").addValueEventListener (new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 mMessageList.removeAll(mMessageList);
@@ -110,11 +115,72 @@ public class MessageInboxActivity extends AppCompatActivity
             public void onCancelled(DatabaseError databaseError) {
                 System.out.println("The read failed: " + databaseError.getCode());
             }
-        });
+        });*/
 
 
     }
+    private void init() {
+        final MyAdapter myAdapter = new MyAdapter(mMessageList, this);
+        myAdapter.setOnClickListener(new MyAdapter.OnClickListener() {
+            @Override
+            public void onMenuClick(int position, boolean top) {
+                //   data.set(position, top ? "取消置顶" : "置顶");
+            }
 
+            @Override
+            public void onContentClick(int position) {
+                Toast.makeText(MessageInboxActivity.this, "click pos = " + position, Toast.LENGTH_SHORT).show();
+            }
+        });
+        mRecyclerView.setAdapter(myAdapter);
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                myAdapter.setScrollingMenu(null);
+            }
+        });
+
+
+        String userId = myFirebaseUser.getUid();
+        mdatabaseReference.child("users").child(userId).child("messages").addValueEventListener (new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                mMessageList.removeAll(mMessageList);
+                for (DataSnapshot messageSnapshot : snapshot.getChildren()) {
+
+                    String content = (String) messageSnapshot.child("content").getValue();
+                    String buyer = (String) messageSnapshot.child("buyer").getValue();
+                    String datetime = (String) messageSnapshot.child("datetime").getValue();
+                    String title = (String) messageSnapshot.child("title").getValue();
+                    Message message=new Message(content,buyer,datetime,title);
+                    mMessageList.add(message);
+                    Log.i("lll",content+buyer);
+                }
+                myAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("The read failed: " + databaseError.getCode());
+            }
+        });
+            //         Log.i("lll",mMessageList.toString());
+
+     //   final List<Message> data = new ArrayList<>();
+
+
+     /*   for (int i = 0; i < 20; i++) {
+            Message me=new Message("content","buyer","datetime","title");
+            data.add(me);
+
+
+
+
+
+        }*/
+
+    }
     //On start method
     @Override
     public void onStart() {
