@@ -9,15 +9,6 @@
     tools:context="com.riversidecorps.rebuy.SingleListingActivity"
     tools:showIn="@layout/app_bar_single_listing">
 
-    <TextView
-        android:id="@+id/logininfor"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:text="You are not logged in!" />
-
     <ImageView
         android:id="@+id/itemImageIV"
         android:layout_width="160dp"
@@ -25,6 +16,8 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="8dp"
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop"
         app:srcCompat="@mipmap/ic_launcher_round" />
 
     <LinearLayout
