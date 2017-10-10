@@ -279,11 +279,7 @@ public class ViewOffersActivity extends AppCompatActivity
             if (offer.getOfferID().equals(currOffer)){
                 itemName.setText(offer.getItemName());
                 itemBuyer.setText(offer.getItemBuyer());
-                // number formatting - Seb - has to be added to others
-                NumberFormat formattedP1 = NumberFormat.getCurrencyInstance(Locale.US);
-                String currency = formattedP1.format(offer.getItemOriginalPrice());
-                originalPrice.setText(currency);
-                //
+                originalPrice.setText(offer.getItemOriginalPrice());
                 offerPrice.setText(offer.getOfferPrice());
                 offerQuantity.setText(offer.getOfferQuantity());
                 offerDescription.setText(offer.getOfferDescription());

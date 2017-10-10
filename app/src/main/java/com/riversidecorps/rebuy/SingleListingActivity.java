@@ -242,10 +242,10 @@ public class SingleListingActivity extends AppCompatActivity
             //Create a new intent
             Intent OfferActivity = new Intent(this, CreateOfferActivity.class);
             //Add all relevant data for the offer activity
-            OfferActivity.putExtra("mItemName", mItemName);
-            OfferActivity.putExtra("mItemPrice", mItemPrice);
-            OfferActivity.putExtra("mItemQuantity", mItemQuantity);
-            OfferActivity.putExtra("mItemDes", mItemDes);
+            OfferActivity.putExtra("itemName", mItemName);
+            OfferActivity.putExtra("itemPrice", mItemPrice);
+            OfferActivity.putExtra("itemQuantity", mItemQuantity);
+            OfferActivity.putExtra("itemDes", mItemDes);
             OfferActivity.putExtra("itemId", mItemID);
             OfferActivity.putExtra("listingImage", mItemImages.get(0));
             //Start activity
