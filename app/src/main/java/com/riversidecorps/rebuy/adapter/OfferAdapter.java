@@ -48,7 +48,6 @@ public class OfferAdapter extends RecyclerView.Adapter<OfferAdapter.ViewHolder> 
         }
     }
 
-
     public OfferAdapter(Context context, ArrayList<Offer> offerLists) {
         this.context = context;
         this.offerLists = offerLists;

@@ -3,6 +3,7 @@ package com.riversidecorps.rebuy;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -36,6 +37,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.riversidecorps.rebuy.adapter.OfferAdapter;
+import com.riversidecorps.rebuy.models.Listing;
 import com.riversidecorps.rebuy.models.Offer;
 
 import java.text.DateFormat;
@@ -46,6 +48,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.text.NumberFormat;
 import java.util.Locale;
+import java.util.Objects;
 
 import static android.content.ContentValues.TAG;
 
@@ -77,7 +80,7 @@ public class ViewOffersActivity extends AppCompatActivity
             //User is logged in;
         }
 
-        String userId = mUser.getUid();
+        final String userId = mUser.getUid();
 
         // Attach a listener to read the data at our posts reference
         mdatabaseReference.child(DB_OFFER).addValueEventListener (new ValueEventListener() {
@@ -93,12 +96,18 @@ public class ViewOffersActivity extends AppCompatActivity
                     String offerPrice = (String) messageSnapshot.child("offerPrice").getValue();
                     String offerDescription = (String) messageSnapshot.child("offerDescription").getValue();
                     String quantity = (String) messageSnapshot.child("offerQuantity").getValue();
-                    //String itemId =  messageSnapshot.getKey().toString();
+                    String sellerId =  (String) messageSnapshot.child("itemSellerId").getValue();
                     String offerDate = (String) messageSnapshot.child("offerDate").getValue();
                     Offer newOffer = new Offer(buyer,itemName , quantity,
-                            originalPrice, offerPrice, offerDate, offerDescription);
+                            originalPrice, offerPrice, offerDate, offerDescription, sellerId);
                     newOffer.setOfferID(mOfferID);
-                    mOfferList.add(newOffer);
+//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+//                        if (Objects.equals(newOffer.getSellerId(), userId)){
+//                            mOfferList.add(newOffer);
+//                        }
+//                    } else {
+                        mOfferList.add(newOffer);
+//                    }
                 }
                 mAdapter.notifyDataSetChanged();
             }

@@ -16,6 +16,7 @@ public class Offer {
     private String mOfferDescription;
     private ArrayList<String> mItemImages;
     private String mOfferDate;
+    private String mItemSeller;
 
         /* Instantiates a new Offer.*/
 
@@ -26,7 +27,7 @@ public class Offer {
         this.mItemName = mItemName;
     }
 
-    public Offer(String mItemBuyer, String mItemName, String mOfferQuantity, String mItemOriginalPrice, String mOfferPrice, String mOfferDate, String mOfferDescription) {
+    public Offer(String mItemBuyer, String mItemName, String mOfferQuantity, String mItemOriginalPrice, String mOfferPrice, String mOfferDate, String mOfferDescription, String mItemSeller) {
         this.mItemBuyer = mItemBuyer;
         this.mItemName = mItemName;
         this.mOfferQuantity = mOfferQuantity;
@@ -34,6 +35,7 @@ public class Offer {
         this.mOfferPrice = mOfferPrice;
         this.mOfferDate = mOfferDate;
         this.mOfferDescription = mOfferDescription;
+        this.mItemSeller = mItemSeller;
     }
 
     public String getItemBuyer() {
@@ -98,5 +100,13 @@ public class Offer {
 
     public String getOfferID() {
         return mOfferID;
+    }
+
+    public String getSellerId() {
+        return mItemSeller;
+    }
+
+    public void setSellerId(String mListingId) {
+        this.mItemSeller = mListingId;
     }
 }
