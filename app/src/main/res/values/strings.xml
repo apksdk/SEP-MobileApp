@@ -1,3 +1,101 @@
 <resources>
     <string name="app_name">ReBuy</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="action_settings">Settings</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+    <string name="title_activity_test">Test</string>
+    <string name="action_logout">Logout</string>
+    <string name="action_quit">Quit</string>
+    <string name="title_label">Title:</string>
+    <string name="error_text">Error</string>
+    <string name="title_activity_test_login">Sign in</string>
+    <string name="error_invalid_title">Please enter a valid title</string>
+    <string name="close_btn">Close</string>
+
+    <!-- Strings related to login -->
+    <string name="login_btn">Login</string>
+    <string name="register_btn">Register</string>
+    <string name="back_btn">Back</string>
+    <string name="username_prompt">Username</string>
+    <string name="password_prompt">Password</string>
+    <string name="login_prompt">Login</string>
+    <string name="email_prompt">Email</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_no_email">Please enter an email</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_no_password">Please enter a password</string>
+    <string name="error_invalid_short_password">This password is too short</string>
+    <string name="error_invalid_long_password">This password is too long</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_no_username">Please enter a username</string>
+    <string name="error_invalid_short_username">This username is too short</string>
+    <string name="error_invalid_long_username">This username is too long</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="action_reset_password">Reset Password</string>
+
+    <string name="failed_login">Could not login, please try again</string>
+
+    <!-- Strings related to the chat -->
+    <string name="send_btn">Send</string>
+    <string name="enter_message">Type a message</string>
+    <string name="title_activity_chat_select">ChatSelectActivity</string>
+    <string name="chat_title_tv">Chat Name</string>
+    <string name="create_chat_btn">Create Chat</string>
+    <string name="chat_title_hint">Enter a chat name</string>
+    <string name="action_select_chat">Select Chat</string>
+
+    <string name="app_logo">App Logo</string>
+    <string name="title_activity_create_listing">Create A Listing</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="title_activity_search_listings">Browse Listings</string>
+    <string name="title_activity_single_listing">Viewing Item</string>
+    <string name="title_activity_offers">Offers</string>
+    <string name="title_activity_message_inbox">Message Inbox</string>
+    <string name="title_activity_reset_password">Reset Password</string>
+    <string name="title_activity_view_listing">View Listings</string>
+    <string name="title_activity_view_offers">View Offers</string>
+
+
+    <!-- Strings related to the item -->
+    <string name="title_pre">"Title: "</string>
+    <string name="price_pre">"Price: "</string>
+    <string name="original_price_pre">"Your Price: "</string>
+    <string name="offer_price_pre">"Offer Price: "</string>
+    <string name="quantity_pre">"Quantity: "</string>
+    <string name="seller_pre">"Seller: "</string>
+    <string name="buyer_pre">"Buyer: "</string>
+    <string name="description_pre">"Description: "</string>
+    <string name="date_pre">"Date: "</string>
+    <string name="item_id">ITEM_ID</string>
+    <string name="accept_btn">Accept Offer</string>
+    <string name="reject_btn">Reject Offer</string>
+    <!-- Strings for progress dialogs -->
+    <string name="login_message">Logging in…</string>
+    <string name="creating_listing_message">Creating Listing…</string>
+
+
+    <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
+    <string name="quickstart_message">Click the SUBSCRIBE TO NEWS button below to subscribe to the
+        news topic. Messages sent to the news topic will be received. The LOG TOKEN button logs the
+        InstanceID token to logcat.</string>
+    <string name="subscribe_to_news">Subscribe To News</string>
+    <string name="log_token">Log Token</string>
+
+    <string name="msg_subscribed">Subscribed to news topic</string>
+    <string name="msg_token_fmt" translatable="false">InstanceID Token: %s</string>
+
+    <!--
+        This is the name that users will see when interacting with this channel.
+        It should describe the category of notifications that will be sent through this channel
+     -->
+    <string name="default_notification_channel_name" translatable="true">News</string>
+    <string name="title_activity_modify_listing">Modify a Listing</string>
 </resources>

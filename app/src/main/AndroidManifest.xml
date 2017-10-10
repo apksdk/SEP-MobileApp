@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.riversidecorps.rebuy">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -9,13 +12,53 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".LoginActivity" />
+        <activity android:name=".RegisterActivity" />
+        <activity
+            android:name=".MyAccountActivity"
+            android:label="ReBuy"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".CreateListingActivity"
+            android:label="@string/title_activity_create_listing"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".SearchListingsActivity"
+            android:label="@string/title_activity_search_listings"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".SingleListingActivity"
+            android:label="@string/title_activity_single_listing"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".CreateOfferActivity"
+            android:label="@string/title_activity_offers"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ViewOffersActivity"
+            android:label="@string/title_activity_view_offers"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".MessageInboxActivity"
+            android:label="@string/title_activity_message_inbox"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ResetPasswordActivity"
+            android:label="@string/title_activity_reset_password"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ViewListingsActivity"
+            android:label="@string/title_activity_view_listing"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ModifyListingActivity"
+            android:label="@string/title_activity_modify_listing"></activity>
     </application>
 
 </manifest>
