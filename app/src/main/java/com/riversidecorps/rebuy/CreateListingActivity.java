@@ -235,6 +235,7 @@ public class CreateListingActivity extends AppCompatActivity
                 //Sign out of the authenticator and return to login activity.
                 mAuth.signOut();
                 this.startActivity(new Intent(this, LoginActivity.class));
+                finish();
                 return true;
 
             //If item is reset password
