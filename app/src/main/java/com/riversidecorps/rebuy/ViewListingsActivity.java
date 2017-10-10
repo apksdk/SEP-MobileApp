@@ -2,6 +2,7 @@ package com.riversidecorps.rebuy;
 
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -33,6 +34,7 @@ import com.riversidecorps.rebuy.adapter.ItemAdapter;
 import com.riversidecorps.rebuy.models.Listing;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import static android.content.ContentValues.TAG;
 
@@ -97,7 +99,14 @@ public class ViewListingsActivity extends AppCompatActivity
                         continue;
                     }
                     Listing listing = messageSnapshot.getValue(Listing.class);
-                    mItemList.add(listing);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                        if (!Objects.equals(listing.getItemSellerId(), userID)){
+                            mItemList.add(listing);
+                        }
+                    } else {
+                        mItemList.add(listing);
+                    }
+
 
 //                        String name = listing.getItemName();
 //                        String description = listing.getItemDescription();
