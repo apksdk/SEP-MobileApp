@@ -71,10 +71,10 @@
     <string name="offer_price_pre">"Offer Price: "</string>
     <string name="quantity_pre">"Quantity: "</string>
     <string name="seller_pre">"Seller: "</string>
-    <string name ="buyer_pre">"Buyer: "</string>
+    <string name="buyer_pre">"Buyer: "</string>
     <string name="description_pre">"Description: "</string>
     <string name="date_pre">"Date: "</string>
-    <string name="item_id" >ITEM_ID</string>
+    <string name="item_id">ITEM_ID</string>
     <string name="accept_btn">Accept Offer</string>
     <string name="reject_btn">Reject Offer</string>
     <!-- Strings for progress dialogs -->
@@ -97,4 +97,5 @@
         It should describe the category of notifications that will be sent through this channel
      -->
     <string name="default_notification_channel_name" translatable="true">News</string>
+    <string name="title_activity_modify_listing">Modify a Listing</string>
 </resources>

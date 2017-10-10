@@ -15,8 +15,12 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -34,11 +38,11 @@ import static android.content.ContentValues.TAG;
 public class MessageInboxActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private FirebaseAuth myFirebaseAuth;
+    private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
-    private FirebaseUser myFirebaseUser;
+    private FirebaseUser mUser;
     private FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
-    private DatabaseReference mdatabaseReference;
+    private DatabaseReference mDatabaseReference;
     private ArrayList<Message> mMessageList= new ArrayList<>();
     private static final String AUTH_IN = "onAuthStateChanged:signed_in:";
     private static final String AUTH_OUT = "onAuthStateChanged:signed_out";
@@ -51,9 +55,9 @@ public class MessageInboxActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        myFirebaseAuth = FirebaseAuth.getInstance();
-        myFirebaseUser = myFirebaseAuth.getCurrentUser();
-        mdatabaseReference = FirebaseDatabase.getInstance().getReference();
+        mAuth = FirebaseAuth.getInstance();
+        mUser = mAuth.getCurrentUser();
+        mDatabaseReference = FirebaseDatabase.getInstance().getReference();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -63,6 +67,19 @@ public class MessageInboxActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        final View navView = navigationView.getHeaderView(0);
+        final TextView usernameNavTV = navView.findViewById(R.id.userNavIDTV);
+        TextView emailNavTV = navView.findViewById(R.id.userNavEmailTV);
+        ImageView userNavAvatarIV = navView.findViewById(R.id.userNavAvatarIV);
+        usernameNavTV.setText(mUser.getDisplayName());
+
+        //Set up nav menu
+        emailNavTV.setText(mUser.getEmail());
+        Glide.with(this)
+                .load(mUser.getPhotoUrl())
+                .placeholder(R.mipmap.ic_launcher)
+                .into(userNavAvatarIV);
 
         //Set listener that triggers when a user signs out
         mAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -110,8 +127,8 @@ public class MessageInboxActivity extends AppCompatActivity
         });
 
 
-        String userId = myFirebaseUser.getUid();
-        mdatabaseReference.child("users").child(userId).child("messages").addValueEventListener (new ValueEventListener() {
+        String userId = mUser.getUid();
+        mDatabaseReference.child("users").child(userId).child("messages").addValueEventListener (new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 mMessageList.removeAll(mMessageList);
@@ -141,7 +158,7 @@ public class MessageInboxActivity extends AppCompatActivity
     public void onStart() {
         super.onStart();
         //Sets a listener to catch when the user is signing in.
-        myFirebaseAuth.addAuthStateListener(mAuthListener);
+        mAuth.addAuthStateListener(mAuthListener);
     }
 
     //On stop method
@@ -150,7 +167,7 @@ public class MessageInboxActivity extends AppCompatActivity
         super.onStop();
         //Sets listener to catch when the user is signing out.
         if (mAuthListener != null) {
-            myFirebaseAuth.removeAuthStateListener(mAuthListener);
+            mAuth.removeAuthStateListener(mAuthListener);
         }
     }
     /**
@@ -176,7 +193,7 @@ public class MessageInboxActivity extends AppCompatActivity
             //If item is logout
             case R.id.action_logout:
                 //Sign out of the authenticator and return to login activity.
-                myFirebaseAuth.signOut();
+                mAuth.signOut();
                 this.startActivity(new Intent(this, LoginActivity.class));
                 return true;
 

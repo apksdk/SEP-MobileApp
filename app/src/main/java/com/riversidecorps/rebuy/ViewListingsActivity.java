@@ -18,8 +18,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -141,6 +143,19 @@ public class ViewListingsActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        final View navView = navigationView.getHeaderView(0);
+        final TextView usernameNavTV = navView.findViewById(R.id.userNavIDTV);
+        TextView emailNavTV = navView.findViewById(R.id.userNavEmailTV);
+        ImageView userNavAvatarIV = navView.findViewById(R.id.userNavAvatarIV);
+        usernameNavTV.setText(mUser.getDisplayName());
+
+        //Set up nav menu
+        emailNavTV.setText(mUser.getEmail());
+        Glide.with(this)
+                .load(mUser.getPhotoUrl())
+                .placeholder(R.mipmap.ic_launcher)
+                .into(userNavAvatarIV);
 
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override

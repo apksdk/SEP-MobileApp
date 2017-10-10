@@ -104,6 +104,9 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
 //        String formatedDate = formatter.format(date);
         viewHolder.item_date.setText(date);
 
+        Glide.with(context)
+                .load(itemLists.get(position).getItemImages().get(0)).into(viewHolder.itemImage);
+
         viewHolder.view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

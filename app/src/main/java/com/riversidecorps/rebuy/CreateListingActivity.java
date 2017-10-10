@@ -29,8 +29,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -57,15 +59,16 @@ import java.util.UUID;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnLongClick;
 
 import static android.content.ContentValues.TAG;
 
 public class CreateListingActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
 
-    private FirebaseAuth myFirebaseAuth;
+    private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
-    private FirebaseUser myFirebaseUser;
+    private FirebaseUser mUser;
     private DatabaseReference databaseReference;
     private FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
     private FirebaseStorage mStorage = FirebaseStorage.getInstance();
@@ -129,8 +132,8 @@ public class CreateListingActivity extends AppCompatActivity
         confirmListingBTN = (Button) findViewById(R.id.confirmListingBTN);
         cancelListingBTN = (Button) findViewById(R.id.cancelListingBTN);
 
-        myFirebaseAuth = FirebaseAuth.getInstance();
-        myFirebaseUser = myFirebaseAuth.getCurrentUser();
+        mAuth = FirebaseAuth.getInstance();
+        mUser = mAuth.getCurrentUser();
         confirmListingBTN.setOnClickListener(this);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -142,7 +145,7 @@ public class CreateListingActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        String userID = myFirebaseUser.getUid();
+        String userID = mUser.getUid();
         DatabaseReference userRef = mDatabase.getReference().child("users").child(userID).child("username");
         userRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -155,6 +158,19 @@ public class CreateListingActivity extends AppCompatActivity
 
             }
         });
+
+        final View navView = navigationView.getHeaderView(0);
+        final TextView usernameNavTV = navView.findViewById(R.id.userNavIDTV);
+        TextView emailNavTV = navView.findViewById(R.id.userNavEmailTV);
+        ImageView userNavAvatarIV = navView.findViewById(R.id.userNavAvatarIV);
+        usernameNavTV.setText(mUser.getDisplayName());
+
+        //Set up nav menu
+        emailNavTV.setText(mUser.getEmail());
+        Glide.with(this)
+                .load(mUser.getPhotoUrl())
+                .placeholder(R.mipmap.ic_launcher)
+                .into(userNavAvatarIV);
 
 
         //Set listener that triggers when a user signs out
@@ -179,7 +195,7 @@ public class CreateListingActivity extends AppCompatActivity
     public void onStart() {
         super.onStart();
         //Sets a listener to catch when the user is signing in.
-        myFirebaseAuth.addAuthStateListener(mAuthListener);
+        mAuth.addAuthStateListener(mAuthListener);
     }
 
     //On stop method
@@ -188,7 +204,7 @@ public class CreateListingActivity extends AppCompatActivity
         super.onStop();
         //Sets listener to catch when the user is signing out.
         if (mAuthListener != null) {
-            myFirebaseAuth.removeAuthStateListener(mAuthListener);
+            mAuth.removeAuthStateListener(mAuthListener);
         }
     }
 
@@ -217,7 +233,7 @@ public class CreateListingActivity extends AppCompatActivity
             //If item is logout
             case R.id.action_logout:
                 //Sign out of the authenticator and return to login activity.
-                myFirebaseAuth.signOut();
+                mAuth.signOut();
                 this.startActivity(new Intent(this, LoginActivity.class));
                 return true;
 
@@ -301,14 +317,13 @@ public class CreateListingActivity extends AppCompatActivity
     }
 
     // TO DO: Get the current time if possible
-    // TO DO: Multiple image upload support
     private int imageCount;
 
     private void saveListing() {
         //Check if all required fields are filled out
         if (validateForm()) {
             imageCount = 0;
-            //Else show a progress dialog informing the user they are being logged in
+            //Show a progress
             progressDialog.setMessage(getString(R.string.creating_listing_message));
             progressDialog.show();
             // Retrieve all relevant data for the listing
@@ -317,7 +332,7 @@ public class CreateListingActivity extends AppCompatActivity
             NumberFormat numFormat = NumberFormat.getCurrencyInstance(Locale.US);
             String price = numFormat.format(Double.parseDouble(itemPriceET.getText().toString()));
             String description = itemDescriptionET.getText().toString().trim();
-            final String sellerID = myFirebaseUser.getUid();
+            final String sellerID = mUser.getUid();
             //Get current date
             String stringDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
             //Create new listing
@@ -430,6 +445,29 @@ public class CreateListingActivity extends AppCompatActivity
             mItemIVCount++;
             addImageBTN.setVisibility(View.GONE);
         }
+    }
+
+    @OnLongClick({R.id.itemImagesLayout, R.id.itemIV, R.id.item2IV, R.id.item3IV})
+    public boolean removeLastImageHandler(View v) {
+        new AlertDialog.Builder(this)
+                .setTitle("Remove Image")
+                .setMessage("Would you like to remove the last added image?")
+                .setPositiveButton("Remove Image", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        if (mItemIVCount == 3) {
+                            item3IV.setVisibility(View.GONE);
+                            addImageBTN.setVisibility(View.VISIBLE);
+                            mItemIVCount--;
+                        } else if (mItemIVCount == 2) {
+                            item2IV.setVisibility(View.GONE);
+                            mItemIVCount--;
+                        }
+                    }
+                })
+                .setNegativeButton("No", null)
+                .show();
+        return false;
     }
 
     /**

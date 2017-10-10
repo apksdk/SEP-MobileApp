@@ -42,12 +42,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -151,10 +148,10 @@ MyAccountActivity extends AppCompatActivity
         DatabaseReference ref = mDatabase.getReference().child("users").child(userID).child("Listings");
 
         Query query = ref.orderByChild("itemDeleted").equalTo(false);
-        FirebaseRecyclerAdapter<Listing, ListingHolder> mAdapter = new FirebaseRecyclerAdapter<Listing, ListingHolder>(
+        FirebaseRecyclerAdapter<Listing, ListingPreviewHolder> mAdapter = new FirebaseRecyclerAdapter<Listing, ListingPreviewHolder>(
                 Listing.class,
                 R.layout.item_listing_overview,
-                ListingHolder.class,
+                ListingPreviewHolder.class,
                 query) {
             /**
              * Each time the data at the given Firebase location changes, this method will be called for
@@ -169,7 +166,7 @@ MyAccountActivity extends AppCompatActivity
              * @param position   The position in the list of the view being populated
              */
             @Override
-            protected void populateViewHolder(ListingHolder viewHolder, Listing model, int position) {
+            protected void populateViewHolder(ListingPreviewHolder viewHolder, Listing model, int position) {
                 viewHolder.setItemNameTV(model.getItemName());
                 viewHolder.setItemPriceTV(model.getItemPrice());
                 //Get the primary key of the item

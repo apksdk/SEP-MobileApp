@@ -12,7 +12,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity android:name=".LoginActivity" />
         <activity android:name=".RegisterActivity" />
         <activity
@@ -57,7 +56,9 @@
             android:name=".ViewListingsActivity"
             android:label="@string/title_activity_view_listing"
             android:theme="@style/AppTheme.NoActionBar" />
-
+        <activity
+            android:name=".ModifyListingActivity"
+            android:label="@string/title_activity_modify_listing"></activity>
     </application>
 
 </manifest>
