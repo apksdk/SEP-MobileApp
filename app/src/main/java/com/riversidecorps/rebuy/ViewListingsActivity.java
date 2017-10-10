@@ -35,7 +35,6 @@ import com.riversidecorps.rebuy.models.Listing;
 import java.util.ArrayList;
 
 import static android.content.ContentValues.TAG;
-import static com.riversidecorps.rebuy.R.id.login_name;
 
 public class ViewListingsActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -50,7 +49,6 @@ public class ViewListingsActivity extends AppCompatActivity
     private SwipeRefreshLayout swipeContainer;
     private String userID;
     private String userName;
-    private TextView loginName;
     private static final String AUTH_IN = "onAuthStateChanged:signed_in:";
     private static final String AUTH_OUT = "onAuthStateChanged:signed_out";
     private static final String LISTINGS = "Listings";
@@ -72,7 +70,6 @@ public class ViewListingsActivity extends AppCompatActivity
             //User is logged in;
         }
 
-        loginName = findViewById(login_name);
         mRecyclerView = findViewById(R.id.listing_recycler_view);
         mAdapter = new ItemAdapter(this, mItemList);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
@@ -92,7 +89,6 @@ public class ViewListingsActivity extends AppCompatActivity
 
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                loginName.setText("Welcome, " + userName + "!");
                 mItemList.removeAll(mItemList);
                 for (DataSnapshot messageSnapshot : snapshot.getChildren()) {
                     Boolean isDeleted = (Boolean) messageSnapshot.child("itemDeleted").getValue();
