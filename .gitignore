@@ -9,3 +9,5 @@
 *.iml
 *.xml
 *.xml
+*.jar
+.idea/modules.xml
