@@ -86,7 +86,7 @@ public class CreateOfferActivity extends AppCompatActivity
         userEmail = myFirebaseUser.getEmail();
         mItemName = getIntent().getStringExtra("itemName");
         mItemPrice = getIntent().getStringExtra("itemPrice");
-        mItemQuantity = Integer.parseInt(getIntent().getStringExtra("itemQuantity"));
+        mItemQuantity = getIntent().getIntExtra("itemQuantity", 0);
         itemId = getIntent().getStringExtra("itemId");
 
         makeOfferBtn = (Button) findViewById(R.id.makeOfferBtn);

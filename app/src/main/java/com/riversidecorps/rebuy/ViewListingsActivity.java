@@ -17,6 +17,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -31,6 +33,7 @@ import com.riversidecorps.rebuy.models.Listing;
 import java.util.ArrayList;
 
 import static android.content.ContentValues.TAG;
+import static com.riversidecorps.rebuy.R.id.login_name;
 
 public class ViewListingsActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -43,9 +46,14 @@ public class ViewListingsActivity extends AppCompatActivity
     private DatabaseReference mdatabaseReference;
     private FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
     private SwipeRefreshLayout swipeContainer;
+    private String userID;
+    private String userName;
+    private TextView loginName;
     private static final String AUTH_IN = "onAuthStateChanged:signed_in:";
     private static final String AUTH_OUT = "onAuthStateChanged:signed_out";
     private static final String LISTINGS = "Listings";
+
+    //TextView loginName = (TextView) findViewById(R.id.login_name);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +70,7 @@ public class ViewListingsActivity extends AppCompatActivity
             //User is logged in;
         }
 
+        loginName = findViewById(login_name);
         mRecyclerView = findViewById(R.id.listing_recycler_view);
         mAdapter = new ItemAdapter(this, mItemList);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
@@ -70,13 +79,18 @@ public class ViewListingsActivity extends AppCompatActivity
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
 
-        String userId = mUser.getUid();
+        userID = mUser.getUid();
+        userName = mUser.getDisplayName();
+
+        // Attach listener to display welcome bar personalised for user's name
+        DatabaseReference userRef = mDatabase.getReference().child("users").child(userID).child("username");
 
         // Attach a listener to read the data at our posts reference
         mDatabase.getReference().child(LISTINGS).addValueEventListener(new ValueEventListener() {
 
             @Override
             public void onDataChange(DataSnapshot snapshot) {
+                loginName.setText("Welcome, " + userName + "!");
                 mItemList.removeAll(mItemList);
                 for (DataSnapshot messageSnapshot : snapshot.getChildren()) {
                     Boolean isDeleted = (Boolean) messageSnapshot.child("itemDeleted").getValue();
@@ -150,7 +164,6 @@ public class ViewListingsActivity extends AppCompatActivity
             @Override
             public void onRefresh() {
                 swipeContainer.setRefreshing(true);
-                // Your code to refresh the list here.
                 // Make sure you call swipeContainer.setRefreshing(false)
                 // once the network request has completed successfully.
                 getResultsFromApi();

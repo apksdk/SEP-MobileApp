@@ -299,8 +299,8 @@ public class ViewOffersActivity extends AppCompatActivity
         acceptOfferBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Close dialog box
-                dialog.dismiss();
+                //When a seller accepts the buyer's offer, do the following
+                //int currentQuantity = mdatabaseReference.child("")
             }
         });
 
@@ -308,7 +308,6 @@ public class ViewOffersActivity extends AppCompatActivity
         rejectOfferBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 //Close dialog box
                 dialog.dismiss();
             }
