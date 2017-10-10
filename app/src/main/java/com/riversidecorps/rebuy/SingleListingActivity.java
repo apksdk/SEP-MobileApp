@@ -127,6 +127,19 @@ public class SingleListingActivity extends AppCompatActivity
         mBuyBTN.setOnClickListener(this);
         mMessageBTN.setOnClickListener(this);
 
+        final View navView = navigationView.getHeaderView(0);
+        final TextView usernameNavTV = navView.findViewById(R.id.userNavIDTV);
+        TextView emailNavTV = navView.findViewById(R.id.userNavEmailTV);
+        ImageView userNavAvatarIV = navView.findViewById(R.id.userNavAvatarIV);
+        usernameNavTV.setText(mUser.getDisplayName());
+
+        //Set up nav menu
+        emailNavTV.setText(mUser.getEmail());
+        Glide.with(this)
+                .load(mUser.getPhotoUrl())
+                .placeholder(R.mipmap.ic_launcher)
+                .into(userNavAvatarIV);
+
         mItemImageIV = findViewById(itemImageIV);
         //Load an image
         Glide.with(this)

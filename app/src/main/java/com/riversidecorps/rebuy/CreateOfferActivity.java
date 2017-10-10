@@ -41,14 +41,13 @@ import butterknife.OnClick;
 
 import static android.content.ContentValues.TAG;
 import static com.riversidecorps.rebuy.R.id.itemImagePreviewIV;
-import static com.riversidecorps.rebuy.R.id.itemQuantityTV;
 
 public class CreateOfferActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener {
 
-    private FirebaseAuth myFirebaseAuth;
+    private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
-    private FirebaseUser myFirebaseUser;
+    private FirebaseUser mUser;
     private DatabaseReference databaseReference;
     private FirebaseStorage mStorage = FirebaseStorage.getInstance();
 
@@ -79,11 +78,11 @@ public class CreateOfferActivity extends AppCompatActivity
         ButterKnife.bind(this);
 
         databaseReference = FirebaseDatabase.getInstance().getReference();
-        myFirebaseAuth = FirebaseAuth.getInstance();
-        myFirebaseUser = myFirebaseAuth.getCurrentUser();
+        mAuth = FirebaseAuth.getInstance();
+        mUser = mAuth.getCurrentUser();
 
 
-        userEmail = myFirebaseUser.getEmail();
+        userEmail = mUser.getEmail();
         mItemName = getIntent().getStringExtra("itemName");
         mItemPrice = getIntent().getStringExtra("itemPrice");
         mItemQuantity = getIntent().getIntExtra("itemQuantity", 0);
@@ -113,6 +112,22 @@ public class CreateOfferActivity extends AppCompatActivity
         //Upload image(s)
         Log.i("imagePath",imagePath);
 
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        final View navView = navigationView.getHeaderView(0);
+        final TextView usernameNavTV = navView.findViewById(R.id.userNavIDTV);
+        TextView emailNavTV = navView.findViewById(R.id.userNavEmailTV);
+        ImageView userNavAvatarIV = navView.findViewById(R.id.userNavAvatarIV);
+        usernameNavTV.setText(mUser.getDisplayName());
+
+        //Set up nav menu
+        emailNavTV.setText(mUser.getEmail());
+        Glide.with(this)
+                .load(mUser.getPhotoUrl())
+                .placeholder(R.mipmap.ic_launcher)
+                .into(userNavAvatarIV);
+
         StorageReference itemImageRef = mStorage.getReference(imagePath);
         Glide.with(this)
                 .using(new FirebaseImageLoader())
@@ -125,9 +140,6 @@ public class CreateOfferActivity extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
 
         //Set listener that triggers when a user signs out
         mAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -151,7 +163,7 @@ public class CreateOfferActivity extends AppCompatActivity
     public void onStart() {
         super.onStart();
         //Sets a listener to catch when the user is signing in.
-        myFirebaseAuth.addAuthStateListener(mAuthListener);
+        mAuth.addAuthStateListener(mAuthListener);
     }
 
     //On stop method
@@ -160,7 +172,7 @@ public class CreateOfferActivity extends AppCompatActivity
         super.onStop();
         //Sets listener to catch when the user is signing out.
         if (mAuthListener != null) {
-            myFirebaseAuth.removeAuthStateListener(mAuthListener);
+            mAuth.removeAuthStateListener(mAuthListener);
         }
     }
     /**
@@ -186,7 +198,7 @@ public class CreateOfferActivity extends AppCompatActivity
             //If item is logout
             case R.id.action_logout:
                 //Sign out of the authenticator and return to login activity.
-                myFirebaseAuth.signOut();
+                mAuth.signOut();
                 this.startActivity(new Intent(this, LoginActivity.class));
                 return true;
 
@@ -264,9 +276,9 @@ public class CreateOfferActivity extends AppCompatActivity
             NumberFormat formattedP1 = NumberFormat.getCurrencyInstance(Locale.US);
             String offerPrice = formattedP1.format(Double.parseDouble(offerPriceET.getText().toString()));
             String itemDes = getIntent().getStringExtra("itemDes");
-            String buyerId = myFirebaseUser.getDisplayName();
+            String buyerId = mUser.getDisplayName();
 
-            FirebaseUser myFirebaseUser = myFirebaseAuth.getCurrentUser();
+            FirebaseUser myFirebaseUser = mAuth.getCurrentUser();
             Date date = new Date();
             Date newDate = new Date(date.getTime() + 604800000L * 2 + 24 * 60 * 60);
             SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd");
