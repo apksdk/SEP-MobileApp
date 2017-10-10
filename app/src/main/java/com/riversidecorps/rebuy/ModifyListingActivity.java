@@ -15,6 +15,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -125,8 +126,8 @@ public class ModifyListingActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Listing listing = dataSnapshot.getValue(Listing.class);
                 mItemName = listing.getItemName();
-                mItemQuantity = String.valueOf(listing.getItemQuantity()).substring(1);
-                mItemPrice = listing.getItemPrice();
+                mItemQuantity = String.valueOf(listing.getItemQuantity());
+                mItemPrice = String.valueOf(listing.getItemPrice()).substring(1);
                 mItemDescription = listing.getItemDescription();
 
                 itemNameET.setText(mItemName);
