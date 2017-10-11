@@ -2,6 +2,7 @@ package com.riversidecorps.rebuy;
 
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -33,9 +34,9 @@ import com.riversidecorps.rebuy.adapter.ItemAdapter;
 import com.riversidecorps.rebuy.models.Listing;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import static android.content.ContentValues.TAG;
-import static com.riversidecorps.rebuy.R.id.login_name;
 
 public class ViewListingsActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -50,7 +51,6 @@ public class ViewListingsActivity extends AppCompatActivity
     private SwipeRefreshLayout swipeContainer;
     private String userID;
     private String userName;
-    private TextView loginName;
     private static final String AUTH_IN = "onAuthStateChanged:signed_in:";
     private static final String AUTH_OUT = "onAuthStateChanged:signed_out";
     private static final String LISTINGS = "Listings";
@@ -72,7 +72,6 @@ public class ViewListingsActivity extends AppCompatActivity
             //User is logged in;
         }
 
-        loginName = findViewById(login_name);
         mRecyclerView = findViewById(R.id.listing_recycler_view);
         mAdapter = new ItemAdapter(this, mItemList);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
@@ -92,7 +91,6 @@ public class ViewListingsActivity extends AppCompatActivity
 
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                loginName.setText("Welcome, " + userName + "!");
                 mItemList.removeAll(mItemList);
                 for (DataSnapshot messageSnapshot : snapshot.getChildren()) {
                     Boolean isDeleted = (Boolean) messageSnapshot.child("itemDeleted").getValue();
@@ -101,7 +99,34 @@ public class ViewListingsActivity extends AppCompatActivity
                         continue;
                     }
                     Listing listing = messageSnapshot.getValue(Listing.class);
-                    mItemList.add(listing);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                        if (!Objects.equals(listing.getItemSellerId(), userID)){
+                            mItemList.add(listing);
+                        }
+                    } else {
+                        mItemList.add(listing);
+                    }
+
+
+//                        String name = listing.getItemName();
+//                        String description = listing.getItemDescription();
+//                        String price = listing.getItemPrice();
+//                        Long quantity = Long.valueOf(listing.getItemQuantity());
+//                        String sellerName = listing.getItemSeller();
+//                        String itemID = messageSnapshot.getKey();
+//                        String itemDate = listing.getCreatedDate();
+//                        DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+//                        String itemSellerId = listing.getItemSellerId();
+
+//                        try {
+//                            Date date = format.parse(itemDate);
+//                            Listing newListing = new Listing(sellerName, name, Integer.parseInt(quantity.toString()), price, description, itemDate);
+//                            newListing.setItemId(itemID);
+//                            newListing.setItemSellerId(itemSellerId);
+//                            mItemList.add(newListing);
+//                        } catch (ParseException e) {
+//                            e.printStackTrace();
+//                        }
                 }
                 mAdapter.notifyDataSetChanged();
             }

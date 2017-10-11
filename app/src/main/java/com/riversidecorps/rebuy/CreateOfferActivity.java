@@ -284,8 +284,9 @@ public class CreateOfferActivity extends AppCompatActivity
             Date newDate = new Date(date.getTime() + 604800000L * 2 + 24 * 60 * 60);
             SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd");
             String stringDate = dt.format(newDate);
+            String itemId = getIntent().getStringExtra("itemId");
 
-            Offer newOffer = new Offer(buyerId,itemName,offerQuantity.toString(), originalPrice,offerPrice,stringDate,itemDes);
+            Offer newOffer = new Offer(buyerId,itemName,offerQuantity.toString(), originalPrice,offerPrice,stringDate,itemDes, itemId);
             databaseReference.child(DB_OFFER).push().setValue(newOffer);
             Toast.makeText(this,"Please wait for making offer ...",Toast.LENGTH_LONG).show();
             startActivity(new Intent(CreateOfferActivity.this, MyAccountActivity.class));
