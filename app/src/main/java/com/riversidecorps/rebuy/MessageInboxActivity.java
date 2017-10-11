@@ -18,7 +18,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
@@ -43,11 +42,12 @@ public class MessageInboxActivity extends AppCompatActivity
     private FirebaseUser mUser;
     private FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
     private DatabaseReference mDatabaseReference;
-    private ArrayList<Message> mMessageList= new ArrayList<>();
+    private ArrayList<Message> mMessageList = new ArrayList<>();
     private static final String AUTH_IN = "onAuthStateChanged:signed_in:";
     private static final String AUTH_OUT = "onAuthStateChanged:signed_out";
     private com.riversidecorps.rebuy.adapter.messageAdapter mAdapter;
     private RecyclerView mRecyclerView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,19 +104,9 @@ public class MessageInboxActivity extends AppCompatActivity
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
     }
+
     private void init() {
         final messageAdapter messageAdapter = new messageAdapter(mMessageList, this);
-        messageAdapter.setOnClickListener(new messageAdapter.OnClickListener() {
-            @Override
-            public void onMenuClick(int position, boolean top) {
-                //   data.set(position, top ? "取消置顶" : "置顶");
-            }
-
-            @Override
-            public void onContentClick(int position) {
-                Toast.makeText(MessageInboxActivity.this, "click pos = " + position, Toast.LENGTH_SHORT).show();
-            }
-        });
         mRecyclerView.setAdapter(messageAdapter);
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -128,21 +118,13 @@ public class MessageInboxActivity extends AppCompatActivity
 
 
         String userId = mUser.getUid();
-        mDatabaseReference.child("users").child(userId).child("messages").addValueEventListener (new ValueEventListener() {
+        mDatabaseReference.child("users").child(userId).child("messages").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 mMessageList.removeAll(mMessageList);
                 for (DataSnapshot messageSnapshot : snapshot.getChildren()) {
-
-                    String content = (String) messageSnapshot.child("content").getValue();
-                    String sender = (String) messageSnapshot.child("sender").getValue();
-                    String datetime = (String) messageSnapshot.child("datetime").getValue();
-                    String title = (String) messageSnapshot.child("title").getValue();
-                    String message_id = (String) messageSnapshot.child("message_id").getValue();
-                    String sender_id = (String) messageSnapshot.child("sender_id").getValue();
-                    Message message=new Message(content,sender,datetime,title, message_id,sender_id);
+                    Message message = messageSnapshot.getValue(Message.class);
                     mMessageList.add(message);
-
                 }
                 messageAdapter.notifyDataSetChanged();
             }
@@ -153,6 +135,7 @@ public class MessageInboxActivity extends AppCompatActivity
             }
         });
     }
+
     //On start method
     @Override
     public void onStart() {
@@ -170,8 +153,10 @@ public class MessageInboxActivity extends AppCompatActivity
             mAuth.removeAuthStateListener(mAuthListener);
         }
     }
+
     /**
      * Creates the options menu on the action bar.
+     *
      * @param menu Menu at the top right of the screen
      * @return true
      */
@@ -184,12 +169,13 @@ public class MessageInboxActivity extends AppCompatActivity
 
     /**
      * Sets a listener that triggers when an option from the taskbar menu is selected.
+     *
      * @param item Which item on the menu was selected.
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         //Finds which item was selected
-        switch(item.getItemId()){
+        switch (item.getItemId()) {
             //If item is logout
             case R.id.action_logout:
                 //Sign out of the authenticator and return to login activity.

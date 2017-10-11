@@ -16,8 +16,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -35,7 +35,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * created by yhao on 2017/8/18.
+ * created by yijun on 2017/10/8.
  */
 
 
@@ -55,6 +55,7 @@ public class messageAdapter extends RecyclerView.Adapter<messageAdapter.MyViewHo
     private DatabaseReference mdatabaseReference;
     private ProgressDialog progressDialog;
     private String userName;
+
     public SlidingMenu getScrollingMenu() {
         return mScrollingMenu;
     }
@@ -80,7 +81,7 @@ public class messageAdapter extends RecyclerView.Adapter<messageAdapter.MyViewHo
         mdatabaseReference = FirebaseDatabase.getInstance().getReference();
         messageLists = data;
         mContext = context;
-        progressDialog=new ProgressDialog(mContext);
+        progressDialog = new ProgressDialog(mContext);
         DatabaseReference userRef = mDatabase.getReference().child("users").child(myFirebaseUser.getUid()).child("username");
         userRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -101,62 +102,62 @@ public class messageAdapter extends RecyclerView.Adapter<messageAdapter.MyViewHo
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, @SuppressLint("RecyclerView") final int position) {
-        TextView menuText;
-        ImageView imageView;
-        RelativeLayout content;
-        SlidingMenu slidingMenu;
-
+        holder.imageView.setBackgroundResource(R.drawable.ic_message_inbox);
         holder.messagePreviewTV.setText(messageLists.get(position).getContent());
         holder.messageAuthorTV.setText(messageLists.get(position).getSender());
         holder.messageDateTV.setText(messageLists.get(position).getDatetime());
         holder.messageTitleTV.setText(messageLists.get(position).getTitle());
         holder.delete_message.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {closeOpenMenu();
+            public void onClick(View v) {
+                closeOpenMenu();
+                String message_id = messageLists.get(position).getMessage_id();
                 String userId = myFirebaseUser.getUid();
-                String message_id=messageLists.get(position).getMessage_id();
                 mdatabaseReference.child("users").child(userId).child("messages").child(message_id).removeValue();
 
-                boolean top=true;
-                if (mOnClickListener != null) {
-                    mOnClickListener.onMenuClick(position, top);
-                }
             }
         });
 
-
-        holder.menuText.setText("Reply");
-        holder.menuText.setOnClickListener(new View.OnClickListener() {
+        holder.reply_message.setText("Reply");
+        holder.reply_message.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 closeOpenMenu();
-                boolean top=true;
                 AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
                 builder.setTitle("Message");
                 builder.setIcon(R.drawable.ic_message_dialog);
 
-                final EditText input = new EditText(mContext);
-                input.setInputType(InputType.TYPE_CLASS_TEXT);
-                builder.setView(input);
+                final EditText messageInput = new EditText(mContext);
+                messageInput.setInputType(InputType.TYPE_CLASS_TEXT);
+                builder.setView(messageInput);
                 builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        progressDialog.setMessage(mContext.getString(R.string.creating_listing_message));
-                        progressDialog.show();
-                        String datetime = new SimpleDateFormat("yyyy-MM-dd hh:mm a").format(new Date());
-                        String message = input.getText().toString();
-                        String sender_id = messageLists.get(position).getSender_id();
-                        String itemName = messageLists.get(position).getTitle();
-                        final String messageID = mdatabaseReference.child("users").child(sender_id).child("messages").push().getKey();
-                        mdatabaseReference.child("users").child(sender_id).child("messages").child(messageID).child("content").setValue(message);
-                        mdatabaseReference.child("users").child(sender_id).child("messages").child(messageID).child("title").setValue(itemName);
-                        mdatabaseReference.child("users").child(sender_id).child("messages").child(messageID).child("sender").setValue(userName);
-                        mdatabaseReference.child("users").child(sender_id).child("messages").child(messageID).child("sender_id").setValue(sender_id);
-                        mdatabaseReference.child("users").child(sender_id).child("messages").child(messageID).child("message_id").setValue(messageID);
-                        mdatabaseReference.child("users").child(sender_id).child("messages").child(messageID).child("datetime").setValue(datetime);
-                        progressDialog.dismiss();
+                        //Check if there's an input
+                        if (messageInput.getText().toString().isEmpty()) {
+                            //Display error message
+                            Toast.makeText(mContext, "Please enter a message before sending.", Toast.LENGTH_SHORT).show();
+                        } else {
+                            //Set & Display a loading dialog
+                            progressDialog.setMessage(mContext.getString(R.string.reply_message));
+                            progressDialog.show();
+                            String datetime = new SimpleDateFormat("yyyy-MM-dd HH:MM").format(new Date());
+                            String content = messageInput.getText().toString();
+                            String sender_id = messageLists.get(position).getSender_id();
+                            String item_name = messageLists.get(position).getTitle();
+                            String userId = myFirebaseUser.getUid();
+                            final String message_id = mdatabaseReference.child("users").child(sender_id).child("messages").push().getKey();
+                            //Create a new message
+                            Message message = new Message(content, userName, datetime, item_name, message_id, userId);
+                            //Save the message to the sender's messages
+                            mdatabaseReference.child("users").child(sender_id).child("messages").child(message_id).setValue(message);
+                            Toast.makeText(mContext, "Your message has been sent to the seller!", Toast.LENGTH_LONG).show();
+                            //Close the progress dialog
+                            progressDialog.dismiss();
+                        }
                     }
                 });
+
                 builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -164,34 +165,18 @@ public class messageAdapter extends RecyclerView.Adapter<messageAdapter.MyViewHo
                     }
                 });
                 builder.show();
-                if (mOnClickListener != null) {
-                    mOnClickListener.onMenuClick(position, top);
-                }
+
             }
         });
         holder.slidingMenu.setCustomOnClickListener(new SlidingMenu.CustomOnClickListener() {
             @Override
             public void onClick() {
-                if (mOnClickListener != null) {
-                    mOnClickListener.onContentClick(position);
-                }
+                Toast.makeText(mContext, "Content: " + messageLists.get(position).getContent(),
+                        Toast.LENGTH_SHORT).show();
             }
         });
 
     }
-
-    public interface OnClickListener {
-        void onMenuClick(int position, boolean top);
-
-        void onContentClick(int position);
-    }
-
-    private OnClickListener mOnClickListener;
-
-    public void setOnClickListener(OnClickListener onClickListener) {
-        this.mOnClickListener = onClickListener;
-    }
-
 
     @Override
     public int getItemCount() {
@@ -199,10 +184,10 @@ public class messageAdapter extends RecyclerView.Adapter<messageAdapter.MyViewHo
     }
 
     class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView menuText;
+        TextView reply_message;
         TextView delete_message;
         ImageView imageView;
-    //    RelativeLayout content;
+        //    RelativeLayout content;
         SlidingMenu slidingMenu;
         TextView messageTitleTV_Pre;
         TextView messageTitleTV;
@@ -218,18 +203,17 @@ public class messageAdapter extends RecyclerView.Adapter<messageAdapter.MyViewHo
 
         MyViewHolder(View itemView) {
             super(itemView);
-            menuText = (TextView) itemView.findViewById(R.id.menuText);
+            reply_message = (TextView) itemView.findViewById(R.id.reply_message);
             delete_message = (TextView) itemView.findViewById(R.id.delete_message);
             imageView = (ImageView) itemView.findViewById(R.id.mailReadStatusIV);
-        //    content = (RelativeLayout) itemView.findViewById(R.id.content);
             slidingMenu = (SlidingMenu) itemView.findViewById(R.id.slidingMenu);
-            messageTitleTV_Pre=itemView.findViewById(R.id.messageTitleTV_Pre);
-            messageTitleTV=itemView.findViewById(R.id.messageTitleTV);
-            messagePreviewTV_Pre=itemView.findViewById(R.id.messagePreviewTV_Pre);
-            messagePreviewTV=itemView.findViewById(R.id.messagePreviewTV);
-            messageAuthorTV_Pre=itemView.findViewById(R.id.messageAuthorTV_Pre);
-            messageAuthorTV=itemView.findViewById(R.id.messageAuthorTV);
-            messageDateTV=itemView.findViewById(R.id.messageDateTV);
+            messageTitleTV_Pre = itemView.findViewById(R.id.messageTitleTV_Pre);
+            messageTitleTV = itemView.findViewById(R.id.messageTitleTV);
+            messagePreviewTV_Pre = itemView.findViewById(R.id.messagePreviewTV_Pre);
+            messagePreviewTV = itemView.findViewById(R.id.messagePreviewTV);
+            messageAuthorTV_Pre = itemView.findViewById(R.id.messageAuthorTV_Pre);
+            messageAuthorTV = itemView.findViewById(R.id.messageAuthorTV);
+            messageDateTV = itemView.findViewById(R.id.messageDateTV);
 
         }
     }

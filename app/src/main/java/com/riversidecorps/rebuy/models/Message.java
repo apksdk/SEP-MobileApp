@@ -21,27 +21,54 @@ public class Message {
         this.sender_id = sender_id;
     }
 
-    public String getSender() { return sender; }
+    public Message() {
+    }
 
-    public void setSender(String sender) { this.sender = sender; }
+    public String getSender() {
+        return sender;
+    }
 
-    public String getDatetime() { return datetime; }
+    public void setSender(String sender) {
+        this.sender = sender;
+    }
 
-    public void setDatetime(String datetime) { this.datetime = datetime; }
+    public String getDatetime() {
+        return datetime;
+    }
 
-    public String getTitle() { return title; }
+    public void setDatetime(String datetime) {
+        this.datetime = datetime;
+    }
 
-    public void setTitle(String title) { this.title = title; }
+    public String getTitle() {
+        return title;
+    }
 
-    public String getContent() { return content; }
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-    public void setContent(String content) { this.content = content; }
+    public String getContent() {
+        return content;
+    }
 
-    public String getMessage_id() { return message_id; }
+    public void setContent(String content) {
+        this.content = content;
+    }
 
-    public void setMessage_id(String message_id) { this.message_id = message_id; }
+    public String getMessage_id() {
+        return message_id;
+    }
 
-    public String getSender_id() { return sender_id; }
+    public void setMessage_id(String message_id) {
+        this.message_id = message_id;
+    }
 
-    public void setSender_id(String sender_id) { this.sender_id = sender_id; }
+    public String getSender_id() {
+        return sender_id;
+    }
+
+    public void setSender_id(String sender_id) {
+        this.sender_id = sender_id;
+    }
 }

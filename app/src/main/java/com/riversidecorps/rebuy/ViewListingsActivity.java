@@ -102,26 +102,6 @@ public class ViewListingsActivity extends AppCompatActivity
                     }
                     Listing listing = messageSnapshot.getValue(Listing.class);
                     mItemList.add(listing);
-
-//                        String name = listing.getItemName();
-//                        String description = listing.getItemDescription();
-//                        String price = listing.getItemPrice();
-//                        Long quantity = Long.valueOf(listing.getItemQuantity());
-//                        String sellerName = listing.getItemSeller();
-//                        String itemID = messageSnapshot.getKey();
-//                        String itemDate = listing.getCreatedDate();
-//                        DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-//                        String itemSellerId = listing.getItemSellerId();
-
-//                        try {
-//                            Date date = format.parse(itemDate);
-//                            Listing newListing = new Listing(sellerName, name, Integer.parseInt(quantity.toString()), price, description, itemDate);
-//                            newListing.setItemId(itemID);
-//                            newListing.setItemSellerId(itemSellerId);
-//                            mItemList.add(newListing);
-//                        } catch (ParseException e) {
-//                            e.printStackTrace();
-//                        }
                 }
                 mAdapter.notifyDataSetChanged();
             }
