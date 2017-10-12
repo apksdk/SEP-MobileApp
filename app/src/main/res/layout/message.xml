@@ -84,7 +84,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_alignRight="@+id/messagePreviewTV"
-                    android:layout_marginRight="2dp"
+                    android:layout_marginRight="5dp"
                   />
 
             </RelativeLayout>
@@ -98,7 +98,7 @@
 
                 <TextView
                     android:id="@+id/reply_message"
-                    android:layout_width="60dp"
+                    android:layout_width="75dp"
                     android:layout_height="match_parent"
                     android:background="@color/colorAccent"
                     android:gravity="center"
@@ -106,7 +106,7 @@
 
                 <TextView
                     android:id="@+id/delete_message"
-                    android:layout_width="60dp"
+                    android:layout_width="75dp"
                     android:layout_height="match_parent"
                     android:background="@color/cardview_dark_background"
                     android:gravity="center"
