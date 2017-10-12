@@ -151,10 +151,10 @@
                         android:paddingLeft="2dp"
                         android:paddingBottom="10dp"
                         android:paddingRight="10dp"
-                        android:text="Error"
-                        android:textColor="@color/colorPrimary"
                         android:textSize="18sp"
-                        android:textStyle="bold" />
+                        android:ellipsize="end"
+                        android:text="Error"
+                        android:textColor="@android:color/black"/>
 
                     <TextView
                         android:id="@+id/price_pre"
@@ -182,9 +182,9 @@
                         android:paddingBottom="10dp"
                         android:paddingRight="10dp"
                         android:text="Error"
-                        android:textColor="@color/colorPrimary"
                         android:textSize="18sp"
-                        android:textStyle="bold" />
+                        android:ellipsize="end"
+                        android:textColor="@android:color/black"/>
 
                 </RelativeLayout>
             </LinearLayout>
