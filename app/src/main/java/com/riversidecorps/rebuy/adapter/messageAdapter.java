@@ -151,7 +151,7 @@ public class messageAdapter extends RecyclerView.Adapter<messageAdapter.MyViewHo
                             Message message = new Message(content, userName, datetime, item_name, message_id, userId);
                             //Save the message to the sender's messages
                             mdatabaseReference.child("users").child(sender_id).child("messages").child(message_id).setValue(message);
-                            Toast.makeText(mContext, "Your message has been sent to the seller!", Toast.LENGTH_LONG).show();
+                            Toast.makeText(mContext, "Your message has been sent to the sender!", Toast.LENGTH_LONG).show();
                             //Close the progress dialog
                             progressDialog.dismiss();
                         }
