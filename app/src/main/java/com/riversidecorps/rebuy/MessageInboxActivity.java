@@ -47,7 +47,7 @@ public class MessageInboxActivity extends AppCompatActivity
     private static final String AUTH_OUT = "onAuthStateChanged:signed_out";
     private com.riversidecorps.rebuy.adapter.messageAdapter mAdapter;
     private RecyclerView mRecyclerView;
-
+    private TextView mEmptyView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +58,7 @@ public class MessageInboxActivity extends AppCompatActivity
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
         mDatabaseReference = FirebaseDatabase.getInstance().getReference();
+        mEmptyView = findViewById(R.id.empty_view);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -127,6 +128,13 @@ public class MessageInboxActivity extends AppCompatActivity
                     mMessageList.add(message);
                 }
                 messageAdapter.notifyDataSetChanged();
+                if(messageAdapter.getItemCount()==0){
+                    mRecyclerView.setVisibility(View.GONE);
+                    mEmptyView.setVisibility(View.VISIBLE);
+                }else{
+                    mRecyclerView.setVisibility(View.VISIBLE);
+                    mEmptyView.setVisibility(View.GONE);
+                }
             }
 
             @Override

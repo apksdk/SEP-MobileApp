@@ -15,4 +15,20 @@
         android:layout_height="match_parent"
         android:scrollbars="vertical"
         android:background="#FFFFFF" />
+
+    On the same layout where is defined the RecyclerView, add the TextView:
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="vertical" />
+    <TextView
+        android:id="@+id/empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:visibility="gone"
+        android:text="@string/no_data_available"
+        android:textSize="24sp"/>
 </RelativeLayout>

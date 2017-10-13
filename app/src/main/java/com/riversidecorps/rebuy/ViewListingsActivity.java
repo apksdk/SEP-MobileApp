@@ -10,7 +10,6 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -54,7 +53,6 @@ public class ViewListingsActivity extends AppCompatActivity
     private FirebaseAuth.AuthStateListener mAuthListener;
     private DatabaseReference mdatabaseReference;
     private FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
-    private SwipeRefreshLayout swipeContainer;
     private String userID;
     private String userName;
     private String mfilter;
@@ -62,7 +60,6 @@ public class ViewListingsActivity extends AppCompatActivity
     private static final String AUTH_OUT = "onAuthStateChanged:signed_out";
     private static final String LISTINGS = "Listings";
 
-    //TextView loginName = (TextView) findViewById(R.id.login_name);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -162,24 +159,6 @@ public class ViewListingsActivity extends AppCompatActivity
                 // ...
             }
         };
-
-
-        swipeContainer = findViewById(R.id.swipeContainer);
-        // Setup refresh listener which triggers new data loading
-        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                swipeContainer.setRefreshing(true);
-                // Make sure you call swipeContainer.setRefreshing(false)
-                // once the network request has completed successfully.
-                getResultsFromApi();
-            }
-        });
-        // Configure the refreshing colors
-        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
-                android.R.color.holo_green_light,
-                android.R.color.holo_orange_light,
-                android.R.color.holo_red_light);
     }
 
     @Override
