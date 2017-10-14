@@ -57,6 +57,9 @@ public class ModifyListingActivity extends AppCompatActivity {
     private static final int PERMISSION_REQUEST_READ_STORAGE = 1000;
     private static final int REQUEST_GALLERY_IMAGE = 2;
 
+    private static final String DB_LISTING = "Listings";
+    private static final String DB_USERS = "Users";
+
     private FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private FirebaseUser mUser = mAuth.getCurrentUser();
@@ -120,7 +123,7 @@ public class ModifyListingActivity extends AppCompatActivity {
         Intent intent = getIntent();
         mItemID = intent.getStringExtra("itemID");
 
-        DatabaseReference ref = mDatabase.getReference().child("Listings").child(mItemID);
+        DatabaseReference ref = mDatabase.getReference().child(DB_LISTING).child(mItemID);
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -258,14 +261,14 @@ public class ModifyListingActivity extends AppCompatActivity {
                             newMinListing.setItemImage(imageList.get(0));
                             //Save listing on Firebase
                             final DatabaseReference ref = mDatabase.getReference();
-                            ref.child("Listings").child(mItemID).setValue(newListing).addOnSuccessListener(ModifyListingActivity.this, new OnSuccessListener<Void>() {
+                            ref.child(DB_LISTING).child(mItemID).setValue(newListing).addOnSuccessListener(ModifyListingActivity.this, new OnSuccessListener<Void>() {
                                 /**
                                  * Create a toast when listing has been stored to inform the user that their listing has been successfully created
                                  * @param aVoid void
                                  */
                                 @Override
                                 public void onSuccess(Void aVoid) {
-                                    ref.child("users").child(sellerID).child("Listings").child(mItemID).setValue(newMinListing).addOnSuccessListener(ModifyListingActivity.this, new OnSuccessListener<Void>() {
+                                    ref.child(DB_USERS).child(sellerID).child(DB_LISTING).child(mItemID).setValue(newMinListing).addOnSuccessListener(ModifyListingActivity.this, new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {
                                             Toast.makeText(getBaseContext(), "Your listing has been successfully created!", Toast.LENGTH_LONG).show();

@@ -191,6 +191,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     //If they match the database move to main activity
                     if (task.isSuccessful()) {
                         startActivity(new Intent(LoginActivity.this, MyAccountActivity.class));
+                        finish();
                     } else {
                         //Else inform user that login was unsuccessful
                         Toast.makeText(LoginActivity.this, FAILED_LOGIN, Toast.LENGTH_SHORT).show();

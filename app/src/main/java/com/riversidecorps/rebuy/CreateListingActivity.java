@@ -74,6 +74,8 @@ public class CreateListingActivity extends AppCompatActivity
     private FirebaseStorage mStorage = FirebaseStorage.getInstance();
 
     private static final String DB_LISTING = "Listings";
+    private static final String DB_USERS = "Users";
+    private static final String DB_USERNAME = "username";
     private static final String AUTH_IN = "onAuthStateChanged:signed_in:";
     private static final String AUTH_OUT = "onAuthStateChanged:signed_out";
 
@@ -146,7 +148,7 @@ public class CreateListingActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         String userID = mUser.getUid();
-        DatabaseReference userRef = mDatabase.getReference().child("users").child(userID).child("username");
+        DatabaseReference userRef = mDatabase.getReference().child(DB_USERS).child(userID).child(DB_USERNAME);
         userRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -370,11 +372,11 @@ public class CreateListingActivity extends AppCompatActivity
                         if (imageList.size() == imageCount) {
                             //Add image URL to listing
                             newListing.setItemImages(imageList);
-                            newListing.setItemId(uniqueId);
                             newListing.setItemSellerId(sellerID);
                             newMinListing.setItemImage(imageList.get(0));
                             //Save listing on Firebase
                             final String listingID = databaseReference.child(DB_LISTING).push().getKey();
+                            newListing.setItemId(listingID);
                             databaseReference.child(DB_LISTING).child(listingID).setValue(newListing).addOnSuccessListener(CreateListingActivity.this, new OnSuccessListener<Void>() {
                                 /**
                                  * Create a toast when listing has been stored to inform the user that their listing has been successfully created
@@ -382,7 +384,7 @@ public class CreateListingActivity extends AppCompatActivity
                                  */
                                 @Override
                                 public void onSuccess(Void aVoid) {
-                                    databaseReference.child("users").child(sellerID).child("Listings").child(listingID).setValue(newMinListing).addOnSuccessListener(CreateListingActivity.this, new OnSuccessListener<Void>() {
+                                    databaseReference.child(DB_USERS).child(sellerID).child(DB_LISTING).child(listingID).setValue(newMinListing).addOnSuccessListener(CreateListingActivity.this, new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {
                                             Toast.makeText(getBaseContext(), "Your listing has been successfully created!", Toast.LENGTH_LONG).show();

@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -26,13 +27,18 @@ import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.riversidecorps.rebuy.models.Listing;
 import com.riversidecorps.rebuy.models.Message;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -106,7 +112,7 @@ public class SingleListingActivity extends AppCompatActivity
         mItemSellerID = getIntent().getStringExtra("itemSellerId");
         // Get database Reference
         mDatabaseReference = mDatabase.getReference();
-        muserId=mUser.getUid();
+        muserId = mUser.getUid();
         //Set up UI
         mNameTv = findViewById(R.id.itemNameTV);
         mNameTv.setText(mItemName);
@@ -311,6 +317,79 @@ public class SingleListingActivity extends AppCompatActivity
                                 finish();
                             }
                         });
+                    }
+                }
+            });
+            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                /**
+                 * Closes the dialog
+                 *
+                 * @param dialog The dialog
+                 * @param which Which dialog
+                 */
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+            builder.show();
+        }
+        if (view == mBuyBTN) {
+            //Create a new dialog & do initial setup
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle("How man items would you like to buy?");
+            builder.setIcon(R.drawable.ic_message_dialog);
+            builder.setCancelable(false);
+            final EditText quantityInput = new EditText(this);
+            quantityInput.setInputType(InputType.TYPE_CLASS_NUMBER);
+            builder.setView(quantityInput);
+            builder.setPositiveButton("Buy Now", new DialogInterface.OnClickListener() {
+                /**
+                 * Sends the message by saving it on Firebase Database
+                 *
+                 * @param dialog The dialog interface
+                 * @param which Which dialog
+                 */
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    //Check if there's an input
+                    if (quantityInput.getText().toString().isEmpty()) {
+                        //Display error message
+                        Toast.makeText(SingleListingActivity.this, "Please enter a quantity before buying.", Toast.LENGTH_SHORT).show();
+                    } else {
+                        final Integer quantity = Integer.parseInt(quantityInput.getText().toString());
+                        if(quantity > mItemQuantity){
+                            //Display error message
+                            Toast.makeText(SingleListingActivity.this, "Please enter a quantity smaller than the amount of listed items", Toast.LENGTH_SHORT).show();
+                        } else {
+                            //Set & Display a loading dialog
+                            mProgressDialog.setMessage("Buying...");
+                            mProgressDialog.show();
+                            //Get current time
+                            String datetime = new SimpleDateFormat("yyyy-MM-dd hh:mm a").format(new Date());
+                            //Get the user's message
+                            String userMessage = mUser.getDisplayName() + " has bought " + quantity + " item(s)";
+                            //Get a message id from Firebase Database
+                            final String messageID = mDatabaseReference.child("users").child(mItemSellerID).child(DB_MESSAGES).push().getKey();
+                            //Create a new message
+                            Message message = new Message(userMessage, mUser.getDisplayName(), datetime, mItemName, messageID, muserId);
+                            //Save the message
+                            mDatabaseReference.child("users").child(mItemSellerID).child(DB_MESSAGES).child(messageID).setValue(message).addOnSuccessListener(SingleListingActivity.this, new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    if (mItemQuantity == quantity){
+                                        mDatabaseReference.child("Listings").child(mItemID).child("itemCompleted").setValue(true);
+                                        mDatabaseReference.child("Listings").child(mItemID).child("itemQuantity").setValue(mItemQuantity - quantity);
+                                    } else {
+                                        mDatabaseReference.child("Listings").child(mItemID).child("itemQuantity").setValue(mItemQuantity - quantity);
+                                    }
+                                    Toast.makeText(getBaseContext(), "Thank you for your purchase", Toast.LENGTH_LONG).show();
+                                    //Close the progress dialog
+                                    mProgressDialog.dismiss();
+                                    finish();
+                                }
+                            });
+                        }
                     }
                 }
             });

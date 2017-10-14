@@ -65,6 +65,10 @@ public class
 MyAccountActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    private static final String DB_LISTING = "Listings";
+    private static final String DB_USERS = "Users";
+    private static final String DB_USERNAME = "username";
+
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private FirebaseUser mUser = mAuth.getCurrentUser();
     private FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
@@ -145,7 +149,7 @@ MyAccountActivity extends AppCompatActivity
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
         currentListingsRV.addItemDecoration(dividerItemDecoration);
 
-        DatabaseReference ref = mDatabase.getReference().child("users").child(userID).child("Listings");
+        DatabaseReference ref = mDatabase.getReference().child(DB_USERS).child(userID).child(DB_LISTING);
 
         Query query = ref.orderByChild("itemDeleted").equalTo(false);
         FirebaseRecyclerAdapter<Listing, ListingPreviewHolder> mAdapter = new FirebaseRecyclerAdapter<Listing, ListingPreviewHolder>(
