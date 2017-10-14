@@ -22,7 +22,9 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.riversidecorps.rebuy.models.UserInformation;
+import com.riversidecorps.rebuy.R;
+
+import java.util.Objects;
 
 import java.util.Objects;
 

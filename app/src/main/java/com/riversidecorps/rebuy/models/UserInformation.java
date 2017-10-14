@@ -6,7 +6,7 @@ package com.riversidecorps.rebuy.models;
  * @version 1.0
  * @since 22.08.2017
  */
-public class UserInformation {
+class UserInformation {
 
     private String mEmail;
     private String mUsername;
@@ -16,7 +16,7 @@ public class UserInformation {
      * @param email email of the user
      * @param username username of the user
      */
-    public UserInformation(String email, String username){
+    UserInformation(String email, String username){
         mEmail = email;
         mUsername = username;
     }
