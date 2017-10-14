@@ -80,7 +80,7 @@
     <!-- Strings for progress dialogs -->
     <string name="login_message">Logging in…</string>
     <string name="creating_listing_message">Creating Listing…</string>
-
+    <string name="reply_message">Replying Message…</string>
 
     <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
     <string name="quickstart_message">Click the SUBSCRIBE TO NEWS button below to subscribe to the
@@ -98,4 +98,5 @@
      -->
     <string name="default_notification_channel_name" translatable="true">News</string>
     <string name="title_activity_modify_listing">Modify a Listing</string>
+    <string name="no_data_available">No data available</string>
 </resources>

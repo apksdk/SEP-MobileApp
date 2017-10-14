@@ -2,25 +2,29 @@ package com.riversidecorps.rebuy;
 
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
@@ -29,6 +33,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.riversidecorps.rebuy.adapter.ItemAdapter;
 import com.riversidecorps.rebuy.models.Listing;
@@ -39,7 +44,7 @@ import java.util.Objects;
 import static android.content.ContentValues.TAG;
 
 public class ViewListingsActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, SearchView.OnQueryTextListener {
     private RecyclerView mRecyclerView;
     private ItemAdapter mAdapter;
     private ArrayList<Listing> mItemList = new ArrayList<>();
@@ -48,14 +53,13 @@ public class ViewListingsActivity extends AppCompatActivity
     private FirebaseAuth.AuthStateListener mAuthListener;
     private DatabaseReference mdatabaseReference;
     private FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
-    private SwipeRefreshLayout swipeContainer;
     private String userID;
     private String userName;
+    private String mfilter;
     private static final String AUTH_IN = "onAuthStateChanged:signed_in:";
     private static final String AUTH_OUT = "onAuthStateChanged:signed_out";
     private static final String LISTINGS = "Listings";
 
-    //TextView loginName = (TextView) findViewById(R.id.login_name);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,27 +110,6 @@ public class ViewListingsActivity extends AppCompatActivity
                     } else {
                         mItemList.add(listing);
                     }
-
-
-//                        String name = listing.getItemName();
-//                        String description = listing.getItemDescription();
-//                        String price = listing.getItemPrice();
-//                        Long quantity = Long.valueOf(listing.getItemQuantity());
-//                        String sellerName = listing.getItemSeller();
-//                        String itemID = messageSnapshot.getKey();
-//                        String itemDate = listing.getCreatedDate();
-//                        DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-//                        String itemSellerId = listing.getItemSellerId();
-
-//                        try {
-//                            Date date = format.parse(itemDate);
-//                            Listing newListing = new Listing(sellerName, name, Integer.parseInt(quantity.toString()), price, description, itemDate);
-//                            newListing.setItemId(itemID);
-//                            newListing.setItemSellerId(itemSellerId);
-//                            mItemList.add(newListing);
-//                        } catch (ParseException e) {
-//                            e.printStackTrace();
-//                        }
                 }
                 mAdapter.notifyDataSetChanged();
             }
@@ -176,24 +159,6 @@ public class ViewListingsActivity extends AppCompatActivity
                 // ...
             }
         };
-
-
-        swipeContainer = findViewById(R.id.swipeContainer);
-        // Setup refresh listener which triggers new data loading
-        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                swipeContainer.setRefreshing(true);
-                // Make sure you call swipeContainer.setRefreshing(false)
-                // once the network request has completed successfully.
-                getResultsFromApi();
-            }
-        });
-        // Configure the refreshing colors
-        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
-                android.R.color.holo_green_light,
-                android.R.color.holo_orange_light,
-                android.R.color.holo_red_light);
     }
 
     @Override
@@ -293,7 +258,29 @@ public class ViewListingsActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         //Inflates the menu menu_other which includes logout and quit functions.
-        getMenuInflater().inflate(R.menu.my_account, menu);
+        getMenuInflater().inflate(R.menu.search_listings, menu);
+        MenuItem searchItem = menu.findItem(R.id.search);
+        SearchView searchView = (SearchView) searchItem.getActionView();
+        searchView.setOnQueryTextListener(this);
+        changeSearchViewTextColor(searchView);
+        MenuItemCompat.setOnActionExpandListener(searchItem,
+                new MenuItemCompat.OnActionExpandListener() {
+                    @Override
+                    public boolean onMenuItemActionExpand(MenuItem menuItem) {
+                        return true;
+                    }
+
+                    @Override
+                    public boolean onMenuItemActionCollapse(MenuItem menuItem) {
+                        Toast.makeText(getApplicationContext(), "onMenuItemActionCollapse", Toast.LENGTH_SHORT).show();
+                      /*  datasource.open();
+                        mReminderList.clear();
+                        mReminderList.addAll(datasource.findAll());
+                        mAdapter.notifyDataSetChanged();
+                        datasource.close();*/
+                        return true;
+                    }
+                });
         return true;
     }
 
@@ -323,7 +310,91 @@ public class ViewListingsActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+
+    public void searchFromFirebase(String keywords){
+
+        final String keyword=keywords;
+        DatabaseReference userRef = mDatabase.getReference().child("Listings").child(userID).child("username");
+        Query query = mdatabaseReference.child("Listings").orderByChild("itemName");
+        query.addValueEventListener(new ValueEventListener()
+        {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                mItemList.removeAll(mItemList);
+                for (DataSnapshot messageSnapshot : snapshot.getChildren()) {
+                    Boolean isDeleted = (Boolean) messageSnapshot.child("itemDeleted").getValue();
+                    //If the item is marked as deleted skip to the next item
+                    if (isDeleted) {
+                        continue;
+                    }
+                    Listing listing = messageSnapshot.getValue(Listing.class);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                        if (!Objects.equals(listing.getItemSellerId(), userID)){
+
+                            if(listing.getItemName().contains(keyword)){
+                                mItemList.add(listing);
+                            }
+
+                        }
+                    } else {
+                        mItemList.add(listing);
+                    }
+                }
+                mAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("The read failed: " + databaseError.getCode());
+            }
+        });
+
+
+
+        // Attach a listener to read the data at our posts reference
+      //  mDatabase.getReference().child(LISTINGS).addValueEventListener(new ValueEventListener() {
+
+    //    });
+    }
+
+
     private void getResultsFromApi() {
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        mfilter = newText;
+        searchFromFirebase(newText);
+        //  datasource.open();
+        //mItemList.clear();
+        //      mItemList.addAll(datasource.filterReminder(newText));
+
+        mAdapter.notifyDataSetChanged();
+        //       datasource.close();
+        return false;
+    }
+
+    /**
+     *  Change the text colour in searchview
+     * @param view
+     */
+    private void changeSearchViewTextColor(View view) {
+        if (view != null) {
+            if (view instanceof TextView) {
+                ((TextView) view).setTextColor(Color.WHITE);
+                return;
+            } else if (view instanceof ViewGroup) {
+                ViewGroup viewGroup = (ViewGroup) view;
+                for (int i = 0; i < viewGroup.getChildCount(); i++) {
+                    changeSearchViewTextColor(viewGroup.getChildAt(i));
+                }
+            }
+        }
     }
 
 }

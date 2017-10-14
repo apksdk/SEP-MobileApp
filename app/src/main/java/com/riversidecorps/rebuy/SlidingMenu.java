@@ -16,6 +16,7 @@ public class SlidingMenu extends HorizontalScrollView {
 
     //swipe bar ratio
     private static final float radio = 0.43f;
+    private static final float screen_radio = 0.99f;
     private final int mScreenWidth;
     private final int mMenuWidth;
 
@@ -25,7 +26,7 @@ public class SlidingMenu extends HorizontalScrollView {
 
     public SlidingMenu(final Context context, AttributeSet attrs) {
         super(context, attrs);
-        mScreenWidth = ScreenUtil.getScreenWidth(context);
+        mScreenWidth = (int) (ScreenUtil.getScreenWidth(context)* screen_radio);
         mMenuWidth = (int) (mScreenWidth * radio);
         setOverScrollMode(View.OVER_SCROLL_NEVER);
         setHorizontalScrollBarEnabled(false);

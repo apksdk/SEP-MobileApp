@@ -295,17 +295,15 @@ public class SingleListingActivity extends AppCompatActivity
                         Toast.makeText(SingleListingActivity.this, "Please enter a message before sending.", Toast.LENGTH_SHORT).show();
                     } else {
                         //Set & Display a loading dialog
-                        mProgressDialog.setMessage("Sending Message...");
+                        mProgressDialog.setMessage(getString(R.string.reply_message));
                         mProgressDialog.show();
                         //Get current time
-                        String datetime = new SimpleDateFormat("yyyy-MM-dd hh:mm a").format(new Date());
+                        String datetime = new SimpleDateFormat("yyyy-MM-dd HH:MM").format(new Date());
                         //Get the user's message
                         String userMessage = messageInput.getText().toString();
                         //Get a message id from Firebase Database
                         final String messageID = mDatabaseReference.child("users").child(mItemSellerID).child(DB_MESSAGES).push().getKey();
                         //Create a new message
-
-
                         Message message = new Message(userMessage, mUser.getDisplayName(), datetime, mItemName,messageID,muserId);
                         //Save the message
                         mDatabaseReference.child("users").child(mItemSellerID).child(DB_MESSAGES).child(messageID).setValue(message).addOnSuccessListener(SingleListingActivity.this, new OnSuccessListener<Void>() {

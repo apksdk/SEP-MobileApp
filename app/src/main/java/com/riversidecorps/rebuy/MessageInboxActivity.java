@@ -1,9 +1,12 @@
 package com.riversidecorps.rebuy;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -18,7 +21,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
@@ -33,6 +35,7 @@ import com.riversidecorps.rebuy.models.Message;
 
 import java.util.ArrayList;
 
+import static android.R.attr.id;
 import static android.content.ContentValues.TAG;
 
 public class MessageInboxActivity extends AppCompatActivity
@@ -41,13 +44,15 @@ public class MessageInboxActivity extends AppCompatActivity
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseUser mUser;
-    private FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
     private DatabaseReference mDatabaseReference;
-    private ArrayList<Message> mMessageList= new ArrayList<>();
+    private ArrayList<Message> mMessageList = new ArrayList<>();
     private static final String AUTH_IN = "onAuthStateChanged:signed_in:";
     private static final String AUTH_OUT = "onAuthStateChanged:signed_out";
     private com.riversidecorps.rebuy.adapter.messageAdapter mAdapter;
     private RecyclerView mRecyclerView;
+    private TextView mEmptyView;
+    private int messageCount = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,7 +63,7 @@ public class MessageInboxActivity extends AppCompatActivity
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
         mDatabaseReference = FirebaseDatabase.getInstance().getReference();
-
+        mEmptyView = findViewById(R.id.empty_view);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -104,19 +109,11 @@ public class MessageInboxActivity extends AppCompatActivity
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
     }
+
+    //
     private void init() {
         final messageAdapter messageAdapter = new messageAdapter(mMessageList, this);
-        messageAdapter.setOnClickListener(new messageAdapter.OnClickListener() {
-            @Override
-            public void onMenuClick(int position, boolean top) {
-                //   data.set(position, top ? "取消置顶" : "置顶");
-            }
-
-            @Override
-            public void onContentClick(int position) {
-                Toast.makeText(MessageInboxActivity.this, "click pos = " + position, Toast.LENGTH_SHORT).show();
-            }
-        });
+        String userId = mUser.getUid();
         mRecyclerView.setAdapter(messageAdapter);
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -126,25 +123,51 @@ public class MessageInboxActivity extends AppCompatActivity
             }
         });
 
+        mDatabaseReference.child("users").child(userId).child("messages").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                messageCount = (int) snapshot.getChildrenCount();
+            }
 
-        String userId = mUser.getUid();
-        mDatabaseReference.child("users").child(userId).child("messages").addValueEventListener (new ValueEventListener() {
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("The read failed: " + databaseError.getCode());
+            }
+        });
+
+
+        mDatabaseReference.child("users").child(userId).child("messages").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 mMessageList.removeAll(mMessageList);
                 for (DataSnapshot messageSnapshot : snapshot.getChildren()) {
-
-                    String content = (String) messageSnapshot.child("content").getValue();
-                    String sender = (String) messageSnapshot.child("sender").getValue();
-                    String datetime = (String) messageSnapshot.child("datetime").getValue();
-                    String title = (String) messageSnapshot.child("title").getValue();
-                    String message_id = (String) messageSnapshot.child("message_id").getValue();
-                    String sender_id = (String) messageSnapshot.child("sender_id").getValue();
-                    Message message=new Message(content,sender,datetime,title, message_id,sender_id);
+                    Message message = messageSnapshot.getValue(Message.class);
                     mMessageList.add(message);
-
                 }
                 messageAdapter.notifyDataSetChanged();
+                if (messageAdapter.getItemCount() == 0) {
+                    mRecyclerView.setVisibility(View.GONE);
+                    mEmptyView.setVisibility(View.VISIBLE);
+                } else {
+                    mRecyclerView.setVisibility(View.VISIBLE);
+                    mEmptyView.setVisibility(View.GONE);
+                }
+                if (messageAdapter.getItemCount() > messageCount) {
+                    NotificationManager mNotifyMgr =
+                            (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                    PendingIntent contentIntent = PendingIntent.getActivity(
+                            getApplicationContext(), 0, new Intent(getApplicationContext(), MessageInboxActivity.class), 0);
+
+                    NotificationCompat.Builder mNotifyBuilder =
+                            new NotificationCompat.Builder(getApplicationContext())
+                                    .setContentTitle("New Message")
+                                    .setContentText("You've received new messages.")
+                                    .setSmallIcon(R.drawable.ic_menu_message_inbox)
+                                    .setFullScreenIntent(contentIntent, false);
+                    mNotifyMgr.notify(id, mNotifyBuilder.build());
+
+                }
+
             }
 
             @Override
@@ -153,6 +176,7 @@ public class MessageInboxActivity extends AppCompatActivity
             }
         });
     }
+
     //On start method
     @Override
     public void onStart() {
@@ -170,8 +194,10 @@ public class MessageInboxActivity extends AppCompatActivity
             mAuth.removeAuthStateListener(mAuthListener);
         }
     }
+
     /**
      * Creates the options menu on the action bar.
+     *
      * @param menu Menu at the top right of the screen
      * @return true
      */
@@ -184,12 +210,13 @@ public class MessageInboxActivity extends AppCompatActivity
 
     /**
      * Sets a listener that triggers when an option from the taskbar menu is selected.
+     *
      * @param item Which item on the menu was selected.
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         //Finds which item was selected
-        switch(item.getItemId()){
+        switch (item.getItemId()) {
             //If item is logout
             case R.id.action_logout:
                 //Sign out of the authenticator and return to login activity.
