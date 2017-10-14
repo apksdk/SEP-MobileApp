@@ -22,9 +22,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.riversidecorps.rebuy.R;
-
-import java.util.Objects;
+import com.riversidecorps.rebuy.models.UserInformation;
 
 import java.util.Objects;
 
@@ -269,6 +267,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                         //If unsuccessful show a toast telling the user
                     } else {
                         Toast.makeText(RegisterActivity.this, REGISTER_FAILED, Toast.LENGTH_SHORT).show();
+                        progressDialog.dismiss();
                     }
                 }
             });
