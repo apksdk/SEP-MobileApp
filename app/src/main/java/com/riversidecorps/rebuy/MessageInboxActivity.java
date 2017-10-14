@@ -1,9 +1,12 @@
 package com.riversidecorps.rebuy;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -32,6 +35,7 @@ import com.riversidecorps.rebuy.models.Message;
 
 import java.util.ArrayList;
 
+import static android.R.attr.id;
 import static android.content.ContentValues.TAG;
 
 public class MessageInboxActivity extends AppCompatActivity
@@ -40,7 +44,6 @@ public class MessageInboxActivity extends AppCompatActivity
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseUser mUser;
-    private FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
     private DatabaseReference mDatabaseReference;
     private ArrayList<Message> mMessageList = new ArrayList<>();
     private static final String AUTH_IN = "onAuthStateChanged:signed_in:";
@@ -48,6 +51,8 @@ public class MessageInboxActivity extends AppCompatActivity
     private com.riversidecorps.rebuy.adapter.messageAdapter mAdapter;
     private RecyclerView mRecyclerView;
     private TextView mEmptyView;
+    private int messageCount = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,7 +64,6 @@ public class MessageInboxActivity extends AppCompatActivity
         mUser = mAuth.getCurrentUser();
         mDatabaseReference = FirebaseDatabase.getInstance().getReference();
         mEmptyView = findViewById(R.id.empty_view);
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -106,8 +110,10 @@ public class MessageInboxActivity extends AppCompatActivity
 
     }
 
+    //
     private void init() {
         final messageAdapter messageAdapter = new messageAdapter(mMessageList, this);
+        String userId = mUser.getUid();
         mRecyclerView.setAdapter(messageAdapter);
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -117,8 +123,19 @@ public class MessageInboxActivity extends AppCompatActivity
             }
         });
 
+        mDatabaseReference.child("users").child(userId).child("messages").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                messageCount = (int) snapshot.getChildrenCount();
+            }
 
-        String userId = mUser.getUid();
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("The read failed: " + databaseError.getCode());
+            }
+        });
+
+
         mDatabaseReference.child("users").child(userId).child("messages").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
@@ -128,13 +145,29 @@ public class MessageInboxActivity extends AppCompatActivity
                     mMessageList.add(message);
                 }
                 messageAdapter.notifyDataSetChanged();
-                if(messageAdapter.getItemCount()==0){
+                if (messageAdapter.getItemCount() == 0) {
                     mRecyclerView.setVisibility(View.GONE);
                     mEmptyView.setVisibility(View.VISIBLE);
-                }else{
+                } else {
                     mRecyclerView.setVisibility(View.VISIBLE);
                     mEmptyView.setVisibility(View.GONE);
                 }
+                if (messageAdapter.getItemCount() > messageCount) {
+                    NotificationManager mNotifyMgr =
+                            (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                    PendingIntent contentIntent = PendingIntent.getActivity(
+                            getApplicationContext(), 0, new Intent(getApplicationContext(), MessageInboxActivity.class), 0);
+
+                    NotificationCompat.Builder mNotifyBuilder =
+                            new NotificationCompat.Builder(getApplicationContext())
+                                    .setContentTitle("New Message")
+                                    .setContentText("You've received new messages.")
+                                    .setSmallIcon(R.drawable.ic_menu_message_inbox)
+                                    .setFullScreenIntent(contentIntent, false);
+                    mNotifyMgr.notify(id, mNotifyBuilder.build());
+
+                }
+
             }
 
             @Override
