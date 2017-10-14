@@ -105,13 +105,13 @@ public class messageAdapter extends RecyclerView.Adapter<messageAdapter.MyViewHo
         holder.imageView.setBackgroundResource(R.drawable.ic_message_inbox);
         holder.messagePreviewTV.setText(messageLists.get(position).getContent());
         holder.messageAuthorTV.setText(messageLists.get(position).getSender());
-        holder.messageDateTV.setText(messageLists.get(position).getDatetime());
+        holder.messageDateTV.setText(messageLists.get(position).getDateTime());
         holder.messageTitleTV.setText(messageLists.get(position).getTitle());
         holder.delete_message.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 closeOpenMenu();
-                String message_id = messageLists.get(position).getMessage_id();
+                String message_id = messageLists.get(position).getMessageId();
                 String userId = myFirebaseUser.getUid();
                 mdatabaseReference.child("users").child(userId).child("messages").child(message_id).removeValue();
 
@@ -143,7 +143,7 @@ public class messageAdapter extends RecyclerView.Adapter<messageAdapter.MyViewHo
                             progressDialog.show();
                             String datetime = new SimpleDateFormat("yyyy-MM-dd HH:MM").format(new Date());
                             String content = messageInput.getText().toString();
-                            String sender_id = messageLists.get(position).getSender_id();
+                            String sender_id = messageLists.get(position).getSenderId();
                             String item_name = messageLists.get(position).getTitle();
                             String userId = myFirebaseUser.getUid();
                             final String message_id = mdatabaseReference.child("users").child(sender_id).child("messages").push().getKey();

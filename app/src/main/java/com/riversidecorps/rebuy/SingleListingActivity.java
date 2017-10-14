@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -27,18 +26,13 @@ import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.riversidecorps.rebuy.models.Listing;
 import com.riversidecorps.rebuy.models.Message;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -66,7 +60,7 @@ public class SingleListingActivity extends AppCompatActivity
     private String mItemDes;
     private Integer mItemQuantity;
     private String mItemSellerID;
-    private String muserId;
+    private String mUserId;
     private ArrayList<String> mItemImages = new ArrayList<>();
 
     private ImageView mItemImageIV;
@@ -114,7 +108,7 @@ public class SingleListingActivity extends AppCompatActivity
         mItemSellerID = getIntent().getStringExtra("itemSellerId");
         // Get database Reference
         mDatabaseReference = mDatabase.getReference();
-        muserId = mUser.getUid();
+        mUserId = mUser.getUid();
         //Set up UI
         mNameTv = findViewById(R.id.itemNameTV);
         mNameTv.setText(mItemName);
@@ -131,10 +125,13 @@ public class SingleListingActivity extends AppCompatActivity
         mOfferBTN = findViewById(R.id.offerBTN);
         mBuyBTN = findViewById(R.id.buyBTN);
         mMessageBTN = findViewById(R.id.messageBTN);
+
+        //Set on click listeners for each button
         mOfferBTN.setOnClickListener(this);
         mBuyBTN.setOnClickListener(this);
         mMessageBTN.setOnClickListener(this);
 
+        //Set up nav UI
         final View navView = navigationView.getHeaderView(0);
         final TextView usernameNavTV = navView.findViewById(R.id.userNavIDTV);
         TextView emailNavTV = navView.findViewById(R.id.userNavEmailTV);
@@ -231,17 +228,22 @@ public class SingleListingActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_my_account) {
-            //Do nothing
+            //Move to the MyAccount Activity
             startActivity(new Intent(this, MyAccountActivity.class));
         } else if (id == R.id.nav_message_inbox) {
+            //Move to the MessageInbox Activity
             startActivity(new Intent(this, MessageInboxActivity.class));
         } else if (id == R.id.nav_view_offers) {
+            //Move to the ViewOffers Activity
             startActivity(new Intent(this, ViewOffersActivity.class));
         } else if (id == R.id.nav_search_listings) {
+            //Move to the SearchListings Activity
             startActivity(new Intent(this, SearchListingsActivity.class));
         } else if (id == R.id.nav_create_listing) {
+            //Move to the CreateListing Activity
             startActivity(new Intent(this, CreateListingActivity.class));
         } else if (id == R.id.nav_view_listings) {
+            //Move to the ViewListing Activity
             finish();
         }
 
@@ -300,13 +302,13 @@ public class SingleListingActivity extends AppCompatActivity
                         mProgressDialog.setMessage(getString(R.string.reply_message));
                         mProgressDialog.show();
                         //Get current time
-                        String datetime = new SimpleDateFormat("yyyy-MM-dd HH:MM").format(new Date());
+                        String dateTime = new SimpleDateFormat("yyyy-MM-dd HH:MM").format(new Date());
                         //Get the user's message
                         String userMessage = messageInput.getText().toString();
                         //Get a message id from Firebase Database
                         final String messageID = mDatabaseReference.child(DB_USERS).child(mItemSellerID).child(DB_MESSAGES).push().getKey();
                         //Create a new message
-                        Message message = new Message(userMessage, mUser.getDisplayName(), datetime, mItemName,messageID,muserId);
+                        Message message = new Message(userMessage, mUser.getDisplayName(), dateTime, mItemName,messageID, mUserId);
                         //Save the message
                         mDatabaseReference.child(DB_USERS).child(mItemSellerID).child(DB_MESSAGES).child(messageID).setValue(message).addOnSuccessListener(SingleListingActivity.this, new OnSuccessListener<Void>() {
                             @Override
@@ -337,7 +339,7 @@ public class SingleListingActivity extends AppCompatActivity
         if (view == mBuyBTN) {
             //Create a new dialog & do initial setup
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("How man items would you like to buy?");
+            builder.setTitle("How many items would you like to buy at " + mItemPrice + " each?");
             builder.setIcon(R.drawable.ic_message_dialog);
             builder.setCancelable(false);
             final EditText quantityInput = new EditText(this);
@@ -355,13 +357,14 @@ public class SingleListingActivity extends AppCompatActivity
                     //Check if there's an input
                     if (quantityInput.getText().toString().isEmpty()) {
                         //Display error message
-                        Toast.makeText(SingleListingActivity.this, "Please enter a quantity before buying.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SingleListingActivity.this, "Please enter a quantity before buying", Toast.LENGTH_SHORT).show();
                     } else {
+                        //Grab the input
                         final Integer quantity = Integer.parseInt(quantityInput.getText().toString());
-                        //Check if there is a
+                        //Check if the user inputs more than the seller is offering
                         if(quantity > mItemQuantity){
                             //Display error message
-                            Toast.makeText(SingleListingActivity.this, "Please enter a quantity smaller than the amount of listed items", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SingleListingActivity.this, "Please enter a quantity smaller than the amount of listed items", Toast.LENGTH_LONG).show();
                         } else {
                             //Set & Display a loading dialog
                             mProgressDialog.setMessage("Buying...");
@@ -369,19 +372,23 @@ public class SingleListingActivity extends AppCompatActivity
                             //Get current time
                             String datetime = new SimpleDateFormat("yyyy-MM-dd hh:mm a").format(new Date());
                             //Get the user's message
-                            String userMessage = mUser.getDisplayName() + " has bought " + quantity + " item(s)";
+                            String userMessage = mUser.getDisplayName() + " has bought " + quantity + " " + mItemName + "(s)";
                             //Get a message id from Firebase Database
                             final String messageID = mDatabaseReference.child(DB_USERS).child(mItemSellerID).child(DB_MESSAGES).push().getKey();
                             //Create a new message
-                            Message message = new Message(userMessage, mUser.getDisplayName(), datetime, mItemName, messageID, muserId);
+                            Message message = new Message(userMessage, mUser.getDisplayName(), datetime, mItemName, messageID, mUserId);
                             //Save the message
                             mDatabaseReference.child(DB_USERS).child(mItemSellerID).child(DB_MESSAGES).child(messageID).setValue(message).addOnSuccessListener(SingleListingActivity.this, new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
+                                    //If the amount bought sets listing's quantity to 0
                                     if (mItemQuantity == quantity){
+                                        //Set the listing's quantity to 0 and set it to complete in both location (under listings and user's listings)
                                         mDatabaseReference.child(DB_LISTING).child(mItemID).child("itemCompleted").setValue(true);
-                                        mDatabaseReference.child(DB_LISTING).child(mItemID).child("itemQuantity").setValue(mItemQuantity - quantity);
+                                        mDatabaseReference.child(DB_USERS).child(mItemSellerID).child(DB_LISTING).child(mItemID).child("itemCompleted").setValue(true);
+                                        mDatabaseReference.child(DB_LISTING).child(mItemID).child("itemQuantity").setValue(0);
                                     } else {
+                                        //Sets listing's quantity to new quantity
                                         mDatabaseReference.child(DB_LISTING).child(mItemID).child("itemQuantity").setValue(mItemQuantity - quantity);
                                     }
                                     Toast.makeText(getBaseContext(), "Thank you for your purchase", Toast.LENGTH_LONG).show();

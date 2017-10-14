@@ -7,18 +7,18 @@ package com.riversidecorps.rebuy.models;
 public class Message {
     private String content;
     private String sender;
-    private String datetime;
+    private String dateTime;
     private String title;
-    private String message_id;
-    private String sender_id;
+    private String messageId;
+    private String senderId;
 
-    public Message(String content, String sender, String datetime, String title, String message_id, String sender_id) {
+    public Message(String content, String sender, String dateTime, String title, String messageId, String senderId) {
         this.content = content;
         this.sender = sender;
-        this.datetime = datetime;
+        this.dateTime = dateTime;
         this.title = title;
-        this.message_id = message_id;
-        this.sender_id = sender_id;
+        this.messageId = messageId;
+        this.senderId = senderId;
     }
 
     public Message() {
@@ -32,12 +32,12 @@ public class Message {
         this.sender = sender;
     }
 
-    public String getDatetime() {
-        return datetime;
+    public String getDateTime() {
+        return dateTime;
     }
 
-    public void setDatetime(String datetime) {
-        this.datetime = datetime;
+    public void setDateTime(String dateTime) {
+        this.dateTime = dateTime;
     }
 
     public String getTitle() {
@@ -56,19 +56,19 @@ public class Message {
         this.content = content;
     }
 
-    public String getMessage_id() {
-        return message_id;
+    public String getMessageId() {
+        return messageId;
     }
 
-    public void setMessage_id(String message_id) {
-        this.message_id = message_id;
+    public void setMessageId(String messageId) {
+        this.messageId = messageId;
     }
 
-    public String getSender_id() {
-        return sender_id;
+    public String getSenderId() {
+        return senderId;
     }
 
-    public void setSender_id(String sender_id) {
-        this.sender_id = sender_id;
+    public void setSenderId(String senderId) {
+        this.senderId = senderId;
     }
 }

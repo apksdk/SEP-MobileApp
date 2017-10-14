@@ -15,8 +15,8 @@ public class Offer {
     private String mOfferPrice;
     private String mOfferDescription;
     private ArrayList<String> mItemImages;
-    private Boolean mItemDeleted;
-    private Boolean mItemCompleted;
+    private Boolean mOfferDeleted;
+    private Boolean mOfferCompleted;
     private String mOfferDate;
     private String mItemSeller;
 
@@ -38,8 +38,8 @@ public class Offer {
         this.mOfferDate = mOfferDate;
         this.mOfferDescription = mOfferDescription;
         this.mItemSeller = mItemSeller;
-        mItemDeleted = false;
-        mItemCompleted = false;
+        mOfferDeleted = false;
+        mOfferCompleted = false;
     }
 
     public String getItemBuyer() {
@@ -95,17 +95,17 @@ public class Offer {
      *
      * @return the item deleted
      */
-    public Boolean getItemDeleted() {
-        return mItemDeleted;
+    public Boolean getOfferDeleted() {
+        return mOfferDeleted;
     }
 
     /**
      * Sets item deleted.
      *
-     * @param itemDeleted the item deleted
+     * @param offerDeleted the item deleted
      */
-    public void setItemDeleted(Boolean itemDeleted) {
-        mItemDeleted = itemDeleted;
+    public void setOfferDeleted(Boolean offerDeleted) {
+        mOfferDeleted = offerDeleted;
     }
 
     /**
@@ -113,17 +113,17 @@ public class Offer {
      *
      * @return the item completed
      */
-    public Boolean getItemCompleted() {
-        return mItemCompleted;
+    public Boolean getOfferCompleted() {
+        return mOfferCompleted;
     }
 
     /**
      * Sets item completed.
      *
-     * @param itemCompleted the item completed
+     * @param offerCompleted the item completed
      */
-    public void setItemCompleted(Boolean itemCompleted) {
-        mItemCompleted = itemCompleted;
+    public void setOfferCompleted(Boolean offerCompleted) {
+        mOfferCompleted = offerCompleted;
     }
 
     public String getOfferDate() {

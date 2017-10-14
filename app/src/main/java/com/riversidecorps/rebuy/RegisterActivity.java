@@ -309,6 +309,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     Toast.makeText(RegisterActivity.this, LOGIN_FAILED, Toast.LENGTH_SHORT).show();
                     //Send the user to the login screen to attempt to login again
                     startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+                    finish();
                 }
             }
         });
