@@ -1,4 +1,4 @@
-package com.riversidecorps.rebuy;
+package com.riversidecorps.rebuy.models;
 
 /**
  * Class to store account details while they are moved to the database
