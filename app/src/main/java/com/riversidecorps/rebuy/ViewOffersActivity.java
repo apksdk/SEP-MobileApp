@@ -96,8 +96,14 @@ public class ViewOffersActivity extends AppCompatActivity
                     String offerPrice = (String) messageSnapshot.child("offerPrice").getValue();
                     String offerDescription = (String) messageSnapshot.child("offerDescription").getValue();
                     String quantity = (String) messageSnapshot.child("offerQuantity").getValue();
-                    String sellerId =  (String) messageSnapshot.child("itemSellerId").getValue();
+                    String sellerId =  (String) messageSnapshot.child("sellerId").getValue();
                     String offerDate = (String) messageSnapshot.child("offerDate").getValue();
+                    Boolean isDeleted = (Boolean) messageSnapshot.child("itemDeleted").getValue();
+                    Boolean isCompleted = (Boolean) messageSnapshot.child("itemCompleted").getValue();
+                    //If the item is marked as deleted or completed skip to the next item
+                    if (isDeleted || isCompleted) {
+                        continue;
+                    }
                     Offer newOffer = new Offer(buyer,itemName , quantity,
                             originalPrice, offerPrice, offerDate, offerDescription, sellerId);
                     newOffer.setOfferID(mOfferID);
@@ -294,6 +300,7 @@ public class ViewOffersActivity extends AppCompatActivity
         TextView originalPrice = (TextView) mView.findViewById(R.id.item_original_price);
         TextView offerPrice = (TextView) mView.findViewById(R.id.item_offer_price);
         TextView offerQuantity = (TextView) mView.findViewById(R.id.offer_quantity);
+        TextView offerDescriptionPre = (TextView) mView.findViewById(R.id.description_pre);
         TextView offerDescription = (TextView) mView.findViewById(R.id.offer_description);
         TextView offerDate = (TextView) mView.findViewById(R.id.offer_date);
 
@@ -307,7 +314,13 @@ public class ViewOffersActivity extends AppCompatActivity
                 originalPrice.setText(offer.getItemOriginalPrice());
                 offerPrice.setText(offer.getOfferPrice());
                 offerQuantity.setText(offer.getOfferQuantity());
-                offerDescription.setText(offer.getOfferDescription());
+                String desCheck = offer.getOfferDescription();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    if(Objects.equals(desCheck, "")){
+                        offerDescriptionPre.setText("");
+                    }
+                }
+                offerDescription.setText(desCheck);
                 offerDate.setText(offer.getOfferDate());
             }
         }

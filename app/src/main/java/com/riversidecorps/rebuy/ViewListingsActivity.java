@@ -99,8 +99,9 @@ public class ViewListingsActivity extends AppCompatActivity
                 mItemList.removeAll(mItemList);
                 for (DataSnapshot messageSnapshot : snapshot.getChildren()) {
                     Boolean isDeleted = (Boolean) messageSnapshot.child("itemDeleted").getValue();
-                    //If the item is marked as deleted skip to the next item
-                    if (isDeleted) {
+                    Boolean isCompleted = (Boolean) messageSnapshot.child("itemCompleted").getValue();
+                    //If the item is marked as deleted or completed skip to the next item
+                    if (isDeleted || isCompleted) {
                         continue;
                     }
                     Listing listing = messageSnapshot.getValue(Listing.class);
@@ -324,8 +325,9 @@ public class ViewListingsActivity extends AppCompatActivity
                 mItemList.removeAll(mItemList);
                 for (DataSnapshot messageSnapshot : snapshot.getChildren()) {
                     Boolean isDeleted = (Boolean) messageSnapshot.child("itemDeleted").getValue();
-                    //If the item is marked as deleted skip to the next item
-                    if (isDeleted) {
+                    Boolean isCompleted = (Boolean) messageSnapshot.child("itemCompleted").getValue();
+                    //If the item is marked as deleted or completed skip to the next item
+                    if (isDeleted || isCompleted) {
                         continue;
                     }
                     Listing listing = messageSnapshot.getValue(Listing.class);

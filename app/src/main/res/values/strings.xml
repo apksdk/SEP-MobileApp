@@ -99,4 +99,5 @@
     <string name="default_notification_channel_name" translatable="true">News</string>
     <string name="title_activity_modify_listing">Modify a Listing</string>
     <string name="no_data_available">No data available</string>
+    <string name="description_hint">Enter a message with your offer</string>
 </resources>

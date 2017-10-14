@@ -100,45 +100,49 @@
             android:inputType="number" />
 
         <TextView
-            android:id="@+id/itemOfferMessagePreviewTV"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/itemOfferPriceET"
-            android:layout_toRightOf="@+id/itemImagePreviewIV"
-            android:text="Buyer's Message Preview" />
-
-        <TextView
             android:id="@+id/offerAuthorTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:text="From: buyerID" />
-    </RelativeLayout>
 
-    <Button
-        android:id="@+id/makeOfferBtn"
-        style="@style/Widget.AppCompat.Button.Colored"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="29dp"
-        android:layout_marginLeft="43dp"
-        android:layout_marginStart="43dp"
-        android:text="Make offer"
-        android:theme="@style/ButtonColor" />
+    </RelativeLayout>
 
     <Button
         android:id="@+id/cancelBtn"
         style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/makeOfferBtn"
-        android:layout_alignBottom="@+id/makeOfferBtn"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginEnd="57dp"
-        android:layout_marginRight="57dp"
         android:text="Cancel"
-        android:theme="@style/ButtonColor" />
+        android:theme="@style/ButtonColor"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:id="@+id/makeOfferBtn"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Make offer"
+        android:theme="@style/ButtonColor"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <EditText
+        android:id="@+id/descriptionET"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/makeOfferBtn"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/relativeLayout"
+        android:ems="10"
+        android:hint="@string/description_hint"
+        android:inputType="textMultiLine" />
+
 
 </RelativeLayout>

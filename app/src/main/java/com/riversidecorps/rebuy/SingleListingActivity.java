@@ -267,8 +267,8 @@ public class SingleListingActivity extends AppCompatActivity
             OfferActivity.putExtra("itemPrice", mItemPrice);
             OfferActivity.putExtra("itemQuantity", mItemQuantity);
             OfferActivity.putExtra("itemDes", mItemDes);
-            OfferActivity.putExtra("itemId", mItemID);
             OfferActivity.putExtra("listingImage", mItemImages.get(0));
+            OfferActivity.putExtra("itemSellerID", mItemSellerID);
             //Start activity
             startActivity(OfferActivity);
         }
@@ -358,6 +358,7 @@ public class SingleListingActivity extends AppCompatActivity
                         Toast.makeText(SingleListingActivity.this, "Please enter a quantity before buying.", Toast.LENGTH_SHORT).show();
                     } else {
                         final Integer quantity = Integer.parseInt(quantityInput.getText().toString());
+                        //Check if there is a
                         if(quantity > mItemQuantity){
                             //Display error message
                             Toast.makeText(SingleListingActivity.this, "Please enter a quantity smaller than the amount of listed items", Toast.LENGTH_SHORT).show();

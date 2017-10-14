@@ -40,10 +40,11 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static android.content.ContentValues.TAG;
+import static com.riversidecorps.rebuy.R.id.descriptionET;
 import static com.riversidecorps.rebuy.R.id.itemImagePreviewIV;
 
 public class CreateOfferActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener,View.OnClickListener {
+        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
@@ -66,8 +67,10 @@ public class CreateOfferActivity extends AppCompatActivity
     private Button cancelBtn;
     private EditText offerPriceET;
     private EditText offerQuantityET;
+    private EditText offerDescriptionET;
     private String itemId;
     private ImageView mimageView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,6 +95,7 @@ public class CreateOfferActivity extends AppCompatActivity
         cancelBtn = (Button) findViewById(R.id.cancelBtn);
         offerPriceET = (EditText) findViewById(R.id.itemOfferPriceET);
         offerQuantityET = (EditText) findViewById(R.id.offerQuantityET);
+        offerDescriptionET = (EditText) findViewById(R.id.descriptionET);
         makeOfferBtn.setOnClickListener(this);
         cancelBtn.setOnClickListener(this);
 
@@ -110,7 +114,7 @@ public class CreateOfferActivity extends AppCompatActivity
         mimageView = findViewById(itemImagePreviewIV);
         String imagePath = "itemImageListings/" + itemId + ".png";
         //Upload image(s)
-        Log.i("imagePath",imagePath);
+        Log.i("imagePath", imagePath);
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -175,8 +179,10 @@ public class CreateOfferActivity extends AppCompatActivity
             mAuth.removeAuthStateListener(mAuthListener);
         }
     }
+
     /**
      * Creates the options menu on the action bar.
+     *
      * @param menu Menu at the top right of the screen
      * @return true
      */
@@ -189,12 +195,13 @@ public class CreateOfferActivity extends AppCompatActivity
 
     /**
      * Sets a listener that triggers when an option from the taskbar menu is selected.
+     *
      * @param item Which item on the menu was selected.
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         //Finds which item was selected
-        switch(item.getItemId()){
+        switch (item.getItemId()) {
             //If item is logout
             case R.id.action_logout:
                 //Sign out of the authenticator and return to login activity.
@@ -249,48 +256,59 @@ public class CreateOfferActivity extends AppCompatActivity
 
     @Override
     public void onClick(View view) {
-        if(view == makeOfferBtn){
+        if (view == makeOfferBtn) {
             makeOffer();
-        } else if(view == cancelBtn){
+        } else if (view == cancelBtn) {
             startActivity(new Intent(CreateOfferActivity.this, MyAccountActivity.class));
         }
     }
 
     @OnClick(R.id.makeOfferBtn)
     public void makeOffer() {
-        Integer offerQuantity = Integer.parseInt(offerQuantityET.getText().toString());
-        if(offerQuantity > mItemQuantity){
-            new AlertDialog.Builder(CreateOfferActivity.this)
-                    .setTitle("Not Enough Items")
-                    .setMessage("You have requested to buy more items than the seller is selling.")
-                    .setIcon(R.drawable.ic_dialog_warning)
-                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                             dialogInterface.dismiss();
-                        }
-                    }).show();
+        if (offerPriceET.getText().toString().isEmpty()) {
+            //Display error message
+            Toast.makeText(CreateOfferActivity.this, "Please enter an offer price", Toast.LENGTH_SHORT).show();
+        } else if (offerQuantityET.getText().toString().isEmpty()) {
+            //Display error message
+            Toast.makeText(CreateOfferActivity.this, "Please enter the amount of items you would like to make an offer for", Toast.LENGTH_LONG).show();
         } else {
-            String itemName =  itemNameTV.getText().toString().trim();
-        /*I could catch any value of the itemQuantity in Single view listing page*/
-            String originalPrice = itemOriginalPriceTV.getText().toString();
-            NumberFormat formattedP1 = NumberFormat.getCurrencyInstance(Locale.US);
-            String offerPrice = formattedP1.format(Double.parseDouble(offerPriceET.getText().toString()));
-            String itemDes = getIntent().getStringExtra("itemDes");
-            String buyerId = mUser.getDisplayName();
+            if (offerDescriptionET.getText().toString().isEmpty()) {
+                offerDescriptionET.setText("");
+            }
+            Integer offerQuantity = Integer.parseInt(offerQuantityET.getText().toString());
+            if (offerQuantity > mItemQuantity) {
+                new AlertDialog.Builder(CreateOfferActivity.this)
+                        .setTitle("Not Enough Items")
+                        .setMessage("You have requested to buy more items than the seller is selling.")
+                        .setIcon(R.drawable.ic_dialog_warning)
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                            }
+                        }).show();
+            } else {
+                String itemName = itemNameTV.getText().toString().trim();
+                String originalPrice = itemOriginalPriceTV.getText().toString();
+                NumberFormat formattedP1 = NumberFormat.getCurrencyInstance(Locale.US);
+                String offerPrice = formattedP1.format(Double.parseDouble(offerPriceET.getText().toString()));
+                String itemDes = offerDescriptionET.getText().toString();
+                String buyerId = mUser.getDisplayName();
 
-            FirebaseUser myFirebaseUser = mAuth.getCurrentUser();
-            Date date = new Date();
-            Date newDate = new Date(date.getTime() + 604800000L * 2 + 24 * 60 * 60);
-            SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd");
-            String stringDate = dt.format(newDate);
-            String itemId = getIntent().getStringExtra("itemId");
+                FirebaseUser myFirebaseUser = mAuth.getCurrentUser();
+                Date date = new Date();
+                Date newDate = new Date(date.getTime() + 604800000L * 2 + 24 * 60 * 60);
+                SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd");
+                String stringDate = dt.format(newDate);
+                String sellerId = getIntent().getStringExtra("itemSellerID");
 
-            Offer newOffer = new Offer(buyerId,itemName,offerQuantity.toString(), originalPrice,offerPrice,stringDate,itemDes, itemId);
-            databaseReference.child(DB_OFFER).push().setValue(newOffer);
-            Toast.makeText(this,"Please wait for making offer ...",Toast.LENGTH_LONG).show();
-            startActivity(new Intent(CreateOfferActivity.this, MyAccountActivity.class));
+                Offer newOffer = new Offer(buyerId, itemName, offerQuantity.toString(), originalPrice, offerPrice, stringDate, itemDes, sellerId);
+                databaseReference.child(DB_OFFER).push().setValue(newOffer);
+                Toast.makeText(this, "Please wait for making offer ...", Toast.LENGTH_LONG).show();
+                startActivity(new Intent(CreateOfferActivity.this, MyAccountActivity.class));
+            }
         }
 
     }
 }
+
