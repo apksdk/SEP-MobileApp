@@ -46,6 +46,9 @@ public class MessageInboxActivity extends AppCompatActivity
     private FirebaseUser mUser;
     private DatabaseReference mDatabaseReference;
     private ArrayList<Message> mMessageList = new ArrayList<>();
+    private static final String DB_LISTING = "Listings";
+    private static final String DB_USERS = "Users";
+    private static final String DB_MESSAGES = "Messages";
     private static final String AUTH_IN = "onAuthStateChanged:signed_in:";
     private static final String AUTH_OUT = "onAuthStateChanged:signed_out";
     private com.riversidecorps.rebuy.adapter.messageAdapter mAdapter;
@@ -123,7 +126,7 @@ public class MessageInboxActivity extends AppCompatActivity
             }
         });
 
-        mDatabaseReference.child("users").child(userId).child("messages").addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabaseReference.child(DB_USERS).child(userId).child(DB_MESSAGES).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 messageCount = (int) snapshot.getChildrenCount();
@@ -136,7 +139,7 @@ public class MessageInboxActivity extends AppCompatActivity
         });
 
 
-        mDatabaseReference.child("users").child(userId).child("messages").addValueEventListener(new ValueEventListener() {
+        mDatabaseReference.child(DB_USERS).child(userId).child(DB_MESSAGES).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 mMessageList.removeAll(mMessageList);

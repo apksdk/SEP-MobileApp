@@ -56,7 +56,9 @@ public class SingleListingActivity extends AppCompatActivity
     private DatabaseReference mDatabaseReference;
 
     private ProgressDialog mProgressDialog;
-    private static final String DB_MESSAGES = "messages";
+    private static final String DB_LISTING = "Listings";
+    private static final String DB_USERS = "Users";
+    private static final String DB_MESSAGES = "Messages";
 
     private String mItemID;
     private String mItemName;
@@ -302,11 +304,11 @@ public class SingleListingActivity extends AppCompatActivity
                         //Get the user's message
                         String userMessage = messageInput.getText().toString();
                         //Get a message id from Firebase Database
-                        final String messageID = mDatabaseReference.child("users").child(mItemSellerID).child(DB_MESSAGES).push().getKey();
+                        final String messageID = mDatabaseReference.child(DB_USERS).child(mItemSellerID).child(DB_MESSAGES).push().getKey();
                         //Create a new message
                         Message message = new Message(userMessage, mUser.getDisplayName(), datetime, mItemName,messageID,muserId);
                         //Save the message
-                        mDatabaseReference.child("users").child(mItemSellerID).child(DB_MESSAGES).child(messageID).setValue(message).addOnSuccessListener(SingleListingActivity.this, new OnSuccessListener<Void>() {
+                        mDatabaseReference.child(DB_USERS).child(mItemSellerID).child(DB_MESSAGES).child(messageID).setValue(message).addOnSuccessListener(SingleListingActivity.this, new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
                                 Toast.makeText(getBaseContext(), "Your message has been sent to the seller!", Toast.LENGTH_LONG).show();
@@ -368,18 +370,18 @@ public class SingleListingActivity extends AppCompatActivity
                             //Get the user's message
                             String userMessage = mUser.getDisplayName() + " has bought " + quantity + " item(s)";
                             //Get a message id from Firebase Database
-                            final String messageID = mDatabaseReference.child("users").child(mItemSellerID).child(DB_MESSAGES).push().getKey();
+                            final String messageID = mDatabaseReference.child(DB_USERS).child(mItemSellerID).child(DB_MESSAGES).push().getKey();
                             //Create a new message
                             Message message = new Message(userMessage, mUser.getDisplayName(), datetime, mItemName, messageID, muserId);
                             //Save the message
-                            mDatabaseReference.child("users").child(mItemSellerID).child(DB_MESSAGES).child(messageID).setValue(message).addOnSuccessListener(SingleListingActivity.this, new OnSuccessListener<Void>() {
+                            mDatabaseReference.child(DB_USERS).child(mItemSellerID).child(DB_MESSAGES).child(messageID).setValue(message).addOnSuccessListener(SingleListingActivity.this, new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
                                     if (mItemQuantity == quantity){
-                                        mDatabaseReference.child("Listings").child(mItemID).child("itemCompleted").setValue(true);
-                                        mDatabaseReference.child("Listings").child(mItemID).child("itemQuantity").setValue(mItemQuantity - quantity);
+                                        mDatabaseReference.child(DB_LISTING).child(mItemID).child("itemCompleted").setValue(true);
+                                        mDatabaseReference.child(DB_LISTING).child(mItemID).child("itemQuantity").setValue(mItemQuantity - quantity);
                                     } else {
-                                        mDatabaseReference.child("Listings").child(mItemID).child("itemQuantity").setValue(mItemQuantity - quantity);
+                                        mDatabaseReference.child(DB_LISTING).child(mItemID).child("itemQuantity").setValue(mItemQuantity - quantity);
                                     }
                                     Toast.makeText(getBaseContext(), "Thank you for your purchase", Toast.LENGTH_LONG).show();
                                     //Close the progress dialog

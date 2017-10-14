@@ -46,7 +46,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     private static final String EXIT_KEY = "EXIT";
     private static final String AUTH_IN = "onAuthStateChanged:signed_in:";
     private static final String AUTH_OUT = "onAuthStateChanged:signed_out";
-    private static final String DB_USERS = "users";
+    private static final String DB_USERS = "Users";
     private static final String DOT_COM = ".com";
     private static final String AT = "@";
 

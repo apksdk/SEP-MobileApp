@@ -321,9 +321,11 @@ MyAccountActivity extends AppCompatActivity
                 mAuth.signOut();
                 startActivity(new Intent(this, LoginActivity.class));
                 finish();
+                break;
                 //If item is reset password
             case R.id.action_reset_password:
                 startActivity(new Intent(this, ResetPasswordActivity.class));
+                break;
         }
 
         return super.onOptionsItemSelected(item);
