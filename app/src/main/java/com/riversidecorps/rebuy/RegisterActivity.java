@@ -191,10 +191,12 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     passwordEt.setError(getString(R.string.error_invalid_short_password));
                     focusView = passwordEt;
                     cancel = true;
+                    break;
                 case 1:
                     passwordEt.setError(getString(R.string.error_invalid_long_password));
                     focusView = passwordEt;
                     cancel = true;
+                    break;
             }
         }
 
@@ -210,10 +212,12 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     usernameEt.setError(getString(R.string.error_invalid_short_username));
                     focusView = usernameEt;
                     cancel = true;
+                    break;
                 case 1:
                     usernameEt.setError(getString(R.string.error_invalid_long_username));
                     focusView = usernameEt;
                     cancel = true;
+                    break;
             }
         }
 
