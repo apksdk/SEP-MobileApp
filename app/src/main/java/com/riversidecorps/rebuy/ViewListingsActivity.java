@@ -58,7 +58,8 @@ public class ViewListingsActivity extends AppCompatActivity
     private String mfilter;
     private static final String AUTH_IN = "onAuthStateChanged:signed_in:";
     private static final String AUTH_OUT = "onAuthStateChanged:signed_out";
-    private static final String LISTINGS = "Listings";
+    private static final String DB_LISTING = "Listings";
+    private static final String DB_USERNAME = "username";
 
 
     @Override
@@ -88,10 +89,10 @@ public class ViewListingsActivity extends AppCompatActivity
         userName = mUser.getDisplayName();
 
         // Attach listener to display welcome bar personalised for user's name
-        DatabaseReference userRef = mDatabase.getReference().child("users").child(userID).child("username");
+        DatabaseReference userRef = mDatabase.getReference().child("users").child(userID).child(DB_USERNAME);
 
         // Attach a listener to read the data at our posts reference
-        mDatabase.getReference().child(LISTINGS).addValueEventListener(new ValueEventListener() {
+        mDatabase.getReference().child(DB_LISTING).addValueEventListener(new ValueEventListener() {
 
             @Override
             public void onDataChange(DataSnapshot snapshot) {
@@ -314,8 +315,8 @@ public class ViewListingsActivity extends AppCompatActivity
     public void searchFromFirebase(String keywords){
 
         final String keyword=keywords;
-        DatabaseReference userRef = mDatabase.getReference().child("Listings").child(userID).child("username");
-        Query query = mdatabaseReference.child("Listings").orderByChild("itemName");
+        DatabaseReference userRef = mDatabase.getReference().child(DB_LISTING).child(userID).child(DB_USERNAME);
+        Query query = mdatabaseReference.child(DB_LISTING).orderByChild("itemName");
         query.addValueEventListener(new ValueEventListener()
         {
             @Override
