@@ -131,6 +131,7 @@ public class MessageInboxActivity extends AppCompatActivity
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 messageCount = (int) snapshot.getChildrenCount();
+                Log.i("oo", "first time: " +messageCount);
             }
 
             @Override
@@ -141,13 +142,13 @@ public class MessageInboxActivity extends AppCompatActivity
 
         mDatabaseReference.child(DB_USERS).child(userId).child(DB_MESSAGES).addChildEventListener(new ChildEventListener() {
             public void onChildAdded(DataSnapshot dataSnapshot, String previousKey) {
+              //  Toast.makeText(getApplicationContext(),"ADD NEW", Toast.LENGTH_SHORT).show();
               //  System.out.println("Add "+dataSnapshot.getKey()+" to UI after "+previousKey);
             }
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
             }
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-               messageCount=(int)dataSnapshot.getChildrenCount();
-
+               messageCount--;
             }
             public void onChildMoved(DataSnapshot dataSnapshot, String s) {
             }
@@ -187,11 +188,11 @@ public class MessageInboxActivity extends AppCompatActivity
                             new NotificationCompat.Builder(getApplicationContext())
                                     .setContentTitle("New Message")
                                     .setContentText("You've received new messages.")
-                                    .setSmallIcon(R.drawable.ic_menu_message_inbox)
+                                    .setSmallIcon(R.drawable.ic_notification)
                                     .setFullScreenIntent(contentIntent, false);
                     mNotifyMgr.notify(id, mNotifyBuilder.build());
                     messageCount=messageAdapter.getItemCount();
-
+                    Log.i("oo","after updated : " +messageCount);
                 }
 
             }

@@ -55,6 +55,8 @@ public class messageAdapter extends RecyclerView.Adapter<messageAdapter.MyViewHo
     private DatabaseReference mdatabaseReference;
     private ProgressDialog progressDialog;
     private String userName;
+    private static final String DB_USERS = "Users";
+    private static final String DB_MESSAGES = "Messages";
 
     public SlidingMenu getScrollingMenu() {
         return mScrollingMenu;
@@ -82,7 +84,7 @@ public class messageAdapter extends RecyclerView.Adapter<messageAdapter.MyViewHo
         messageLists = data;
         mContext = context;
         progressDialog = new ProgressDialog(mContext);
-        DatabaseReference userRef = mDatabase.getReference().child("users").child(myFirebaseUser.getUid()).child("username");
+        DatabaseReference userRef = mDatabase.getReference().child(DB_USERS).child(myFirebaseUser.getUid()).child("username");
         userRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -113,8 +115,7 @@ public class messageAdapter extends RecyclerView.Adapter<messageAdapter.MyViewHo
                 closeOpenMenu();
                 String message_id = messageLists.get(position).getMessageId();
                 String userId = myFirebaseUser.getUid();
-                mdatabaseReference.child("users").child(userId).child("messages").child(message_id).removeValue();
-
+                mdatabaseReference.child(DB_USERS).child(userId).child(DB_MESSAGES).child(message_id).removeValue();
             }
         });
 
@@ -146,11 +147,11 @@ public class messageAdapter extends RecyclerView.Adapter<messageAdapter.MyViewHo
                             String sender_id = messageLists.get(position).getSenderId();
                             String item_name = messageLists.get(position).getTitle();
                             String userId = myFirebaseUser.getUid();
-                            final String message_id = mdatabaseReference.child("users").child(sender_id).child("messages").push().getKey();
+                            final String message_id = mdatabaseReference.child(DB_USERS).child(sender_id).child(DB_MESSAGES).push().getKey();
                             //Create a new message
                             Message message = new Message(content, userName, datetime, item_name, message_id, userId);
                             //Save the message to the sender's messages
-                            mdatabaseReference.child("users").child(sender_id).child("messages").child(message_id).setValue(message);
+                            mdatabaseReference.child(DB_USERS).child(sender_id).child(DB_MESSAGES).child(message_id).setValue(message);
                             Toast.makeText(mContext, "Your message has been sent to the sender!", Toast.LENGTH_LONG).show();
                             //Close the progress dialog
                             progressDialog.dismiss();
