@@ -25,6 +25,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -138,6 +139,27 @@ public class MessageInboxActivity extends AppCompatActivity
             }
         });
 
+        mDatabaseReference.child(DB_USERS).child(userId).child(DB_MESSAGES).addChildEventListener(new ChildEventListener() {
+            public void onChildAdded(DataSnapshot dataSnapshot, String previousKey) {
+              //  System.out.println("Add "+dataSnapshot.getKey()+" to UI after "+previousKey);
+            }
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+            }
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+               messageCount=(int)dataSnapshot.getChildrenCount();
+
+            }
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+
+            public void onCancelled() { }
+        });
+
 
         mDatabaseReference.child(DB_USERS).child(userId).child(DB_MESSAGES).addValueEventListener(new ValueEventListener() {
             @Override
@@ -168,6 +190,7 @@ public class MessageInboxActivity extends AppCompatActivity
                                     .setSmallIcon(R.drawable.ic_menu_message_inbox)
                                     .setFullScreenIntent(contentIntent, false);
                     mNotifyMgr.notify(id, mNotifyBuilder.build());
+                    messageCount=messageAdapter.getItemCount();
 
                 }
 
