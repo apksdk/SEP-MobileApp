@@ -19,6 +19,7 @@ public class Offer {
     private Boolean mOfferCompleted;
     private String mOfferDate;
     private String mItemSeller;
+    private String mItemID;
 
         /* Instantiates a new Offer.*/
 
@@ -29,7 +30,7 @@ public class Offer {
         this.mItemName = mItemName;
     }
 
-    public Offer(String mItemBuyer, String mItemName, String mOfferQuantity, String mItemOriginalPrice, String mOfferPrice, String mOfferDate, String mOfferDescription, String mItemSeller) {
+    public Offer(String mItemBuyer, String mItemName, String mOfferQuantity, String mItemOriginalPrice, String mOfferPrice, String mOfferDate, String mOfferDescription, String mItemSeller, String mItemID) {
         this.mItemBuyer = mItemBuyer;
         this.mItemName = mItemName;
         this.mOfferQuantity = mOfferQuantity;
@@ -149,4 +150,9 @@ public class Offer {
     public void setSellerId(String mListingId) {
         this.mItemSeller = mListingId;
     }
+
+    public String getItemID() { return mItemID; }
+
+    public void setItemID(String itemID) { this.mItemID = itemID; }
+
 }

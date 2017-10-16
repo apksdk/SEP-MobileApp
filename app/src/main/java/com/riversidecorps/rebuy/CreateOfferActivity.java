@@ -68,7 +68,7 @@ public class CreateOfferActivity extends AppCompatActivity
     private EditText offerPriceET;
     private EditText offerQuantityET;
     private EditText offerDescriptionET;
-    private String itemId;
+    private String mItemId;
     private ImageView mimageView;
 
     @Override
@@ -89,7 +89,7 @@ public class CreateOfferActivity extends AppCompatActivity
         mItemName = getIntent().getStringExtra("itemName");
         mItemPrice = getIntent().getStringExtra("itemPrice");
         mItemQuantity = getIntent().getIntExtra("itemQuantity", 0);
-        itemId = getIntent().getStringExtra("itemId");
+        mItemId = getIntent().getStringExtra("itemId");
 
         makeOfferBtn = (Button) findViewById(R.id.makeOfferBtn);
         cancelBtn = (Button) findViewById(R.id.cancelBtn);
@@ -112,7 +112,7 @@ public class CreateOfferActivity extends AppCompatActivity
         offerAuthorTV.setText(userEmail);
 
         mimageView = findViewById(itemImagePreviewIV);
-        String imagePath = "itemImageListings/" + itemId + ".png";
+        String imagePath = "itemImageListings/" + mItemId + ".png";
         //Upload image(s)
         Log.i("imagePath", imagePath);
 
@@ -294,6 +294,8 @@ public class CreateOfferActivity extends AppCompatActivity
                 String offerPrice = formattedP1.format(Double.parseDouble(offerPriceET.getText().toString()));
                 String itemDes = offerDescriptionET.getText().toString();
                 String buyerId = mUser.getDisplayName();
+                //Variable rename to keep database consistent
+                String itemId = mItemId;
 
                 FirebaseUser myFirebaseUser = mAuth.getCurrentUser();
                 Date date = new Date();
@@ -302,7 +304,7 @@ public class CreateOfferActivity extends AppCompatActivity
                 String stringDate = dt.format(newDate);
                 String sellerId = getIntent().getStringExtra("itemSellerID");
 
-                Offer newOffer = new Offer(buyerId, itemName, offerQuantity.toString(), originalPrice, offerPrice, stringDate, itemDes, sellerId);
+                Offer newOffer = new Offer(buyerId, itemName, offerQuantity.toString(), originalPrice, offerPrice, stringDate, itemDes, sellerId, itemId);
                 databaseReference.child(DB_OFFER).push().setValue(newOffer);
                 Toast.makeText(this, "Please wait for making offer ...", Toast.LENGTH_LONG).show();
                 startActivity(new Intent(CreateOfferActivity.this, MyAccountActivity.class));
