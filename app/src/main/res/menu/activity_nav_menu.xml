@@ -16,10 +16,7 @@
 
             android:icon="@drawable/ic_menu_view_offers"
             android:title="View Offers" />
-        <item
-            android:id="@+id/nav_search_listings"
-            android:icon="@drawable/ic_menu_search_listings"
-            android:title="Search Listings" />
+
         <item
             android:id="@+id/nav_create_listing"
             android:icon="@drawable/ic_menu_create_listing"

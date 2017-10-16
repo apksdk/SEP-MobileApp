@@ -68,6 +68,9 @@ MyAccountActivity extends AppCompatActivity
     private static final String DB_LISTING = "Listings";
     private static final String DB_USERS = "Users";
     private static final String DB_USERNAME = "username";
+    public static final String ITEM_DELETED = "itemDeleted";
+    public static final String USERS_PATH = "users/";
+    public static final String AVATAR_PNG = "/avatar.png";
 
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private FirebaseUser mUser = mAuth.getCurrentUser();
@@ -88,6 +91,9 @@ MyAccountActivity extends AppCompatActivity
 
     @BindView(R.id.currentListingsRV)
     RecyclerView currentListingsRV;
+
+    @BindView(R.id.noListingTV)
+    TextView noListingTV;
 
     private ImageView mUserNavAvatarIV;
 
@@ -151,12 +157,19 @@ MyAccountActivity extends AppCompatActivity
 
         DatabaseReference ref = mDatabase.getReference().child(DB_USERS).child(userID).child(DB_LISTING);
 
-        Query query = ref.orderByChild("itemDeleted").equalTo(false);
+        Query query = ref.orderByChild(ITEM_DELETED).equalTo(false);
         FirebaseRecyclerAdapter<Listing, ListingPreviewHolder> mAdapter = new FirebaseRecyclerAdapter<Listing, ListingPreviewHolder>(
                 Listing.class,
                 R.layout.item_listing_overview,
                 ListingPreviewHolder.class,
                 query) {
+
+            @Override
+            public void onDataChanged() {
+                noListingTV.setVisibility(View.GONE);
+                super.onDataChanged();
+            }
+
             /**
              * Each time the data at the given Firebase location changes, this method will be called for
              * each item that needs to be displayed. The first two arguments correspond to the mLayout and
@@ -203,7 +216,7 @@ MyAccountActivity extends AppCompatActivity
                 intent.setType("image/*");
                 startActivityForResult(intent, REQUEST_GALLERY_IMAGE);
             } else {
-                Toast toast = Toast.makeText(getApplicationContext(), "Could not retrieve image." + "\n" + "Reason: Permission Denied.", Toast.LENGTH_LONG);
+                Toast toast = Toast.makeText(getApplicationContext(), R.string.permission_denied, Toast.LENGTH_LONG);
                 toast.show();
             }
         }
@@ -237,15 +250,15 @@ MyAccountActivity extends AppCompatActivity
 
                     relativeLayout.addView(previewIV);
                     new AlertDialog.Builder(MyAccountActivity.this)
-                            .setMessage("Would you like to change your picture to this?")
-                            .setTitle("Change User Image Confirmation")
-                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            .setMessage(R.string.change_avatar_confirmation)
+                            .setTitle(R.string.change_image_confirmation_title)
+                            .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                                 //Upload Image
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
                                     final ProgressDialog progressDialog = new ProgressDialog(MyAccountActivity.this);
-                                    progressDialog.setTitle("Saving Avatar");
-                                    progressDialog.setMessage("Saving your avatar...");
+                                    progressDialog.setTitle(getString(R.string.save_avatar_title));
+                                    progressDialog.setMessage(getString(R.string.save_avatar_message));
                                     progressDialog.setCancelable(false);
                                     progressDialog.show();
                                     //Get the image from imageView
@@ -256,7 +269,7 @@ MyAccountActivity extends AppCompatActivity
                                     ByteArrayOutputStream bAOS = new ByteArrayOutputStream();
                                     avatarImage.compress(Bitmap.CompressFormat.PNG, 100, bAOS);
                                     byte[] avatarImageBytes = bAOS.toByteArray();
-                                    String userAvatarPath = "users/" + mUser.getUid() + "/avatar.png";
+                                    String userAvatarPath = USERS_PATH + mUser.getUid() + AVATAR_PNG;
                                     StorageReference userAvatarRef = mStorage.getReference(userAvatarPath);
                                     UploadTask uploadTask = userAvatarRef.putBytes(avatarImageBytes);
                                     uploadTask.addOnSuccessListener(MyAccountActivity.this, new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -269,12 +282,12 @@ MyAccountActivity extends AppCompatActivity
                                                 @Override
                                                 public void onComplete(@NonNull Task<Void> task) {
                                                     if (task.isSuccessful()) {
-                                                        Toast.makeText(MyAccountActivity.this, "You have successfully saved your avatar.", Toast.LENGTH_SHORT).show();
+                                                        Toast.makeText(MyAccountActivity.this, R.string.avatar_saved_success, Toast.LENGTH_SHORT).show();
                                                         userAvatarIV.setImageBitmap(selectedImage);
                                                         mUserNavAvatarIV.setImageBitmap(selectedImage);
 
                                                     } else {
-                                                        Toast.makeText(MyAccountActivity.this, "There was an error while saving your avatar. Please try again.", Toast.LENGTH_SHORT).show();
+                                                        Toast.makeText(MyAccountActivity.this, R.string.avatar_saved_failed, Toast.LENGTH_SHORT).show();
                                                     }
                                                     progressDialog.dismiss();
                                                 }
@@ -283,7 +296,7 @@ MyAccountActivity extends AppCompatActivity
                                     });
                                 }
                             })
-                            .setNegativeButton("No", null)
+                            .setNegativeButton(R.string.no, null)
                             .setView(relativeLayout)
                             .show();
                 } catch (FileNotFoundException e) {
@@ -353,8 +366,6 @@ MyAccountActivity extends AppCompatActivity
             startActivity(new Intent(this, MessageInboxActivity.class));
         } else if (id == R.id.nav_view_offers) {
             startActivity(new Intent(this, ViewOffersActivity.class));
-        } else if (id == R.id.nav_search_listings) {
-            startActivity(new Intent(this, SearchListingsActivity.class));
         } else if (id == R.id.nav_create_listing) {
             startActivity(new Intent(this, CreateListingActivity.class));
         } else if (id == R.id.nav_view_listings) {
