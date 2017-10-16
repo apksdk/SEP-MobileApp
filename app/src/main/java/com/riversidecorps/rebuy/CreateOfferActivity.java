@@ -295,6 +295,7 @@ public class CreateOfferActivity extends AppCompatActivity
                 String buyerId = mUser.getUid();
                 //Variable rename to keep database consistent
                 String itemId = mItemId;
+                Integer itemQuantity = mItemQuantity;
 
                 FirebaseUser myFirebaseUser = mAuth.getCurrentUser();
                 Date date = new Date();
@@ -303,7 +304,7 @@ public class CreateOfferActivity extends AppCompatActivity
                 String stringDate = dt.format(newDate);
                 String sellerId = getIntent().getStringExtra("itemSellerID");
 
-                Offer newOffer = new Offer(buyerId, buyerName, itemName, offerQuantity, originalPrice, offerPrice, stringDate, itemDes, sellerId, itemId);
+                Offer newOffer = new Offer(buyerId, buyerName, itemName, offerQuantity, itemQuantity, originalPrice, offerPrice, stringDate, itemDes, sellerId, itemId);
                 databaseReference.child(DB_OFFER).push().setValue(newOffer);
                 Toast.makeText(this, "Please wait for making offer ...", Toast.LENGTH_LONG).show();
                 startActivity(new Intent(CreateOfferActivity.this, MyAccountActivity.class));

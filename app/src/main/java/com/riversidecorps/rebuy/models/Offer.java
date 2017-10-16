@@ -12,6 +12,7 @@ public class Offer {
     private String mItemBuyer;
     private String mItemName;
     private Integer mOfferQuantity;
+    private Integer mItemQuantity;
     private String mItemOriginalPrice;
     private String mOfferPrice;
     private String mOfferDescription;
@@ -31,11 +32,12 @@ public class Offer {
         this.mItemName = mItemName;
     }
 
-    public Offer(String mItemBuyerID, String mItemBuyer, String mItemName, Integer mOfferQuantity, String mItemOriginalPrice, String mOfferPrice, String mOfferDate, String mOfferDescription, String mItemSeller, String mItemID) {
+    public Offer(String mItemBuyerID, String mItemBuyer, String mItemName, Integer mOfferQuantity, Integer mItemQuantity, String mItemOriginalPrice, String mOfferPrice, String mOfferDate, String mOfferDescription, String mItemSeller, String mItemID) {
         this.mItemBuyerID = mItemBuyerID;
         this.mItemBuyer = mItemBuyer;
         this.mItemName = mItemName;
         this.mOfferQuantity = mOfferQuantity;
+        this.mItemQuantity = mItemQuantity;
         this.mItemOriginalPrice = mItemOriginalPrice;
         this.mOfferPrice = mOfferPrice;
         this.mOfferDate = mOfferDate;
@@ -164,4 +166,11 @@ public class Offer {
 
     public void setItemID(String itemID) { this.mItemID = itemID; }
 
+    public Integer getItemQuantity() {
+        return mItemQuantity;
+    }
+
+    public void setItemQuantity(Integer mItemQuantity) {
+        this.mItemQuantity = mItemQuantity;
+    }
 }
