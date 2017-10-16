@@ -351,7 +351,7 @@ public class ViewOffersActivity extends AppCompatActivity
         acceptOfferBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Prevents infinite loop
+                ////Close dialog box
                 dialog.dismiss();
                 //Show buying is in progress
                 mProgressDialog.setMessage("Accepting Offer...");
@@ -359,7 +359,7 @@ public class ViewOffersActivity extends AppCompatActivity
                 //Get current time
                 String datetime = new SimpleDateFormat("yyyy-MM-dd hh:mm a").format(new Date());
                 //Set the user's message
-                String userMessage = mUser.getDisplayName() + " has accepted " + mOfferedQuantity + " " + mItemName + "(s)";
+                String userMessage = mUser.getDisplayName() + " has accepted your offer for " + mOfferedQuantity + " " + mItemName + "(s)";
                 //Get a message id from Firebase Database
                 final String messageID = mdatabaseReference.child(DB_USERS).child(mBuyerID).child(DB_MESSAGES).push().getKey();
                 //Create a new message
@@ -397,6 +397,30 @@ public class ViewOffersActivity extends AppCompatActivity
             public void onClick(View v) {
                 //Close dialog box
                 dialog.dismiss();
+                //Show buying is in progress
+                mProgressDialog.setMessage("Accepting Offer...");
+                mProgressDialog.show();
+                //Get current time
+                String datetime = new SimpleDateFormat("yyyy-MM-dd hh:mm a").format(new Date());
+                //Set the user's message
+                String userMessage = mUser.getDisplayName() + " has declined your offer for " + mOfferedQuantity + " " + mItemName + "(s)";
+                //Get a message id from Firebase Database
+                final String messageID = mdatabaseReference.child(DB_USERS).child(mBuyerID).child(DB_MESSAGES).push().getKey();
+                //Create a new message
+                Message message = new Message(userMessage, mUser.getDisplayName(), datetime, mItemName, messageID, mUserId);
+                //Save the message
+                mdatabaseReference.child(DB_USERS).child(mBuyerId).child(DB_MESSAGES).child(messageID).setValue(message).addOnSuccessListener(ViewOffersActivity.this, new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Toast.makeText(getBaseContext(), "Thank you for your purchase", Toast.LENGTH_LONG).show();
+                        //Close the progress dialog
+                        mProgressDialog.dismiss();
+                        finish();
+                    }
+                });
+
+                mdatabaseReference.child(DB_OFFER).child(mOfferID).child("offerCompleted").setValue(true);
+
             }
         });
     }
