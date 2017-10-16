@@ -331,6 +331,7 @@ public class ViewOffersActivity extends AppCompatActivity
         //Allows us to find offerID of the selected offer
         final Offer finalSelectedOffer = selectedOffer;
         final String itemID = finalSelectedOffer.getItemID();
+        final String mBuyerID = finalSelectedOffer.getItemBuyerID();
 
         //Get the User ID, Offered Quantity, Item Name and Item Buyer
         //Used in the Accept Offer button ~ Seb
@@ -359,7 +360,7 @@ public class ViewOffersActivity extends AppCompatActivity
                 //Set the user's message
                 String userMessage = mUser.getDisplayName() + " has accepted " + mOfferedQuantity + " " + mItemName + "(s)";
                 //Get a message id from Firebase Database
-                final String messageID = mdatabaseReference.child(DB_USERS).child(mBuyerId).child(DB_MESSAGES).push().getKey();
+                final String messageID = mdatabaseReference.child(DB_USERS).child(mBuyerID).child(DB_MESSAGES).push().getKey();
                 //Create a new message
                 Message message = new Message(userMessage, mUser.getDisplayName(), datetime, mItemName, messageID, mUserId);
                 //Save the message
@@ -373,6 +374,8 @@ public class ViewOffersActivity extends AppCompatActivity
                     }
                 });
 
+                final Integer[] intItemQuantity = new Integer[1];
+
                 //Database Listener to get original listing quantity
                 mdatabaseReference.child(DB_LISTING).addValueEventListener(new ValueEventListener() {
                     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
@@ -381,18 +384,7 @@ public class ViewOffersActivity extends AppCompatActivity
                         for (DataSnapshot listingSnapshot : dataSnapshot.getChildren()) {
                             if (Objects.equals(listingSnapshot.getKey(), itemID)) {
                                 Long itemQuantity = (Long) listingSnapshot.child("itemQuantity").getValue();
-                                Integer intItemQuantity = (int) (long) itemQuantity;
-                                //If the amount bought sets listing's quantity to 0
-                                if (intItemQuantity <= mOfferedQuantity) {
-                                    //Set the listing's quantity to 0 and set it to complete in both location (under listings and user's listings)
-                                    mdatabaseReference.child(DB_LISTING).child(itemID).child("itemCompleted").setValue(true);
-                                    mdatabaseReference.child(DB_LISTING).child(itemID).child("itemQuantity").setValue(0);
-                                    mdatabaseReference.child(DB_OFFER).child(mOfferID).child("offerCompleted").setValue(true);
-                                } else {
-                                    //Sets listing's quantity to new quantity
-                                    mdatabaseReference.child(DB_LISTING).child(itemID).child("itemQuantity").setValue(intItemQuantity - mOfferedQuantity);
-                                    mdatabaseReference.child(DB_OFFER).child(mOfferID).child("offerCompleted").setValue(true);
-                                }
+                                intItemQuantity[0] = (int) (long) itemQuantity;
                             }
                         }
                     }
@@ -403,6 +395,18 @@ public class ViewOffersActivity extends AppCompatActivity
                     }
 
                 });
+
+                //If the amount bought sets listing's quantity to 0
+                if (intItemQuantity[0] <= mOfferedQuantity) {
+                    //Set the listing's quantity to 0 and set it to complete in both location (under listings and user's listings)
+                    mdatabaseReference.child(DB_LISTING).child(itemID).child("itemCompleted").setValue(true);
+                    mdatabaseReference.child(DB_LISTING).child(itemID).child("itemQuantity").setValue(0);
+                    mdatabaseReference.child(DB_OFFER).child(mOfferID).child("offerCompleted").setValue(true);
+                } else {
+                    //Sets listing's quantity to new quantity
+                    mdatabaseReference.child(DB_LISTING).child(itemID).child("itemQuantity").setValue(intItemQuantity[0] - mOfferedQuantity);
+                    mdatabaseReference.child(DB_OFFER).child(mOfferID).child("offerCompleted").setValue(true);
+                }
             }
         });
 

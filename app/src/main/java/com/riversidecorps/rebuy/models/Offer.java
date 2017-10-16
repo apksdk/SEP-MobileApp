@@ -32,7 +32,7 @@ public class Offer {
     }
 
     public Offer(String mItemBuyerID, String mItemBuyer, String mItemName, Integer mOfferQuantity, String mItemOriginalPrice, String mOfferPrice, String mOfferDate, String mOfferDescription, String mItemSeller, String mItemID) {
-        this.mItemBuyerID = mItemBuyer;
+        this.mItemBuyerID = mItemBuyerID;
         this.mItemBuyer = mItemBuyer;
         this.mItemName = mItemName;
         this.mOfferQuantity = mOfferQuantity;
@@ -49,7 +49,7 @@ public class Offer {
     public String getItemBuyerID() { return mItemBuyerID; }
 
     public void setItemBuyerID(String itemBuyerID) {
-        mItemBuyer = itemBuyerID;
+        mItemBuyerID = itemBuyerID;
     }
 
     public String getItemBuyer() {
