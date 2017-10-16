@@ -100,4 +100,13 @@
     <string name="title_activity_modify_listing">Modify a Listing</string>
     <string name="no_data_available">No data available</string>
     <string name="description_hint">Enter a message with your offer</string>
+    <string name="permission_denied">Could not retrieve image.  Reason: Permission Denied.</string>
+    <string name="change_avatar_confirmation">Would you like to change your picture to this?</string>
+    <string name="change_image_confirmation_title">Change User Image Confirmation</string>
+    <string name="yes">Yes</string>
+    <string name="save_avatar_title">Saving Avatar</string>
+    <string name="save_avatar_message">Saving your avatar...</string>
+    <string name="avatar_saved_success">You have successfully saved your avatar.</string>
+    <string name="avatar_saved_failed">There was an error while saving your avatar. Please try again.</string>
+    <string name="no">No</string>
 </resources>
