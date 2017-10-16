@@ -241,8 +241,6 @@ public class CreateOfferActivity extends AppCompatActivity
             startActivity(new Intent(this, MessageInboxActivity.class));
         } else if (id == R.id.nav_view_offers) {
             startActivity(new Intent(this, ViewOffersActivity.class));
-        } else if (id == R.id.nav_search_listings) {
-            startActivity(new Intent(this, SearchListingsActivity.class));
         } else if (id == R.id.nav_create_listing) {
             startActivity(new Intent(this, CreateListingActivity.class));
         } else if (id == R.id.nav_view_listings) {

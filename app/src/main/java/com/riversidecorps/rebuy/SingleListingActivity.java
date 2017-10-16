@@ -236,9 +236,6 @@ public class SingleListingActivity extends AppCompatActivity
         } else if (id == R.id.nav_view_offers) {
             //Move to the ViewOffers Activity
             startActivity(new Intent(this, ViewOffersActivity.class));
-        } else if (id == R.id.nav_search_listings) {
-            //Move to the SearchListings Activity
-            startActivity(new Intent(this, SearchListingsActivity.class));
         } else if (id == R.id.nav_create_listing) {
             //Move to the CreateListing Activity
             startActivity(new Intent(this, CreateListingActivity.class));
