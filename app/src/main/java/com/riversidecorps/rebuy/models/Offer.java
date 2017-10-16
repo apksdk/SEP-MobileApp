@@ -8,9 +8,10 @@ import java.util.ArrayList;
 
 public class Offer {
     private String mOfferID;
+    private String mItemBuyerID;
     private String mItemBuyer;
     private String mItemName;
-    private String mOfferQuantity;
+    private Integer mOfferQuantity;
     private String mItemOriginalPrice;
     private String mOfferPrice;
     private String mOfferDescription;
@@ -30,7 +31,8 @@ public class Offer {
         this.mItemName = mItemName;
     }
 
-    public Offer(String mItemBuyer, String mItemName, String mOfferQuantity, String mItemOriginalPrice, String mOfferPrice, String mOfferDate, String mOfferDescription, String mItemSeller, String mItemID) {
+    public Offer(String mItemBuyerID, String mItemBuyer, String mItemName, Integer mOfferQuantity, String mItemOriginalPrice, String mOfferPrice, String mOfferDate, String mOfferDescription, String mItemSeller, String mItemID) {
+        this.mItemBuyerID = mItemBuyer;
         this.mItemBuyer = mItemBuyer;
         this.mItemName = mItemName;
         this.mOfferQuantity = mOfferQuantity;
@@ -39,8 +41,15 @@ public class Offer {
         this.mOfferDate = mOfferDate;
         this.mOfferDescription = mOfferDescription;
         this.mItemSeller = mItemSeller;
+        this.mItemID = mItemID;
         mOfferDeleted = false;
         mOfferCompleted = false;
+    }
+
+    public String getItemBuyerID() { return mItemBuyerID; }
+
+    public void setItemBuyerID(String itemBuyerID) {
+        mItemBuyer = itemBuyerID;
     }
 
     public String getItemBuyer() {
@@ -59,11 +68,11 @@ public class Offer {
         mItemName = itemName;
     }
 
-    public String getOfferQuantity() {
+    public Integer getOfferQuantity() {
         return mOfferQuantity;
     }
 
-    public void setOfferQuantity(String offerQuantity) {
+    public void setOfferQuantity(Integer offerQuantity) {
         mOfferQuantity = offerQuantity;
     }
 

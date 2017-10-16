@@ -7,6 +7,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -66,8 +67,8 @@ public class ViewOffersActivity extends AppCompatActivity
     private DatabaseReference mdatabaseReference;
     private FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
     private SwipeRefreshLayout swipeContainer;
-
     private ProgressDialog mProgressDialog;
+
     private static final String DB_LISTING = "Listings";
     private static final String DB_USERS = "Users";
     private static final String DB_MESSAGES = "Messages";
@@ -75,8 +76,10 @@ public class ViewOffersActivity extends AppCompatActivity
     private static final String AUTH_IN = "onAuthStateChanged:signed_in:";
     private static final String AUTH_OUT = "onAuthStateChanged:signed_out";
     private static final String DB_OFFER = "Offers";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        mProgressDialog = new ProgressDialog(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_offers);
         mAuth = FirebaseAuth.getInstance();
@@ -92,37 +95,26 @@ public class ViewOffersActivity extends AppCompatActivity
         final String userId = mUser.getUid();
 
         // Attach a listener to read the data at our posts reference
-        mdatabaseReference.child(DB_OFFER).addValueEventListener (new ValueEventListener() {
+        mdatabaseReference.child(DB_OFFER).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 mOfferList.removeAll(mOfferList);
                 for (DataSnapshot messageSnapshot : snapshot.getChildren()) {
-
+                    Offer offer = messageSnapshot.getValue(Offer.class);
                     String mOfferID = (String) messageSnapshot.getKey();
-                    String buyer = (String) messageSnapshot.child("itemBuyer").getValue();
-                    String itemName = (String) messageSnapshot.child("itemName").getValue();
-                    String originalPrice = (String) messageSnapshot.child("itemOriginalPrice").getValue();
-                    String offerPrice = (String) messageSnapshot.child("offerPrice").getValue();
-                    String offerDescription = (String) messageSnapshot.child("offerDescription").getValue();
-                    String quantity = (String) messageSnapshot.child("offerQuantity").getValue();
-                    String sellerId =  (String) messageSnapshot.child("sellerId").getValue();
-                    String offerDate = (String) messageSnapshot.child("offerDate").getValue();
-                    String itemId = (String) messageSnapshot.child("itemId").getValue();
-                    Boolean isDeleted = (Boolean) messageSnapshot.child("itemDeleted").getValue();
-                    Boolean isCompleted = (Boolean) messageSnapshot.child("itemCompleted").getValue();
+                    Boolean isDeleted = offer.getOfferDeleted();
+                    Boolean isCompleted = offer.getOfferCompleted();
                     //If the item is marked as deleted or completed skip to the next item
                     if (isDeleted || isCompleted) {
                         continue;
                     }
-                    Offer newOffer = new Offer(buyer,itemName , quantity,
-                            originalPrice, offerPrice, offerDate, offerDescription, sellerId, itemId);
-                    newOffer.setOfferID(mOfferID);
+                    offer.setOfferID(mOfferID);
 //                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
 //                        if (Objects.equals(newOffer.getSellerId(), userId)){
 //                            mOfferList.add(newOffer);
 //                        }
 //                    } else {
-                        mOfferList.add(newOffer);
+                    mOfferList.add(offer);
 //                    }
                 }
                 mAdapter.notifyDataSetChanged();
@@ -133,6 +125,7 @@ public class ViewOffersActivity extends AppCompatActivity
                 System.out.println("The read failed: " + databaseError.getCode());
             }
         });
+
         mRecyclerView = findViewById(R.id.offer_recycler_view);
         mAdapter = new OfferAdapter(this, mOfferList);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
@@ -227,8 +220,6 @@ public class ViewOffersActivity extends AppCompatActivity
             startActivity(new Intent(this, MessageInboxActivity.class));
         } else if (id == R.id.nav_view_offers) {
             //Do Nothing
-        } else if (id == R.id.nav_search_listings) {
-            startActivity(new Intent(this, SearchListingsActivity.class));
         } else if (id == R.id.nav_create_listing) {
             startActivity(new Intent(this, CreateListingActivity.class));
         } else if (id == R.id.nav_view_listings) {
@@ -307,30 +298,25 @@ public class ViewOffersActivity extends AppCompatActivity
         Button rejectOfferBtn = (Button) mView.findViewById(R.id.reject_offer_btn);
         TextView itemName = (TextView) mView.findViewById(R.id.item_name);
         final TextView itemBuyer = (TextView) mView.findViewById(R.id.item_buyer);
-        TextView originalPrice = (TextView) mView.findViewById(R.id.item_original_price);
+        final TextView originalPrice = (TextView) mView.findViewById(R.id.item_original_price);
         TextView offerPrice = (TextView) mView.findViewById(R.id.item_offer_price);
         TextView offerQuantity = (TextView) mView.findViewById(R.id.offer_quantity);
         TextView offerDescriptionPre = (TextView) mView.findViewById(R.id.description_pre);
         TextView offerDescription = (TextView) mView.findViewById(R.id.offer_description);
         TextView offerDate = (TextView) mView.findViewById(R.id.offer_date);
 
-        //Get the User ID, Offered Quantity, Item Name and Item Buyer
-        //Used in the Accept Offer button ~ Seb
-        final String mUserId = mUser.getUid();
-        final String mOfferedQuantity = offerQuantity.getText().toString();
-        final String mBuyerId = itemBuyer.getText().toString();
-        final String mItemName = itemName.getText().toString();
-
         TextView itemIDRV = (TextView) v.findViewById(R.id.offer_id);
+        Offer selectedOffer = null;
 
         String currOffer = itemIDRV.getText().toString();
         for (Offer offer : mOfferList) {
             if (offer.getOfferID().equals(currOffer)){
+                selectedOffer = offer;
                 itemName.setText(offer.getItemName());
                 itemBuyer.setText(offer.getItemBuyer());
                 originalPrice.setText(offer.getItemOriginalPrice());
                 offerPrice.setText(offer.getOfferPrice());
-                offerQuantity.setText(offer.getOfferQuantity());
+                offerQuantity.setText(offer.getOfferQuantity().toString());
                 String desCheck = offer.getOfferDescription();
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                     if(Objects.equals(desCheck, "")){
@@ -342,44 +328,80 @@ public class ViewOffersActivity extends AppCompatActivity
             }
         }
 
+        //Allows us to find offerID of the selected offer
+        final Offer finalSelectedOffer = selectedOffer;
+        final String itemID = finalSelectedOffer.getItemID();
+
+        //Get the User ID, Offered Quantity, Item Name and Item Buyer
+        //Used in the Accept Offer button ~ Seb
+        final String mUserId = mUser.getUid();
+        final Integer mOfferedQuantity = Integer.parseInt(offerQuantity.getText().toString());
+        final String mBuyerId = itemBuyer.getText().toString();
+        final String mItemName = itemName.getText().toString();
+        final String mOfferID = itemIDRV.getText().toString();
+
         alertDialog.setView(mView);
         final AlertDialog dialog = alertDialog.create();
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.show();
+
         //Sets listener for the click of the accept offer button in alert dialog
         acceptOfferBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //Prevents infinite loop
+                dialog.dismiss();
                 //Show buying is in progress
                 mProgressDialog.setMessage("Accepting Offer...");
                 mProgressDialog.show();
                 //Get current time
                 String datetime = new SimpleDateFormat("yyyy-MM-dd hh:mm a").format(new Date());
                 //Set the user's message
-                String userMessage = mUser.getDisplayName() + " has bought " + mOfferedQuantity + " " + mItemName + "(s)";
+                String userMessage = mUser.getDisplayName() + " has accepted " + mOfferedQuantity + " " + mItemName + "(s)";
                 //Get a message id from Firebase Database
-                final String messageID = mdatabaseReference.child(DB_USERS).child(mUserId).child(DB_MESSAGES).push().getKey();
+                final String messageID = mdatabaseReference.child(DB_USERS).child(mBuyerId).child(DB_MESSAGES).push().getKey();
                 //Create a new message
-                Message message = new Message(userMessage, mUser.getDisplayName(), datetime, mItemName, messageID, mBuyerId);
+                Message message = new Message(userMessage, mUser.getDisplayName(), datetime, mItemName, messageID, mUserId);
                 //Save the message
-                mdatabaseReference.child(DB_USERS).child(mUserId).child(DB_MESSAGES).child(messageID).setValue(message).addOnSuccessListener(ViewOffersActivity.this, new OnSuccessListener<Void>() {
+                mdatabaseReference.child(DB_USERS).child(mBuyerId).child(DB_MESSAGES).child(messageID).setValue(message).addOnSuccessListener(ViewOffersActivity.this, new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        //If the amount bought sets listing's quantity to 0
-                        //if (mItemQuantity == quantity){
-                            //Set the listing's quantity to 0 and set it to complete in both location (under listings and user's listings)
-                            //mdatabaseReference.child(DB_LISTING).child(mItemID).child("itemCompleted").setValue(true);
-                            //mdatabaseReference.child(DB_USERS).child(mItemSellerID).child(DB_LISTING).child(mItemID).child("itemCompleted").setValue(true);
-                            //mdatabaseReference.child(DB_LISTING).child(mItemID).child("itemQuantity").setValue(0);
-                        //} else {
-                            //Sets listing's quantity to new quantity
-    // mdatabaseReference.child(DB_LISTING).child().child("itemQuantity").setValue( - mOfferedQuantity);
-                        //}
                         Toast.makeText(getBaseContext(), "Thank you for your purchase", Toast.LENGTH_LONG).show();
                         //Close the progress dialog
                         mProgressDialog.dismiss();
                         finish();
                     }
+                });
+
+                //Database Listener to get original listing quantity
+                mdatabaseReference.child(DB_LISTING).addValueEventListener(new ValueEventListener() {
+                    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (DataSnapshot listingSnapshot : dataSnapshot.getChildren()) {
+                            if (Objects.equals(listingSnapshot.getKey(), itemID)) {
+                                Long itemQuantity = (Long) listingSnapshot.child("itemQuantity").getValue();
+                                Integer intItemQuantity = (int) (long) itemQuantity;
+                                //If the amount bought sets listing's quantity to 0
+                                if (intItemQuantity <= mOfferedQuantity) {
+                                    //Set the listing's quantity to 0 and set it to complete in both location (under listings and user's listings)
+                                    mdatabaseReference.child(DB_LISTING).child(itemID).child("itemCompleted").setValue(true);
+                                    mdatabaseReference.child(DB_LISTING).child(itemID).child("itemQuantity").setValue(0);
+                                    mdatabaseReference.child(DB_OFFER).child(mOfferID).child("offerCompleted").setValue(true);
+                                } else {
+                                    //Sets listing's quantity to new quantity
+                                    mdatabaseReference.child(DB_LISTING).child(itemID).child("itemQuantity").setValue(intItemQuantity - mOfferedQuantity);
+                                    mdatabaseReference.child(DB_OFFER).child(mOfferID).child("offerCompleted").setValue(true);
+                                }
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+
                 });
             }
         });

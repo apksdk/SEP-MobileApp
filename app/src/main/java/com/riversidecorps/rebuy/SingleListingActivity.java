@@ -271,6 +271,7 @@ public class SingleListingActivity extends AppCompatActivity
             OfferActivity.putExtra("itemDes", mItemDes);
             OfferActivity.putExtra("listingImage", mItemImages.get(0));
             OfferActivity.putExtra("itemSellerID", mItemSellerID);
+            OfferActivity.putExtra("itemId", mItemID);
             //Start activity
             startActivity(OfferActivity);
         }

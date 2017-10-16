@@ -293,7 +293,8 @@ public class CreateOfferActivity extends AppCompatActivity
                 NumberFormat formattedP1 = NumberFormat.getCurrencyInstance(Locale.US);
                 String offerPrice = formattedP1.format(Double.parseDouble(offerPriceET.getText().toString()));
                 String itemDes = offerDescriptionET.getText().toString();
-                String buyerId = mUser.getDisplayName();
+                String buyerName = mUser.getDisplayName();
+                String buyerId = mUser.getUid();
                 //Variable rename to keep database consistent
                 String itemId = mItemId;
 
@@ -304,7 +305,7 @@ public class CreateOfferActivity extends AppCompatActivity
                 String stringDate = dt.format(newDate);
                 String sellerId = getIntent().getStringExtra("itemSellerID");
 
-                Offer newOffer = new Offer(buyerId, itemName, offerQuantity.toString(), originalPrice, offerPrice, stringDate, itemDes, sellerId, itemId);
+                Offer newOffer = new Offer(buyerId, buyerName, itemName, offerQuantity, originalPrice, offerPrice, stringDate, itemDes, sellerId, itemId);
                 databaseReference.child(DB_OFFER).push().setValue(newOffer);
                 Toast.makeText(this, "Please wait for making offer ...", Toast.LENGTH_LONG).show();
                 startActivity(new Intent(CreateOfferActivity.this, MyAccountActivity.class));
