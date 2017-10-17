@@ -121,6 +121,12 @@ MyAccountActivity extends AppCompatActivity
         TextView emailNavTV = navView.findViewById(R.id.userNavEmailTV);
         mUserNavAvatarIV = navView.findViewById(R.id.userNavAvatarIV);
 
+        //Setup Loading dialog
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Loading your account details...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
         //Prevents being required to login every time
         if (mUser == null) {
             startActivity(new Intent(MyAccountActivity.this, LoginActivity.class));
@@ -167,6 +173,7 @@ MyAccountActivity extends AppCompatActivity
             @Override
             public void onDataChanged() {
                 noListingTV.setVisibility(View.GONE);
+                progressDialog.dismiss();
                 super.onDataChanged();
             }
 

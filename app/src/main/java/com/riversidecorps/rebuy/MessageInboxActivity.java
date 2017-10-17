@@ -2,6 +2,7 @@ package com.riversidecorps.rebuy;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -46,15 +47,20 @@ public class MessageInboxActivity extends AppCompatActivity
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseUser mUser;
     private DatabaseReference mDatabaseReference;
+
     private ArrayList<Message> mMessageList = new ArrayList<>();
+
     private static final String DB_LISTING = "Listings";
     private static final String DB_USERS = "Users";
     private static final String DB_MESSAGES = "Messages";
     private static final String AUTH_IN = "onAuthStateChanged:signed_in:";
     private static final String AUTH_OUT = "onAuthStateChanged:signed_out";
     private com.riversidecorps.rebuy.adapter.messageAdapter mAdapter;
+
     private RecyclerView mRecyclerView;
     private TextView mEmptyView;
+    private ProgressDialog mProgressDialog;
+
     private int messageCount = 0;
 
     @Override
@@ -64,24 +70,31 @@ public class MessageInboxActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
         mDatabaseReference = FirebaseDatabase.getInstance().getReference();
         mEmptyView = findViewById(R.id.empty_view);
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
 
         final View navView = navigationView.getHeaderView(0);
         final TextView usernameNavTV = navView.findViewById(R.id.userNavIDTV);
         TextView emailNavTV = navView.findViewById(R.id.userNavEmailTV);
         ImageView userNavAvatarIV = navView.findViewById(R.id.userNavAvatarIV);
         usernameNavTV.setText(mUser.getDisplayName());
+
+        //Setup Loading dialog
+        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setMessage("Loading messages...");
+        mProgressDialog.setCancelable(false);
+        mProgressDialog.show();
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
 
         //Set up nav menu
         emailNavTV.setText(mUser.getEmail());
@@ -194,7 +207,7 @@ public class MessageInboxActivity extends AppCompatActivity
                     messageCount=messageAdapter.getItemCount();
                     Log.i("oo","after updated : " +messageCount);
                 }
-
+                mProgressDialog.dismiss();
             }
 
             @Override

@@ -79,9 +79,10 @@ public class ViewOffersActivity extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        mProgressDialog = new ProgressDialog(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_offers);
+
+        mProgressDialog = new ProgressDialog(this);
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
         mdatabaseReference = FirebaseDatabase.getInstance().getReference();
@@ -93,6 +94,12 @@ public class ViewOffersActivity extends AppCompatActivity
         }
 
         final String userId = mUser.getUid();
+
+        //Setup loading dialog
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Loading offers...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
 
         // Attach a listener to read the data at our posts reference
         mdatabaseReference.child(DB_OFFER).addValueEventListener(new ValueEventListener() {
@@ -117,6 +124,7 @@ public class ViewOffersActivity extends AppCompatActivity
                     mOfferList.add(offer);
 //                    }
                 }
+                progressDialog.dismiss();
                 mAdapter.notifyDataSetChanged();
             }
 
@@ -169,28 +177,8 @@ public class ViewOffersActivity extends AppCompatActivity
                     // User is signed out
                     Log.d(TAG, AUTH_OUT);
                 }
-                // ...
             }
         };
-
-
-//        swipeContainer = findViewById(R.id.swipeContainer);
-//        // Setup refresh listener which triggers new data loading
-//        swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-//            @Override
-//            public void onRefresh() {
-//                swipeContainer.setRefreshing(true);
-//                // Your code to refresh the list here.
-//                // Make sure you call swipeContainer.setRefreshing(false)
-//                // once the network request has completed successfully.
-//                getResultsFromApi();
-//            }
-//        });
-//        // Configure the refreshing colors
-//        swipeContainer.setColorSchemeResources(android.R.color.holo_blue_bright,
-//                android.R.color.holo_green_light,
-//                android.R.color.holo_orange_light,
-//                android.R.color.holo_red_light);
     }
 
     @Override

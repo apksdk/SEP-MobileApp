@@ -1,5 +1,6 @@
 package com.riversidecorps.rebuy;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Color;
@@ -41,21 +42,29 @@ import com.riversidecorps.rebuy.models.Listing;
 import java.util.ArrayList;
 import java.util.Objects;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 import static android.content.ContentValues.TAG;
 
 public class ViewListingsActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, SearchView.OnQueryTextListener {
+    @BindView(R.id.noListingTV)
+    TextView noListingTV;
     private RecyclerView mRecyclerView;
     private ItemAdapter mAdapter;
+
     private ArrayList<Listing> mItemList = new ArrayList<>();
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private FirebaseUser mUser = mAuth.getCurrentUser();
     private FirebaseAuth.AuthStateListener mAuthListener;
     private DatabaseReference mdatabaseReference;
     private FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
+
     private String userID;
     private String userName;
     private String mfilter;
+
     private static final String AUTH_IN = "onAuthStateChanged:signed_in:";
     private static final String AUTH_OUT = "onAuthStateChanged:signed_out";
     private static final String DB_LISTING = "Listings";
@@ -64,9 +73,10 @@ public class ViewListingsActivity extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.i("TTT", "onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_listings);
+        ButterKnife.bind(this);
+
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
         mdatabaseReference = FirebaseDatabase.getInstance().getReference();
@@ -76,6 +86,11 @@ public class ViewListingsActivity extends AppCompatActivity
         } else {
             //User is logged in;
         }
+        //Setup Loading dialog
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Loading listings...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
 
         mRecyclerView = findViewById(R.id.listing_recycler_view);
         mAdapter = new ItemAdapter(this, mItemList);
@@ -96,7 +111,7 @@ public class ViewListingsActivity extends AppCompatActivity
 
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                mItemList.removeAll(mItemList);
+                mItemList.clear();
                 for (DataSnapshot messageSnapshot : snapshot.getChildren()) {
                     Boolean isDeleted = (Boolean) messageSnapshot.child("itemDeleted").getValue();
                     Boolean isCompleted = (Boolean) messageSnapshot.child("itemCompleted").getValue();
@@ -106,7 +121,7 @@ public class ViewListingsActivity extends AppCompatActivity
                     }
                     Listing listing = messageSnapshot.getValue(Listing.class);
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                        if (!Objects.equals(listing.getItemSellerId(), userID)){
+                        if (!Objects.equals(listing.getItemSellerId(), userID)) {
                             mItemList.add(listing);
                         }
                     } else {
@@ -114,6 +129,11 @@ public class ViewListingsActivity extends AppCompatActivity
                     }
                 }
                 mAdapter.notifyDataSetChanged();
+                progressDialog.dismiss();
+                //Check if no listing hint is visible and there's atleast an item
+                if(noListingTV.getVisibility() == View.VISIBLE && !mItemList.isEmpty()) {
+                    noListingTV.setVisibility(View.GONE);
+                }
             }
 
             @Override
@@ -311,13 +331,12 @@ public class ViewListingsActivity extends AppCompatActivity
     }
 
 
-    public void searchFromFirebase(String keywords){
+    public void searchFromFirebase(String keywords) {
 
-        final String keyword=keywords;
+        final String keyword = keywords;
         DatabaseReference userRef = mDatabase.getReference().child(DB_LISTING).child(userID).child(DB_USERNAME);
         Query query = mdatabaseReference.child(DB_LISTING).orderByChild("itemName");
-        query.addValueEventListener(new ValueEventListener()
-        {
+        query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 mItemList.removeAll(mItemList);
@@ -330,9 +349,9 @@ public class ViewListingsActivity extends AppCompatActivity
                     }
                     Listing listing = messageSnapshot.getValue(Listing.class);
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                        if (!Objects.equals(listing.getItemSellerId(), userID)){
+                        if (!Objects.equals(listing.getItemSellerId(), userID)) {
 
-                            if(listing.getItemName().contains(keyword)){
+                            if (listing.getItemName().contains(keyword)) {
                                 mItemList.add(listing);
                             }
 
@@ -351,11 +370,10 @@ public class ViewListingsActivity extends AppCompatActivity
         });
 
 
-
         // Attach a listener to read the data at our posts reference
-      //  mDatabase.getReference().child(LISTINGS).addValueEventListener(new ValueEventListener() {
+        //  mDatabase.getReference().child(LISTINGS).addValueEventListener(new ValueEventListener() {
 
-    //    });
+        //    });
     }
 
 
@@ -381,7 +399,8 @@ public class ViewListingsActivity extends AppCompatActivity
     }
 
     /**
-     *  Change the text colour in searchview
+     * Change the text colour in searchview
+     *
      * @param view
      */
     private void changeSearchViewTextColor(View view) {
