@@ -94,6 +94,7 @@ public class CreateListingActivity extends AppCompatActivity
     private String userName;
     private ArrayList<String> imageList = new ArrayList<>();
     private int requestingIV;
+    private int imageCount;
 
     @BindView(R.id.itemIV)
     ImageView itemIV;
@@ -316,9 +317,6 @@ public class CreateListingActivity extends AppCompatActivity
             finish();
         }
     }
-
-    // TO DO: Get the current time if possible
-    private int imageCount;
 
     private void saveListing() {
         //Check if all required fields are filled out

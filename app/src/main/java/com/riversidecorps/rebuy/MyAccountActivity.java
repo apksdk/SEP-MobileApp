@@ -58,7 +58,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
- * The type My account activity.
+ * The homepage / user account activity
  */
 
 public class
@@ -103,7 +103,7 @@ MyAccountActivity extends AppCompatActivity
         setContentView(R.layout.activity_my_account);
         MultiDex.install(this);
         ButterKnife.bind(this);
-
+        //Setup UI
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -112,7 +112,7 @@ MyAccountActivity extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
-
+        //Setup Nav View
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
@@ -133,11 +133,9 @@ MyAccountActivity extends AppCompatActivity
             finish();
             return;
         }
-
+        // UI Data Initialization
         userAvatarIV.setClickable(true);
-
         final String userID = mUser.getUid();
-
         userIDTV.setText(mUser.getDisplayName());
         usernameNavTV.setText(userIDTV.getText().toString());
 
@@ -157,12 +155,11 @@ MyAccountActivity extends AppCompatActivity
 
         //Set up recyclerview
         currentListingsRV.setLayoutManager(new LinearLayoutManager(this));
-
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
         currentListingsRV.addItemDecoration(dividerItemDecoration);
 
         DatabaseReference ref = mDatabase.getReference().child(DB_USERS).child(userID).child(DB_LISTING);
-
+        //Create query to filter out deleted items
         Query query = ref.orderByChild(ITEM_DELETED).equalTo(false);
         FirebaseRecyclerAdapter<Listing, ListingPreviewHolder> mAdapter = new FirebaseRecyclerAdapter<Listing, ListingPreviewHolder>(
                 Listing.class,
@@ -172,6 +169,7 @@ MyAccountActivity extends AppCompatActivity
 
             @Override
             public void onDataChanged() {
+                //Hide no listing message & dismiss loading dialog
                 noListingTV.setVisibility(View.GONE);
                 progressDialog.dismiss();
                 super.onDataChanged();
@@ -191,6 +189,7 @@ MyAccountActivity extends AppCompatActivity
              */
             @Override
             protected void populateViewHolder(ListingPreviewHolder viewHolder, Listing model, int position) {
+                //Setup UI for each listing item
                 viewHolder.setItemNameTV(model.getItemName());
                 viewHolder.setItemPriceTV(model.getItemPrice());
                 //Get the primary key of the item
@@ -203,21 +202,39 @@ MyAccountActivity extends AppCompatActivity
         currentListingsRV.setAdapter(mAdapter);
     }
 
+    /**
+     * Checks for permission to access external storage, starts activity to get image if it does otherwise
+     * request permissions for access.
+     *
+     * @param view the image view being clicked
+     */
     public void changeAvatarImage(View view) {
-        //Intent x = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        //Check if application has read permission
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            //Request permission
             ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSION_REQUEST_READ_STORAGE);
         } else {
+            //Start new intent to get an image
             Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             intent.setType("image/");
             startActivityForResult(intent, REQUEST_GALLERY_IMAGE);
         }
     }
 
+    /**
+     * Gets permission request result. If permission is granted then launch activity to select an image,
+     * otherwise show a permission denied message.
+     *
+     * @param requestCode
+     * @param permissions
+     * @param grantResults
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        //Check request code
         if (requestCode == REQUEST_GALLERY_IMAGE) {
+            //Check if permission was granted
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 intent.setType("image/*");
@@ -239,23 +256,29 @@ MyAccountActivity extends AppCompatActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
+        //Check request code
         if (requestCode == REQUEST_GALLERY_IMAGE) {
+            //Check if result was successful
             if (resultCode == Activity.RESULT_OK) {
                 try {
+                    //Get image from intent
                     Uri imageUri = data.getData();
                     InputStream imageStream = getContentResolver().openInputStream(imageUri);
-
+                    //Convert image stream to bitmap
                     final Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+                    //Create a new image view
                     final ImageView previewIV = new ImageView(this);
+                    //Create a new relative layout & setup its' parameters
                     final RelativeLayout relativeLayout = new RelativeLayout(this);
                     RelativeLayout.LayoutParams ivParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                     ivParams.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
+                    //Set parameters for the image view
                     previewIV.setLayoutParams(ivParams);
                     previewIV.setScaleType(ImageView.ScaleType.CENTER_CROP);
                     previewIV.setImageBitmap(selectedImage);
-
+                    //Add imageview to layout
                     relativeLayout.addView(previewIV);
+                    //Create new dialog and display it
                     new AlertDialog.Builder(MyAccountActivity.this)
                             .setMessage(R.string.change_avatar_confirmation)
                             .setTitle(R.string.change_image_confirmation_title)
@@ -351,6 +374,9 @@ MyAccountActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Closes the navigation drawer if it's open, otherwise exit the activity
+     */
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -361,6 +387,12 @@ MyAccountActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * Performs action when navigation menu item is clicked
+     *
+     * @param item selected item
+     * @return true
+     */
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
