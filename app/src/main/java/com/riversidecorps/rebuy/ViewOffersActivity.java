@@ -49,6 +49,11 @@ import butterknife.ButterKnife;
 
 import static android.content.ContentValues.TAG;
 
+/*
+    Authors: Lei Liu (Steven), Sean, Sebastian
+
+ */
+
 public class ViewOffersActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private RecyclerView mRecyclerView;
