@@ -59,7 +59,7 @@ public class MessageInboxActivity extends AppCompatActivity
     private static final String DB_MESSAGES = "Messages";
     private static final String AUTH_IN = "onAuthStateChanged:signed_in:";
     private static final String AUTH_OUT = "onAuthStateChanged:signed_out";
-    
+
     private RecyclerView mRecyclerView;
     private TextView mEmptyView;
     private ProgressDialog mProgressDialog;

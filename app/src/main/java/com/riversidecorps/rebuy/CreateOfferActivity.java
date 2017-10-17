@@ -41,19 +41,33 @@ import butterknife.OnClick;
 
 import static android.content.ContentValues.TAG;
 import static com.riversidecorps.rebuy.R.id.itemImagePreviewIV;
-
+/**
+ * Allow the user to make offer for the item. All the relevant data will be stored in the firebase
+ * ViewOffer Activity can fetch data from firebase directly.
+ * @author Lei Liu
+ * @version 1.0
+ * @since 03.09.2017
+ */
 public class CreateOfferActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
-
+    //Firebase variables
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseUser mUser;
     private DatabaseReference mDatabaseReference;
     private FirebaseStorage mStorage = FirebaseStorage.getInstance();
 
+    //Constants
     private static final String DB_OFFER = "Offers";
     private static final String AUTH_IN = "onAuthStateChanged:signed_in:";
     private static final String AUTH_OUT = "onAuthStateChanged:signed_out";
+    private static final String ITEM_SELLER_ID = "itemSellerID";
+    private static final String ITEM_NAME = "itemName";
+    private static final String ITEM_PRICE = "itemPrice";
+    private static final String ITEM_QUANTITY = "itemQuantity";
+    private static final String ITEM_ID = "itemId";
+
+    // view variables
     private String mItemName;
     private String mItemPrice;
     private Integer mItemQuantity;
@@ -71,6 +85,10 @@ public class CreateOfferActivity extends AppCompatActivity
     private ImageView mImageView;
 
     @Override
+    /**
+     * OnClick method for when either of the listeners are triggered
+     * @param v The view of the button clicked
+     */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_offer);
@@ -78,18 +96,19 @@ public class CreateOfferActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         ButterKnife.bind(this);
-
+        // firebase get current user
         mDatabaseReference = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
 
-
+        // send the content to variables in order to another activity can fetch it.
         mUserEmail = mUser.getEmail();
-        mItemName = getIntent().getStringExtra("itemName");
-        mItemPrice = getIntent().getStringExtra("itemPrice");
-        mItemQuantity = getIntent().getIntExtra("itemQuantity", 0);
-        mItemId = getIntent().getStringExtra("itemId");
+        mItemName = getIntent().getStringExtra(ITEM_NAME);
+        mItemPrice = getIntent().getStringExtra(ITEM_PRICE);
+        mItemQuantity = getIntent().getIntExtra(ITEM_QUANTITY, 0);
+        mItemId = getIntent().getStringExtra(ITEM_ID);
 
+        //Initialises the layout elements
         makeOfferBtn = (Button) findViewById(R.id.makeOfferBtn);
         cancelBtn = (Button) findViewById(R.id.cancelBtn);
         offerPriceET = (EditText) findViewById(R.id.itemOfferPriceET);
@@ -110,11 +129,12 @@ public class CreateOfferActivity extends AppCompatActivity
         mOfferAuthorTV = (TextView) findViewById(R.id.offerAuthorTV);
         mOfferAuthorTV.setText(mUserEmail);
 
+        // set image path
         mImageView = findViewById(itemImagePreviewIV);
         String imagePath = "itemImageListings/" + mItemId + ".png";
         //Upload image(s)
-        Log.i("imagePath", imagePath);
 
+        // set up nav view
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
@@ -137,7 +157,7 @@ public class CreateOfferActivity extends AppCompatActivity
                 .load(itemImageRef)
                 .into(mImageView);
 
-
+        // set up drawer layout
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -250,7 +270,10 @@ public class CreateOfferActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
+    /**
+     * Make offer or cancel
+     * @param view Which button was selected.
+     */
     @Override
     public void onClick(View view) {
         if (view == makeOfferBtn) {
@@ -259,15 +282,18 @@ public class CreateOfferActivity extends AppCompatActivity
             startActivity(new Intent(CreateOfferActivity.this, MyAccountActivity.class));
         }
     }
-
+    /**
+     * When make offer clicked checkout empty or not, and check whether quantity is enough or not
+     * @param
+     */
     @OnClick(R.id.makeOfferBtn)
     public void makeOffer() {
         if (offerPriceET.getText().toString().isEmpty()) {
             //Display error message
-            Toast.makeText(CreateOfferActivity.this, "Please enter an offer price", Toast.LENGTH_SHORT).show();
+            Toast.makeText(CreateOfferActivity.this, R.string.enter_offfer_price, Toast.LENGTH_SHORT).show();
         } else if (offerQuantityET.getText().toString().isEmpty()) {
             //Display error message
-            Toast.makeText(CreateOfferActivity.this, "Please enter the amount of items you would like to make an offer for", Toast.LENGTH_LONG).show();
+            Toast.makeText(CreateOfferActivity.this, R.string.enter_items_amount, Toast.LENGTH_LONG).show();
         } else {
             if (offerDescriptionET.getText().toString().isEmpty()) {
                 offerDescriptionET.setText("");
@@ -275,10 +301,10 @@ public class CreateOfferActivity extends AppCompatActivity
             Integer offerQuantity = Integer.parseInt(offerQuantityET.getText().toString());
             if (offerQuantity > mItemQuantity) {
                 new AlertDialog.Builder(CreateOfferActivity.this)
-                        .setTitle("Not Enough Items")
-                        .setMessage("You have requested to buy more items than the seller is selling.")
+                        .setTitle(R.string.not_enough_items)
+                        .setMessage(R.string.request_more_than_selling)
                         .setIcon(R.drawable.ic_dialog_warning)
-                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 dialogInterface.dismiss();
@@ -296,16 +322,15 @@ public class CreateOfferActivity extends AppCompatActivity
                 String itemId = mItemId;
                 Integer itemQuantity = mItemQuantity;
 
-                FirebaseUser myFirebaseUser = mAuth.getCurrentUser();
                 Date date = new Date();
                 Date newDate = new Date(date.getTime() + 604800000L * 2 + 24 * 60 * 60);
                 SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd");
                 String stringDate = dt.format(newDate);
-                String sellerId = getIntent().getStringExtra("itemSellerID");
+                String sellerId = getIntent().getStringExtra(ITEM_SELLER_ID);
 
                 Offer newOffer = new Offer(buyerId, buyerName, itemName, offerQuantity, itemQuantity, originalPrice, offerPrice, stringDate, itemDes, sellerId, itemId);
                 mDatabaseReference.child(DB_OFFER).push().setValue(newOffer);
-                Toast.makeText(this, "Please wait for making offer ...", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, R.string.wait_for_offer, Toast.LENGTH_LONG).show();
                 startActivity(new Intent(CreateOfferActivity.this, MyAccountActivity.class));
             }
         }

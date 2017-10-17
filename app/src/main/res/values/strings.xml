@@ -115,4 +115,18 @@
     <string name="loading_message">Loading messages...</string>
     <string name="new_message">New Message</string>
     <string name="received_new_message">You\'ve received new messages.</string>
+    <string name="cant_retrieve_images">Could not retrieve images.</string>
+    <string name="denied_causedby_permission">Reason: Permission Denied.</string>
+    <string name="remove_image">Remove Image</string>
+    <string name="whether_remove_image">Would you like to remove the last added image?</string>
+    <string name="field_empty">This field cannot be empty!</string>
+    <string name="create_success">Your listing has been successfully created!</string>
+    <string name="exit_confirm">Exit Confirmation</string>
+    <string name="exit_without_save">Are you sure you want to exit without saving your changes?</string>
+    <string name="wait_for_offer">Please wait for making offer ...</string>
+    <string name="ok">OK</string>
+    <string name="not_enough_items">Not Enough Items</string>
+    <string name="request_more_than_selling">You have requested to buy more items than the seller is selling.</string>
+    <string name="enter_items_amount">Please enter the amount of items you would like to make an offer for</string>
+    <string name="enter_offfer_price">Please enter an offer price</string>
 </resources>

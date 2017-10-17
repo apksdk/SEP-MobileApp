@@ -63,16 +63,25 @@ import butterknife.OnLongClick;
 
 import static android.content.ContentValues.TAG;
 
+/**
+ * Allow the user to create listing, Data will be stored into firebase once user click create button.
+ * Data will be used in the view listing activity. and it allow user to add images.
+ *
+ * @author Lei Liu
+ * @version 1.0
+ * @since 22.08.2017
+ */
 public class CreateListingActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
 
+    //Firebase variables
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseUser mUser;
     private DatabaseReference databaseReference;
     private FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
     private FirebaseStorage mStorage = FirebaseStorage.getInstance();
-
+    //Constants
     private static final String DB_LISTING = "Listings";
     private static final String DB_USERS = "Users";
     private static final String DB_USERNAME = "username";
@@ -81,9 +90,9 @@ public class CreateListingActivity extends AppCompatActivity
 
     private static final int PERMISSION_REQUEST_READ_STORAGE = 1000;
     private static final int REQUEST_GALLERY_IMAGE = 2;
-
+    //Progress dialog variable
     private ProgressDialog progressDialog;
-
+    //Layout elements
     private EditText itemNameET;
     private EditText itemQantityET;
     private EditText itemPriceET;
@@ -115,8 +124,13 @@ public class CreateListingActivity extends AppCompatActivity
     LinearLayout itemImagesLayout;
 
     @Override
+    /**
+     * What happens on the creation of the activity.
+     * @param savedInstanceState
+     */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //Inflates the activity_create_listing layout
         setContentView(R.layout.activity_create_listing);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -127,15 +141,16 @@ public class CreateListingActivity extends AppCompatActivity
 
         //Initialises progress dialog
         progressDialog = new ProgressDialog(this);
-
+        //Initialises the layout elements
         itemNameET = (EditText) findViewById(R.id.itemNameET);
         itemQantityET = (EditText) findViewById(R.id.itemQuantityET);
         itemPriceET = (EditText) findViewById(R.id.itemPriceET);
         itemDescriptionET = (EditText) findViewById(R.id.itemDescriptionET);
         confirmListingBTN = (Button) findViewById(R.id.confirmListingBTN);
         cancelListingBTN = (Button) findViewById(R.id.cancelListingBTN);
-
+        // firebase get Instance
         mAuth = FirebaseAuth.getInstance();
+        // Instance get current user
         mUser = mAuth.getCurrentUser();
         confirmListingBTN.setOnClickListener(this);
 
@@ -144,10 +159,9 @@ public class CreateListingActivity extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
-
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
+        // store data to firebase
         String userID = mUser.getUid();
         DatabaseReference userRef = mDatabase.getReference().child(DB_USERS).child(userID).child(DB_USERNAME);
         userRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -291,16 +305,16 @@ public class CreateListingActivity extends AppCompatActivity
                 if (!currentET.getText().toString().isEmpty()) {
                     isEdited = true;
                     new AlertDialog.Builder(CreateListingActivity.this)
-                            .setTitle("Exit Confirmation")
-                            .setMessage("Are you sure you want to exit without saving your changes?")
+                            .setTitle(R.string.exit_confirm)
+                            .setMessage(R.string.exit_without_save)
                             .setIcon(R.drawable.ic_dialog_warning)
-                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
                                     finish();
                                 }
                             })
-                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialogInterface, int i) {
                                     dialogInterface.dismiss();
@@ -318,6 +332,7 @@ public class CreateListingActivity extends AppCompatActivity
         }
     }
 
+    // save new created listing to firebase
     private void saveListing() {
         //Check if all required fields are filled out
         if (validateForm()) {
@@ -383,7 +398,7 @@ public class CreateListingActivity extends AppCompatActivity
                                     databaseReference.child(DB_USERS).child(sellerID).child(DB_LISTING).child(listingID).setValue(newMinListing).addOnSuccessListener(CreateListingActivity.this, new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {
-                                            Toast.makeText(getBaseContext(), "Your listing has been successfully created!", Toast.LENGTH_LONG).show();
+                                            Toast.makeText(getBaseContext(), R.string.create_success, Toast.LENGTH_LONG).show();
                                             //Close the progress dialog
                                             progressDialog.dismiss();
                                             finish();
@@ -413,7 +428,7 @@ public class CreateListingActivity extends AppCompatActivity
                 //Check if the edit text is empty
                 if (TextUtils.isEmpty(currentET.getText().toString())) {
                     //Display an error if it's empty
-                    currentET.setError("This field cannot be empty!");
+                    currentET.setError(getString(R.string.field_empty));
                     validForm = false;
                 }
             }
@@ -422,6 +437,10 @@ public class CreateListingActivity extends AppCompatActivity
     }
 
     @Override
+    /**
+     * OnClick method for when either of the listeners are triggered
+     * @param v The view of the button clicked
+     */
     public void onClick(View view) {
         if (view == confirmListingBTN) {
             saveListing();
@@ -449,9 +468,9 @@ public class CreateListingActivity extends AppCompatActivity
     @OnLongClick({R.id.itemImagesLayout, R.id.itemIV, R.id.item2IV, R.id.item3IV})
     public boolean removeLastImageHandler(View v) {
         new AlertDialog.Builder(this)
-                .setTitle("Remove Image")
-                .setMessage("Would you like to remove the last added image?")
-                .setPositiveButton("Remove Image", new DialogInterface.OnClickListener() {
+                .setTitle(R.string.remove_image)
+                .setMessage(R.string.whether_remove_image)
+                .setPositiveButton(R.string.remove_image, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         if (mItemIVCount == 3) {
@@ -474,7 +493,7 @@ public class CreateListingActivity extends AppCompatActivity
      *
      * @param view ImageView
      */
-    //TO DO: Maybe allow users to take images using their camera?
+    //Allow users to change images their phone
     public void changeItemImage(View view) {
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSION_REQUEST_READ_STORAGE);
@@ -511,7 +530,7 @@ public class CreateListingActivity extends AppCompatActivity
                 startActivityForResult(intent, REQUEST_GALLERY_IMAGE);
             } else {
                 //Display a permission denied error to the user
-                Toast.makeText(getApplicationContext(), "Could not retrieve images." + "\n" + "Reason: Permission Denied.", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), getString(R.string.cant_retrieve_images) + "\n" + getString(R.string.denied_causedby_permission), Toast.LENGTH_LONG).show();
             }
         }
     }
