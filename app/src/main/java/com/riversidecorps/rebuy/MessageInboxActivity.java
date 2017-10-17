@@ -55,13 +55,12 @@ public class MessageInboxActivity extends AppCompatActivity
     private static final String DB_MESSAGES = "Messages";
     private static final String AUTH_IN = "onAuthStateChanged:signed_in:";
     private static final String AUTH_OUT = "onAuthStateChanged:signed_out";
-    private com.riversidecorps.rebuy.adapter.messageAdapter mAdapter;
 
     private RecyclerView mRecyclerView;
     private TextView mEmptyView;
     private ProgressDialog mProgressDialog;
 
-    private int messageCount = 0;
+    private int mMessageCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,8 +142,8 @@ public class MessageInboxActivity extends AppCompatActivity
         mDatabaseReference.child(DB_USERS).child(userId).child(DB_MESSAGES).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
-                messageCount = (int) snapshot.getChildrenCount();
-                Log.i("oo", "first time: " +messageCount);
+                mMessageCount = (int) snapshot.getChildrenCount();
+                Log.i("oo", "first time: " + mMessageCount);
             }
 
             @Override
@@ -161,7 +160,7 @@ public class MessageInboxActivity extends AppCompatActivity
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
             }
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-               messageCount--;
+               mMessageCount--;
             }
             public void onChildMoved(DataSnapshot dataSnapshot, String s) {
             }
@@ -191,7 +190,7 @@ public class MessageInboxActivity extends AppCompatActivity
                     mRecyclerView.setVisibility(View.VISIBLE);
                     mEmptyView.setVisibility(View.GONE);
                 }
-                if (messageAdapter.getItemCount() > messageCount) {
+                if (messageAdapter.getItemCount() > mMessageCount) {
                     NotificationManager mNotifyMgr =
                             (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
                     PendingIntent contentIntent = PendingIntent.getActivity(
@@ -204,8 +203,8 @@ public class MessageInboxActivity extends AppCompatActivity
                                     .setSmallIcon(R.drawable.ic_notification)
                                     .setFullScreenIntent(contentIntent, false);
                     mNotifyMgr.notify(id, mNotifyBuilder.build());
-                    messageCount=messageAdapter.getItemCount();
-                    Log.i("oo","after updated : " +messageCount);
+                    mMessageCount =messageAdapter.getItemCount();
+                    Log.i("oo","after updated : " + mMessageCount);
                 }
                 mProgressDialog.dismiss();
             }

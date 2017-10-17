@@ -7,11 +7,9 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -19,15 +17,12 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,15 +39,13 @@ import com.riversidecorps.rebuy.adapter.OfferAdapter;
 import com.riversidecorps.rebuy.models.Message;
 import com.riversidecorps.rebuy.models.Offer;
 
-import java.text.DateFormat;
-import java.text.NumberFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.text.NumberFormat;
-import java.util.Locale;
 import java.util.Objects;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 import static android.content.ContentValues.TAG;
 
@@ -60,32 +53,36 @@ public class ViewOffersActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private RecyclerView mRecyclerView;
     private OfferAdapter mAdapter;
-    private ArrayList<Offer> mOfferList = new ArrayList<>();
+
+    private FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private FirebaseUser mUser = mAuth.getCurrentUser();
     private FirebaseAuth.AuthStateListener mAuthListener;
     private DatabaseReference mdatabaseReference;
-    private FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
-    private SwipeRefreshLayout swipeContainer;
+
     private ProgressDialog mProgressDialog;
+    private ArrayList<Offer> mOfferList = new ArrayList<>();
 
     private static final String DB_LISTING = "Listings";
     private static final String DB_USERS = "Users";
     private static final String DB_MESSAGES = "Messages";
-
     private static final String AUTH_IN = "onAuthStateChanged:signed_in:";
     private static final String AUTH_OUT = "onAuthStateChanged:signed_out";
     private static final String DB_OFFER = "Offers";
+
+    @BindView(R.id.noOffersTV)
+    TextView noOffersTV;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_offers);
+        ButterKnife.bind(this);
 
         mProgressDialog = new ProgressDialog(this);
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
-        mdatabaseReference = FirebaseDatabase.getInstance().getReference();
+        mdatabaseReference = mDatabase.getReference();
         if (mUser == null) {
             startActivity(new Intent(this, LoginActivity.class));
             finish();
@@ -126,6 +123,10 @@ public class ViewOffersActivity extends AppCompatActivity
                 }
                 progressDialog.dismiss();
                 mAdapter.notifyDataSetChanged();
+
+                if(noOffersTV.getVisibility() == View.VISIBLE && !mOfferList.isEmpty()) {
+                    noOffersTV.setVisibility(View.GONE);
+                }
             }
 
             @Override
@@ -218,6 +219,7 @@ public class ViewOffersActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
     //On start method
     @Override
     public void onStart() {
@@ -239,6 +241,7 @@ public class ViewOffersActivity extends AppCompatActivity
 
     /**
      * Creates the options menu on the action bar.
+     *
      * @param menu Menu at the top right of the screen
      * @return true
      */
@@ -251,12 +254,13 @@ public class ViewOffersActivity extends AppCompatActivity
 
     /**
      * Sets a listener that triggers when an option from the taskbar menu is selected.
+     *
      * @param item Which item on the menu was selected.
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         //Finds which item was selected
-        switch(item.getItemId()){
+        switch (item.getItemId()) {
             //If item is logout
             case R.id.action_logout:
                 //Sign out of the authenticator and return to login activity.
@@ -273,10 +277,11 @@ public class ViewOffersActivity extends AppCompatActivity
 
         return super.onOptionsItemSelected(item);
     }
+
     private void getResultsFromApi() {
     }
 
-    public void viewDetailedOffer(View v){
+    public void viewDetailedOffer(View v) {
         //Create alert dialog with the layout group_dialog
         final AlertDialog.Builder alertDialog = new AlertDialog.Builder(ViewOffersActivity.this);
         final View mView = getLayoutInflater().inflate(R.layout.dialog_view_offer, null);
@@ -298,7 +303,7 @@ public class ViewOffersActivity extends AppCompatActivity
 
         String currOffer = itemIDRV.getText().toString();
         for (Offer offer : mOfferList) {
-            if (offer.getOfferID().equals(currOffer)){
+            if (offer.getOfferID().equals(currOffer)) {
                 selectedOffer = offer;
                 itemName.setText(offer.getItemName());
                 itemBuyer.setText(offer.getItemBuyer());
@@ -307,7 +312,7 @@ public class ViewOffersActivity extends AppCompatActivity
                 offerQuantity.setText(offer.getOfferQuantity().toString());
                 String desCheck = offer.getOfferDescription();
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                    if(Objects.equals(desCheck, "")){
+                    if (Objects.equals(desCheck, "")) {
                         offerDescriptionPre.setText("");
                     }
                 }

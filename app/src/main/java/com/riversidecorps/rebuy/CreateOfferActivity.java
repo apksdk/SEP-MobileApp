@@ -40,7 +40,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 import static android.content.ContentValues.TAG;
-import static com.riversidecorps.rebuy.R.id.descriptionET;
 import static com.riversidecorps.rebuy.R.id.itemImagePreviewIV;
 
 public class CreateOfferActivity extends AppCompatActivity
@@ -49,7 +48,7 @@ public class CreateOfferActivity extends AppCompatActivity
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseUser mUser;
-    private DatabaseReference databaseReference;
+    private DatabaseReference mDatabaseReference;
     private FirebaseStorage mStorage = FirebaseStorage.getInstance();
 
     private static final String DB_OFFER = "Offers";
@@ -58,18 +57,18 @@ public class CreateOfferActivity extends AppCompatActivity
     private String mItemName;
     private String mItemPrice;
     private Integer mItemQuantity;
-    private String userEmail;
-    private TextView itemNameTV;
-    private TextView itemOriginalPriceTV;
-    private TextView itemQuanitityTV;
-    private TextView offerAuthorTV;
+    private String mUserEmail;
+    private TextView mItemNameTV;
+    private TextView mItemOriginalPriceTV;
+    private TextView mItemQuanitityTV;
+    private TextView mOfferAuthorTV;
     private Button makeOfferBtn;
     private Button cancelBtn;
     private EditText offerPriceET;
     private EditText offerQuantityET;
     private EditText offerDescriptionET;
     private String mItemId;
-    private ImageView mimageView;
+    private ImageView mImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,12 +79,12 @@ public class CreateOfferActivity extends AppCompatActivity
 
         ButterKnife.bind(this);
 
-        databaseReference = FirebaseDatabase.getInstance().getReference();
+        mDatabaseReference = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
 
 
-        userEmail = mUser.getEmail();
+        mUserEmail = mUser.getEmail();
         mItemName = getIntent().getStringExtra("itemName");
         mItemPrice = getIntent().getStringExtra("itemPrice");
         mItemQuantity = getIntent().getIntExtra("itemQuantity", 0);
@@ -99,19 +98,19 @@ public class CreateOfferActivity extends AppCompatActivity
         makeOfferBtn.setOnClickListener(this);
         cancelBtn.setOnClickListener(this);
 
-        itemNameTV = (TextView) findViewById(R.id.itemNameTV);
-        itemNameTV.setText(mItemName);
+        mItemNameTV = (TextView) findViewById(R.id.itemNameTV);
+        mItemNameTV.setText(mItemName);
 
-        itemOriginalPriceTV = (TextView) findViewById(R.id.itemOriginalPriceTV);
-        itemOriginalPriceTV.setText(mItemPrice);
+        mItemOriginalPriceTV = (TextView) findViewById(R.id.itemOriginalPriceTV);
+        mItemOriginalPriceTV.setText(mItemPrice);
 
-        itemQuanitityTV = (TextView) findViewById(R.id.itemQuantityTV);
-        itemQuanitityTV.setText(mItemQuantity.toString());
+        mItemQuanitityTV = (TextView) findViewById(R.id.itemQuantityTV);
+        mItemQuanitityTV.setText(mItemQuantity.toString());
 
-        offerAuthorTV = (TextView) findViewById(R.id.offerAuthorTV);
-        offerAuthorTV.setText(userEmail);
+        mOfferAuthorTV = (TextView) findViewById(R.id.offerAuthorTV);
+        mOfferAuthorTV.setText(mUserEmail);
 
-        mimageView = findViewById(itemImagePreviewIV);
+        mImageView = findViewById(itemImagePreviewIV);
         String imagePath = "itemImageListings/" + mItemId + ".png";
         //Upload image(s)
         Log.i("imagePath", imagePath);
@@ -136,7 +135,7 @@ public class CreateOfferActivity extends AppCompatActivity
         Glide.with(this)
                 .using(new FirebaseImageLoader())
                 .load(itemImageRef)
-                .into(mimageView);
+                .into(mImageView);
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -286,8 +285,8 @@ public class CreateOfferActivity extends AppCompatActivity
                             }
                         }).show();
             } else {
-                String itemName = itemNameTV.getText().toString().trim();
-                String originalPrice = itemOriginalPriceTV.getText().toString();
+                String itemName = mItemNameTV.getText().toString().trim();
+                String originalPrice = mItemOriginalPriceTV.getText().toString();
                 NumberFormat formattedP1 = NumberFormat.getCurrencyInstance(Locale.US);
                 String offerPrice = formattedP1.format(Double.parseDouble(offerPriceET.getText().toString()));
                 String itemDes = offerDescriptionET.getText().toString();
@@ -305,7 +304,7 @@ public class CreateOfferActivity extends AppCompatActivity
                 String sellerId = getIntent().getStringExtra("itemSellerID");
 
                 Offer newOffer = new Offer(buyerId, buyerName, itemName, offerQuantity, itemQuantity, originalPrice, offerPrice, stringDate, itemDes, sellerId, itemId);
-                databaseReference.child(DB_OFFER).push().setValue(newOffer);
+                mDatabaseReference.child(DB_OFFER).push().setValue(newOffer);
                 Toast.makeText(this, "Please wait for making offer ...", Toast.LENGTH_LONG).show();
                 startActivity(new Intent(CreateOfferActivity.this, MyAccountActivity.class));
             }

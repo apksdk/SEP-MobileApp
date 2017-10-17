@@ -30,17 +30,17 @@ import static android.content.ContentValues.TAG;
 public class ResetPasswordActivity extends AppCompatActivity implements View.OnClickListener {
 
     private FirebaseAuth.AuthStateListener mAuthListener;
-    final FirebaseAuth myFirebaseAuth = FirebaseAuth.getInstance();
-    FirebaseUser user = myFirebaseAuth.getCurrentUser();
+    private final FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    private FirebaseUser mUser = mAuth.getCurrentUser();
 
     private static final String AUTH_IN = "onAuthStateChanged:signed_in:";
     private static final String AUTH_OUT = "onAuthStateChanged:signed_out";
 
-    private Button reset;
-    private EditText etnewPassword;
-    private EditText etConfirmPassword;
-    ProgressDialog progressDialog;
-    Boolean isValid;
+    private Button mResetBTN;
+    private EditText newPasswordET;
+    private EditText confirmPasswordET;
+    private ProgressDialog mProgressDialog;
+    private Boolean isValid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,12 +50,12 @@ public class ResetPasswordActivity extends AppCompatActivity implements View.OnC
         setSupportActionBar(toolbar);
 
 
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("changing...");
+        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setMessage("changing...");
 
 
-        reset = (Button) findViewById(R.id.bChange);
-        reset.setOnClickListener(this);
+        mResetBTN = (Button) findViewById(R.id.bChange);
+        mResetBTN.setOnClickListener(this);
 
         //Set listener that triggers when a user signs out
         mAuthListener = new FirebaseAuth.AuthStateListener() {
@@ -79,7 +79,7 @@ public class ResetPasswordActivity extends AppCompatActivity implements View.OnC
     public void onStart() {
         super.onStart();
         //Sets a listener to catch when the user is signing in.
-        myFirebaseAuth.addAuthStateListener(mAuthListener);
+        mAuth.addAuthStateListener(mAuthListener);
     }
 
     //On stop method
@@ -88,7 +88,7 @@ public class ResetPasswordActivity extends AppCompatActivity implements View.OnC
         super.onStop();
         //Sets listener to catch when the user is signing out.
         if (mAuthListener != null) {
-            myFirebaseAuth.removeAuthStateListener(mAuthListener);
+            mAuth.removeAuthStateListener(mAuthListener);
         }
     }
     /**
@@ -114,11 +114,11 @@ public class ResetPasswordActivity extends AppCompatActivity implements View.OnC
             //If item is logout
             case R.id.action_logout:
                 //Sign out of the authenticator and return to login activity.
-                myFirebaseAuth.signOut();
+                mAuth.signOut();
                 ResetPasswordActivity.this.startActivity(new Intent(ResetPasswordActivity.this, LoginActivity.class));
                 return true;
 
-            //If item is reset password
+            //If item is mResetBTN password
             case R.id.action_reset_password:
                 ResetPasswordActivity.this.startActivity(new Intent(ResetPasswordActivity.this, ResetPasswordActivity.class));
                 return true;
@@ -130,21 +130,21 @@ public class ResetPasswordActivity extends AppCompatActivity implements View.OnC
 
     @Override
     public void onClick(View view) {
-        if (view == reset) {
+        if (view == mResetBTN) {
             changePassword();
         }
     }
 
     private void changePassword() {
-        etnewPassword = (EditText) findViewById(R.id.etNewPassword);
-        etConfirmPassword = (EditText) findViewById(R.id.etConfirmPassword);
+        newPasswordET = (EditText) findViewById(R.id.etNewPassword);
+        confirmPasswordET = (EditText) findViewById(R.id.etConfirmPassword);
 
-        String newPassword = etnewPassword.getText().toString().trim();
-        String confirmPassword = etConfirmPassword.getText().toString().trim();
+        String newPassword = newPasswordET.getText().toString().trim();
+        String confirmPassword = confirmPasswordET.getText().toString().trim();
 
         if (validationPassed(newPassword, confirmPassword)){
-            if (user != null) {
-                user.updatePassword(newPassword)
+            if (mUser != null) {
+                mUser.updatePassword(newPassword)
                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
@@ -167,24 +167,24 @@ public class ResetPasswordActivity extends AppCompatActivity implements View.OnC
 
     private boolean validationPassed(String newP, String confirmP){
         isValid = false;
-        etnewPassword = (EditText) findViewById(R.id.etNewPassword);
-        etConfirmPassword = (EditText) findViewById(R.id.etConfirmPassword);
+        newPasswordET = (EditText) findViewById(R.id.etNewPassword);
+        confirmPasswordET = (EditText) findViewById(R.id.etConfirmPassword);
         //if empty
         if (TextUtils.isEmpty(newP)){
-            etnewPassword.setError("Please enter new password");
+            newPasswordET.setError("Please enter new password");
         }else {
             //Length validation
             if (newP.length() < 6) {
-                etnewPassword.setError("Password too short");
+                newPasswordET.setError("Password too short");
             } else if (newP.length() > 25) {
-                etnewPassword.setError("Password too long");
+                newPasswordET.setError("Password too long");
             } else {
                 //length is good
                 //if confirmP == newP
                 if (confirmP.equals(newP)){
                     isValid = true;
                 } else {
-                    etConfirmPassword.setError("Please confirm again");
+                    confirmPasswordET.setError("Please confirm again");
                 }
             }
         }
