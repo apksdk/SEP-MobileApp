@@ -104,22 +104,26 @@ public class ViewOffersActivity extends AppCompatActivity
             public void onDataChange(DataSnapshot snapshot) {
                 mOfferList.removeAll(mOfferList);
                 for (DataSnapshot messageSnapshot : snapshot.getChildren()) {
+                    //Set the fields required
                     Offer offer = messageSnapshot.getValue(Offer.class);
                     String mOfferID = (String) messageSnapshot.getKey();
                     Boolean isDeleted = offer.getOfferDeleted();
                     Boolean isCompleted = offer.getOfferCompleted();
+
                     //If the item is marked as deleted or completed skip to the next item
                     if (isDeleted || isCompleted) {
                         continue;
                     }
                     offer.setOfferID(mOfferID);
-//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-//                        if (Objects.equals(newOffer.getSellerId(), userId)){
-//                            mOfferList.add(newOffer);
-//                        }
-//                    } else {
-                    mOfferList.add(offer);
-//                    }
+
+                    //Fix to prevent all users from seeing offers that are not their own
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                        if (Objects.equals(offer.getSellerId(), userId)){
+                            mOfferList.add(offer);
+                        }
+                    } else {
+                        mOfferList.add(offer);
+                    }
                 }
                 progressDialog.dismiss();
                 mAdapter.notifyDataSetChanged();
@@ -411,7 +415,7 @@ public class ViewOffersActivity extends AppCompatActivity
                         finish();
                     }
                 });
-
+                //Set offer as completed so it will be removed later
                 mdatabaseReference.child(DB_OFFER).child(mOfferID).child("offerCompleted").setValue(true);
 
             }

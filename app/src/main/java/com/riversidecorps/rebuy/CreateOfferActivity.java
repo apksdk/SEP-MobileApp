@@ -83,13 +83,14 @@ public class CreateOfferActivity extends AppCompatActivity
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
 
-
+        //Set fields from the previous activity to global variables here
         mUserEmail = mUser.getEmail();
         mItemName = getIntent().getStringExtra("itemName");
         mItemPrice = getIntent().getStringExtra("itemPrice");
         mItemQuantity = getIntent().getIntExtra("itemQuantity", 0);
         mItemId = getIntent().getStringExtra("itemId");
 
+        //Set up UI design elements
         makeOfferBtn = (Button) findViewById(R.id.makeOfferBtn);
         cancelBtn = (Button) findViewById(R.id.cancelBtn);
         offerPriceET = (EditText) findViewById(R.id.itemOfferPriceET);
@@ -115,6 +116,7 @@ public class CreateOfferActivity extends AppCompatActivity
         //Upload image(s)
         Log.i("imagePath", imagePath);
 
+        //Set up navigation view
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
@@ -124,7 +126,7 @@ public class CreateOfferActivity extends AppCompatActivity
         ImageView userNavAvatarIV = navView.findViewById(R.id.userNavAvatarIV);
         usernameNavTV.setText(mUser.getDisplayName());
 
-        //Set up nav menu
+        //Set up navigation menu
         emailNavTV.setText(mUser.getEmail());
         Glide.with(this)
                 .load(mUser.getPhotoUrl())
@@ -253,6 +255,7 @@ public class CreateOfferActivity extends AppCompatActivity
 
     @Override
     public void onClick(View view) {
+        //Event to check whether makeOfferBtn or cancelBtn was clicked
         if (view == makeOfferBtn) {
             makeOffer();
         } else if (view == cancelBtn) {
@@ -269,44 +272,52 @@ public class CreateOfferActivity extends AppCompatActivity
             //Display error message
             Toast.makeText(CreateOfferActivity.this, "Please enter the amount of items you would like to make an offer for", Toast.LENGTH_LONG).show();
         } else {
+            //Check if description was provided, if not, set description to ""
             if (offerDescriptionET.getText().toString().isEmpty()) {
                 offerDescriptionET.setText("");
             }
             Integer offerQuantity = Integer.parseInt(offerQuantityET.getText().toString());
-            if (offerQuantity > mItemQuantity) {
-                new AlertDialog.Builder(CreateOfferActivity.this)
-                        .setTitle("Not Enough Items")
-                        .setMessage("You have requested to buy more items than the seller is selling.")
-                        .setIcon(R.drawable.ic_dialog_warning)
-                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                dialogInterface.dismiss();
-                            }
-                        }).show();
-            } else {
-                String itemName = mItemNameTV.getText().toString().trim();
-                String originalPrice = mItemOriginalPriceTV.getText().toString();
-                NumberFormat formattedP1 = NumberFormat.getCurrencyInstance(Locale.US);
-                String offerPrice = formattedP1.format(Double.parseDouble(offerPriceET.getText().toString()));
-                String itemDes = offerDescriptionET.getText().toString();
-                String buyerName = mUser.getDisplayName();
-                String buyerId = mUser.getUid();
-                //Variable rename to keep database consistent
-                String itemId = mItemId;
-                Integer itemQuantity = mItemQuantity;
+            //Validate that offered quantity isn't zero
+            if (offerQuantity > 0) {
+                //Validate that offered quantity is greater than/equal to the item quantity
+                if (offerQuantity > mItemQuantity) {
+                    //Send error message
+                    new AlertDialog.Builder(CreateOfferActivity.this)
+                            .setTitle("Not Enough Items")
+                            .setMessage("You have requested to buy more items than the seller is selling.")
+                            .setIcon(R.drawable.ic_dialog_warning)
+                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.dismiss();
+                                }
+                            }).show();
+                } else {
+                    //Initialise fields to be used for creating offer
+                    String itemName = mItemNameTV.getText().toString().trim();
+                    String originalPrice = mItemOriginalPriceTV.getText().toString();
+                    NumberFormat formattedP1 = NumberFormat.getCurrencyInstance(Locale.US);
+                    String offerPrice = formattedP1.format(Double.parseDouble(offerPriceET.getText().toString()));
+                    String itemDes = offerDescriptionET.getText().toString();
+                    String buyerName = mUser.getDisplayName();
+                    String buyerId = mUser.getUid();
+                    //Variable renames to keep database consistent
+                    String itemId = mItemId;
+                    Integer itemQuantity = mItemQuantity;
 
-                FirebaseUser myFirebaseUser = mAuth.getCurrentUser();
-                Date date = new Date();
-                Date newDate = new Date(date.getTime() + 604800000L * 2 + 24 * 60 * 60);
-                SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd");
-                String stringDate = dt.format(newDate);
-                String sellerId = getIntent().getStringExtra("itemSellerID");
+                    FirebaseUser myFirebaseUser = mAuth.getCurrentUser();
+                    Date date = new Date();
+                    Date newDate = new Date(date.getTime() + 604800000L * 2 + 24 * 60 * 60);
+                    SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd");
+                    String stringDate = dt.format(newDate);
+                    String sellerId = getIntent().getStringExtra("itemSellerID");
 
-                Offer newOffer = new Offer(buyerId, buyerName, itemName, offerQuantity, itemQuantity, originalPrice, offerPrice, stringDate, itemDes, sellerId, itemId);
-                mDatabaseReference.child(DB_OFFER).push().setValue(newOffer);
-                Toast.makeText(this, "Please wait for making offer ...", Toast.LENGTH_LONG).show();
-                startActivity(new Intent(CreateOfferActivity.this, MyAccountActivity.class));
+                    //Create an offer and display loading message
+                    Offer newOffer = new Offer(buyerId, buyerName, itemName, offerQuantity, itemQuantity, originalPrice, offerPrice, stringDate, itemDes, sellerId, itemId);
+                    mDatabaseReference.child(DB_OFFER).push().setValue(newOffer);
+                    Toast.makeText(this, "Please wait while we create an offer ...", Toast.LENGTH_LONG).show();
+                    startActivity(new Intent(CreateOfferActivity.this, MyAccountActivity.class));
+                }
             }
         }
 
