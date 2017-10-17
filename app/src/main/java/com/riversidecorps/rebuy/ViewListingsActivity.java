@@ -2,7 +2,6 @@ package com.riversidecorps.rebuy;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -25,7 +24,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
@@ -60,7 +58,6 @@ public class ViewListingsActivity extends AppCompatActivity
     private FirebaseAuth.AuthStateListener mAuthListener;
     private DatabaseReference mdatabaseReference;
     private FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
-
     private String userID;
     private String userName;
     private String mfilter;
@@ -69,7 +66,9 @@ public class ViewListingsActivity extends AppCompatActivity
     private static final String AUTH_OUT = "onAuthStateChanged:signed_out";
     private static final String DB_LISTING = "Listings";
     private static final String DB_USERNAME = "username";
-
+    private static final String ITEM_DELETED = "itemDeleted";
+    private static final String ITEM_COMPLETED = "itemCompleted";
+    private static final String ITEM_NAME = "itemName";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,7 +87,7 @@ public class ViewListingsActivity extends AppCompatActivity
         }
         //Setup Loading dialog
         final ProgressDialog progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Loading listings...");
+        progressDialog.setMessage(getString(R.string.loading_string));
         progressDialog.setCancelable(false);
         progressDialog.show();
 
@@ -103,9 +102,6 @@ public class ViewListingsActivity extends AppCompatActivity
         userID = mUser.getUid();
         userName = mUser.getDisplayName();
 
-        // Attach listener to display welcome bar personalised for user's name
-        DatabaseReference userRef = mDatabase.getReference().child("users").child(userID).child(DB_USERNAME);
-
         // Attach a listener to read the data at our posts reference
         mDatabase.getReference().child(DB_LISTING).addValueEventListener(new ValueEventListener() {
 
@@ -113,8 +109,8 @@ public class ViewListingsActivity extends AppCompatActivity
             public void onDataChange(DataSnapshot snapshot) {
                 mItemList.clear();
                 for (DataSnapshot messageSnapshot : snapshot.getChildren()) {
-                    Boolean isDeleted = (Boolean) messageSnapshot.child("itemDeleted").getValue();
-                    Boolean isCompleted = (Boolean) messageSnapshot.child("itemCompleted").getValue();
+                    Boolean isDeleted = (Boolean) messageSnapshot.child(ITEM_DELETED).getValue();
+                    Boolean isCompleted = (Boolean) messageSnapshot.child(ITEM_COMPLETED).getValue();
                     //If the item is marked as deleted or completed skip to the next item
                     if (isDeleted || isCompleted) {
                         continue;
@@ -131,14 +127,14 @@ public class ViewListingsActivity extends AppCompatActivity
                 mAdapter.notifyDataSetChanged();
                 progressDialog.dismiss();
                 //Check if no listing hint is visible and there's atleast an item
-                if(noListingTV.getVisibility() == View.VISIBLE && !mItemList.isEmpty()) {
+                if (noListingTV.getVisibility() == View.VISIBLE && !mItemList.isEmpty()) {
                     noListingTV.setVisibility(View.GONE);
                 }
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                System.out.println("The read failed: " + databaseError.getCode());
+                System.out.println(getString(R.string.read_failed) + databaseError.getCode());
             }
         });
 
@@ -186,7 +182,6 @@ public class ViewListingsActivity extends AppCompatActivity
     @Override
     protected void onRestart() {
         super.onRestart();
-        Log.i("TTT", "onRestart");
     }
 
     @Override
@@ -226,14 +221,12 @@ public class ViewListingsActivity extends AppCompatActivity
     @Override
     public void onStart() {
         super.onStart();
-        Log.i("TTT", "onStart");
         //Sets a listener to catch when the user is signing in.
         mAuth.addAuthStateListener(mAuthListener);
     }
 
     @Override
     protected void onPause() {
-        Log.i("TTT", "onPause");
         super.onPause();
     }
 
@@ -241,7 +234,6 @@ public class ViewListingsActivity extends AppCompatActivity
     @Override
     public void onStop() {
         super.onStop();
-        Log.i("TTT", "onStop");
         //Sets listener to catch when the user is signing out.
         if (mAuthListener != null) {
             mAuth.removeAuthStateListener(mAuthListener);
@@ -249,24 +241,8 @@ public class ViewListingsActivity extends AppCompatActivity
     }
 
     @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-
-            Log.i("TTT", "ORIENTATION_LANDSCAPE");
-
-            // land do nothing is ok
-        } else if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-            Log.i("TTT", "ORIENTATION_LANDSCAPE");
-
-            // port do nothing is ok
-        }
-    }
-
-    @Override
     public void onResume() {
         super.onResume();
-        Log.i("TTT", "onResume");
     }
 
     /**
@@ -277,10 +253,13 @@ public class ViewListingsActivity extends AppCompatActivity
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        //Inflates the menu menu_other which includes logout and quit functions.
+        //Inflates the menu menu_other which includes logout, search and quit functions.
         getMenuInflater().inflate(R.menu.search_listings, menu);
         MenuItem searchItem = menu.findItem(R.id.search);
         SearchView searchView = (SearchView) searchItem.getActionView();
+
+
+        // set text colour for search view
         searchView.setOnQueryTextListener(this);
         changeSearchViewTextColor(searchView);
         MenuItemCompat.setOnActionExpandListener(searchItem,
@@ -292,12 +271,6 @@ public class ViewListingsActivity extends AppCompatActivity
 
                     @Override
                     public boolean onMenuItemActionCollapse(MenuItem menuItem) {
-                        Toast.makeText(getApplicationContext(), "onMenuItemActionCollapse", Toast.LENGTH_SHORT).show();
-                      /*  datasource.open();
-                        mReminderList.clear();
-                        mReminderList.addAll(datasource.findAll());
-                        mAdapter.notifyDataSetChanged();
-                        datasource.close();*/
                         return true;
                     }
                 });
@@ -330,19 +303,23 @@ public class ViewListingsActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-
+    /**
+     * Search the item title from firebase by keywords
+     *
+     * @param keywords
+     */
     public void searchFromFirebase(String keywords) {
 
         final String keyword = keywords;
         DatabaseReference userRef = mDatabase.getReference().child(DB_LISTING).child(userID).child(DB_USERNAME);
-        Query query = mdatabaseReference.child(DB_LISTING).orderByChild("itemName");
+        Query query = mdatabaseReference.child(DB_LISTING).orderByChild(ITEM_NAME);
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 mItemList.removeAll(mItemList);
                 for (DataSnapshot messageSnapshot : snapshot.getChildren()) {
-                    Boolean isDeleted = (Boolean) messageSnapshot.child("itemDeleted").getValue();
-                    Boolean isCompleted = (Boolean) messageSnapshot.child("itemCompleted").getValue();
+                    Boolean isDeleted = (Boolean) messageSnapshot.child(ITEM_DELETED).getValue();
+                    Boolean isCompleted = (Boolean) messageSnapshot.child(ITEM_COMPLETED).getValue();
                     //If the item is marked as deleted or completed skip to the next item
                     if (isDeleted || isCompleted) {
                         continue;
@@ -350,11 +327,9 @@ public class ViewListingsActivity extends AppCompatActivity
                     Listing listing = messageSnapshot.getValue(Listing.class);
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                         if (!Objects.equals(listing.getItemSellerId(), userID)) {
-
                             if (listing.getItemName().contains(keyword)) {
                                 mItemList.add(listing);
                             }
-
                         }
                     } else {
                         mItemList.add(listing);
@@ -365,36 +340,28 @@ public class ViewListingsActivity extends AppCompatActivity
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                System.out.println("The read failed: " + databaseError.getCode());
+                System.out.println(getString(R.string.read_failed) + databaseError.getCode());
             }
         });
 
-
-        // Attach a listener to read the data at our posts reference
-        //  mDatabase.getReference().child(LISTINGS).addValueEventListener(new ValueEventListener() {
-
-        //    });
     }
 
-
-    private void getResultsFromApi() {
-    }
 
     @Override
     public boolean onQueryTextSubmit(String query) {
         return false;
     }
 
+    /**
+     * Get search result when input changes
+     *
+     * @param newText
+     */
     @Override
     public boolean onQueryTextChange(String newText) {
         mfilter = newText;
         searchFromFirebase(newText);
-        //  datasource.open();
-        //mItemList.clear();
-        //      mItemList.addAll(datasource.filterReminder(newText));
-
         mAdapter.notifyDataSetChanged();
-        //       datasource.close();
         return false;
     }
 

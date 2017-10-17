@@ -109,4 +109,10 @@
     <string name="avatar_saved_success">You have successfully saved your avatar.</string>
     <string name="avatar_saved_failed">There was an error while saving your avatar. Please try again.</string>
     <string name="no">No</string>
+    <string name="search_event">Search event</string>
+    <string name="loading_string">Loading listings...</string>
+    <string name="read_failed">The read failed:</string>
+    <string name="loading_message">Loading messages...</string>
+    <string name="new_message">New Message</string>
+    <string name="received_new_message">You\'ve received new messages.</string>
 </resources>

@@ -47,19 +47,14 @@ public class MessageInboxActivity extends AppCompatActivity
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseUser mUser;
     private DatabaseReference mDatabaseReference;
-
     private ArrayList<Message> mMessageList = new ArrayList<>();
-
-    private static final String DB_LISTING = "Listings";
     private static final String DB_USERS = "Users";
     private static final String DB_MESSAGES = "Messages";
     private static final String AUTH_IN = "onAuthStateChanged:signed_in:";
     private static final String AUTH_OUT = "onAuthStateChanged:signed_out";
-
     private RecyclerView mRecyclerView;
     private TextView mEmptyView;
     private ProgressDialog mProgressDialog;
-
     private int mMessageCount;
 
     @Override
@@ -85,7 +80,7 @@ public class MessageInboxActivity extends AppCompatActivity
 
         //Setup Loading dialog
         mProgressDialog = new ProgressDialog(this);
-        mProgressDialog.setMessage("Loading messages...");
+        mProgressDialog.setMessage(getString(R.string.loading_message));
         mProgressDialog.setCancelable(false);
         mProgressDialog.show();
 
@@ -114,11 +109,8 @@ public class MessageInboxActivity extends AppCompatActivity
                     // User is signed out
                     Log.d(TAG, AUTH_OUT);
                 }
-                // ...
             }
         };
-
-        mRecyclerView = findViewById(R.id.message_recycler_view);
         init();
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
@@ -126,8 +118,13 @@ public class MessageInboxActivity extends AppCompatActivity
 
     }
 
-    //
+    /**
+     *  Set message list to message adapter, send notification when receiving new message
+     *
+     * @param
+     */
     private void init() {
+        mRecyclerView = findViewById(R.id.message_recycler_view);
         final messageAdapter messageAdapter = new messageAdapter(mMessageList, this);
         String userId = mUser.getUid();
         mRecyclerView.setAdapter(messageAdapter);
@@ -143,37 +140,32 @@ public class MessageInboxActivity extends AppCompatActivity
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 mMessageCount = (int) snapshot.getChildrenCount();
-                Log.i("oo", "first time: " + mMessageCount);
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                System.out.println("The read failed: " + databaseError.getCode());
+                System.out.println(getString(R.string.read_failed) + databaseError.getCode());
             }
         });
-
+        // message count minus one after one message has been removed
         mDatabaseReference.child(DB_USERS).child(userId).child(DB_MESSAGES).addChildEventListener(new ChildEventListener() {
-            public void onChildAdded(DataSnapshot dataSnapshot, String previousKey) {
-              //  Toast.makeText(getApplicationContext(),"ADD NEW", Toast.LENGTH_SHORT).show();
-              //  System.out.println("Add "+dataSnapshot.getKey()+" to UI after "+previousKey);
-            }
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-            }
+            public void onChildAdded(DataSnapshot dataSnapshot, String previousKey) {}
+
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {}
+
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-               mMessageCount--;
+                mMessageCount--;
             }
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-            }
+
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {}
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void onCancelled(DatabaseError databaseError) {}
 
-            }
-
-            public void onCancelled() { }
+            public void onCancelled() {}
         });
 
-
+        // Set empty view for message box, when got one new message send notification and message count plus one
         mDatabaseReference.child(DB_USERS).child(userId).child(DB_MESSAGES).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
@@ -198,20 +190,19 @@ public class MessageInboxActivity extends AppCompatActivity
 
                     NotificationCompat.Builder mNotifyBuilder =
                             new NotificationCompat.Builder(getApplicationContext())
-                                    .setContentTitle("New Message")
-                                    .setContentText("You've received new messages.")
+                                    .setContentTitle(getString(R.string.new_message))
+                                    .setContentText(getString(R.string.received_new_message))
                                     .setSmallIcon(R.drawable.ic_notification)
                                     .setFullScreenIntent(contentIntent, false);
                     mNotifyMgr.notify(id, mNotifyBuilder.build());
-                    mMessageCount =messageAdapter.getItemCount();
-                    Log.i("oo","after updated : " + mMessageCount);
+                    mMessageCount = messageAdapter.getItemCount();
                 }
                 mProgressDialog.dismiss();
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                System.out.println("The read failed: " + databaseError.getCode());
+                System.out.println(getString(R.string.read_failed) + databaseError.getCode());
             }
         });
     }
