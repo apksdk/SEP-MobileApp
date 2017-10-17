@@ -183,6 +183,7 @@ public class ListingPreviewHolder extends RecyclerView.ViewHolder {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Listing listing = dataSnapshot.getValue(Listing.class);
+                intent.putExtra("isOwner", true);
                 intent.putExtra("itemName", listing.getItemName());
                 intent.putExtra("itemPrice", listing.getItemPrice());
                 intent.putExtra("itemDes", listing.getItemDescription());

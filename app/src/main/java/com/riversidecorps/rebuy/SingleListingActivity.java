@@ -102,6 +102,7 @@ public class SingleListingActivity extends AppCompatActivity
         ButterKnife.bind(this);
         //Get info passed from previous activity
         Intent intent = getIntent();
+        boolean isOwner = intent.getBooleanExtra("isOwner", false);
         mItemID = intent.getStringExtra("itemId");
         mItemName = intent.getStringExtra("itemName");
         mItemPrice = intent.getStringExtra("itemPrice");
@@ -133,6 +134,12 @@ public class SingleListingActivity extends AppCompatActivity
         mOfferBTN.setOnClickListener(this);
         mBuyBTN.setOnClickListener(this);
         mMessageBTN.setOnClickListener(this);
+        //Check if the item belongs to the owner
+        if(isOwner) {
+            mOfferBTN.setVisibility(View.INVISIBLE);
+            mBuyBTN.setVisibility(View.INVISIBLE);
+            mMessageBTN.setVisibility(View.INVISIBLE);
+        }
 
         //Set up nav UI
         final View navView = navigationView.getHeaderView(0);

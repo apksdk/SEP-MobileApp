@@ -111,7 +111,7 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ViewHolder> {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(context, SingleListingActivity.class);
-
+                intent.putExtra("isOwner", false);
                 intent.putExtra("itemName", itemLists.get(viewHolder.getAdapterPosition()).getItemName());
                 intent.putExtra("itemPrice", itemLists.get(viewHolder.getAdapterPosition()).getItemPrice());
                 intent.putExtra("itemDes", itemLists.get(viewHolder.getAdapterPosition()).getItemDescription());
