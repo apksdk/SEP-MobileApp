@@ -44,20 +44,27 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static android.content.ContentValues.TAG;
-
+/**
+ * Display all listings other than login user's, user can search listing
+ * title by keywords, click one listing will jump to single listing activity.
+ * @author Yijun Gai
+ * @version 1.0
+ * @since 21.08.2017
+ */
 public class ViewListingsActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, SearchView.OnQueryTextListener {
     @BindView(R.id.noListingTV)
     TextView noListingTV;
     private RecyclerView mRecyclerView;
     private ItemAdapter mAdapter;
-
     private ArrayList<Listing> mItemList = new ArrayList<>();
+
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private FirebaseUser mUser = mAuth.getCurrentUser();
     private FirebaseAuth.AuthStateListener mAuthListener;
     private DatabaseReference mdatabaseReference;
     private FirebaseDatabase mDatabase = FirebaseDatabase.getInstance();
+
     private String userID;
     private String userName;
     private String mfilter;
@@ -75,10 +82,11 @@ public class ViewListingsActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_listings);
         ButterKnife.bind(this);
-
+        // get FirebaseAuth, databaseReference instance
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
         mdatabaseReference = FirebaseDatabase.getInstance().getReference();
+        // if user has't logged in, redirect to login activity
         if (mUser == null) {
             startActivity(new Intent(this, LoginActivity.class));
             finish();
@@ -90,7 +98,7 @@ public class ViewListingsActivity extends AppCompatActivity
         progressDialog.setMessage(getString(R.string.loading_string));
         progressDialog.setCancelable(false);
         progressDialog.show();
-
+        // set up layour for recycler view
         mRecyclerView = findViewById(R.id.listing_recycler_view);
         mAdapter = new ItemAdapter(this, mItemList);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
@@ -98,13 +106,11 @@ public class ViewListingsActivity extends AppCompatActivity
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
-
+        // get user name and id
         userID = mUser.getUid();
         userName = mUser.getDisplayName();
-
         // Attach a listener to read the data at our posts reference
         mDatabase.getReference().child(DB_LISTING).addValueEventListener(new ValueEventListener() {
-
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 mItemList.clear();
@@ -138,7 +144,7 @@ public class ViewListingsActivity extends AppCompatActivity
             }
         });
 
-
+        //set up toolbar and navigationview
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -146,23 +152,21 @@ public class ViewListingsActivity extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
-
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
         final View navView = navigationView.getHeaderView(0);
         final TextView usernameNavTV = navView.findViewById(R.id.userNavIDTV);
+        // find user email and avatar view
         TextView emailNavTV = navView.findViewById(R.id.userNavEmailTV);
         ImageView userNavAvatarIV = navView.findViewById(R.id.userNavAvatarIV);
+        // display user name
         usernameNavTV.setText(mUser.getDisplayName());
-
         //Set up nav menu
         emailNavTV.setText(mUser.getEmail());
         Glide.with(this)
                 .load(mUser.getPhotoUrl())
                 .placeholder(R.mipmap.ic_launcher)
                 .into(userNavAvatarIV);
-
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -177,11 +181,6 @@ public class ViewListingsActivity extends AppCompatActivity
                 // ...
             }
         };
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
     }
 
     @Override

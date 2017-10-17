@@ -39,7 +39,14 @@ import java.util.ArrayList;
 
 import static android.R.attr.id;
 import static android.content.ContentValues.TAG;
-
+/**
+ * Receiving messages when other user send message to the login user,
+ * also when other user click 'buy it now' the login user will receive
+ * a message, login user can delete and reply the message.
+ * @author Yijun Gai
+ * @version 1.0
+ * @since 23.08.2017
+ */
 public class MessageInboxActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -47,15 +54,17 @@ public class MessageInboxActivity extends AppCompatActivity
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseUser mUser;
     private DatabaseReference mDatabaseReference;
-    private ArrayList<Message> mMessageList = new ArrayList<>();
+
     private static final String DB_USERS = "Users";
     private static final String DB_MESSAGES = "Messages";
     private static final String AUTH_IN = "onAuthStateChanged:signed_in:";
     private static final String AUTH_OUT = "onAuthStateChanged:signed_out";
+    
     private RecyclerView mRecyclerView;
     private TextView mEmptyView;
     private ProgressDialog mProgressDialog;
     private int mMessageCount;
+    private ArrayList<Message> mMessageList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,40 +72,37 @@ public class MessageInboxActivity extends AppCompatActivity
         setContentView(R.layout.activity_message_inbox);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        // Set up navigation view
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
+        // get firebaseauth instance and database instance
         mAuth = FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
         mDatabaseReference = FirebaseDatabase.getInstance().getReference();
         mEmptyView = findViewById(R.id.empty_view);
-
+        // set up navigation view
         final View navView = navigationView.getHeaderView(0);
         final TextView usernameNavTV = navView.findViewById(R.id.userNavIDTV);
         TextView emailNavTV = navView.findViewById(R.id.userNavEmailTV);
         ImageView userNavAvatarIV = navView.findViewById(R.id.userNavAvatarIV);
         usernameNavTV.setText(mUser.getDisplayName());
-
         //Setup Loading dialog
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setMessage(getString(R.string.loading_message));
         mProgressDialog.setCancelable(false);
         mProgressDialog.show();
-
+        // set up drawer layout
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
-
         //Set up nav menu
         emailNavTV.setText(mUser.getEmail());
         Glide.with(this)
                 .load(mUser.getPhotoUrl())
                 .placeholder(R.mipmap.ic_launcher)
                 .into(userNavAvatarIV);
-
         //Set listener that triggers when a user signs out
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
@@ -135,7 +141,7 @@ public class MessageInboxActivity extends AppCompatActivity
                 messageAdapter.setScrollingMenu(null);
             }
         });
-
+        // get origin message count from firebase
         mDatabaseReference.child(DB_USERS).child(userId).child(DB_MESSAGES).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
@@ -164,7 +170,6 @@ public class MessageInboxActivity extends AppCompatActivity
 
             public void onCancelled() {}
         });
-
         // Set empty view for message box, when got one new message send notification and message count plus one
         mDatabaseReference.child(DB_USERS).child(userId).child(DB_MESSAGES).addValueEventListener(new ValueEventListener() {
             @Override
